@@ -64,6 +64,40 @@ return [
             ]) : [],
         ],
 
+        'landlord' => [
+            'driver' => 'mysql',
+            'url' => env('DB_URL'),
+            'host' => env('LANDLORD_DB_HOST', env('DB_HOST', '127.0.0.1')),
+            'port' => env('LANDLORD_DB_PORT', env('DB_PORT', '3306')),
+            'database' => env('LANDLORD_DB_DATABASE', 'webshop_landlord'),
+            'username' => env('LANDLORD_DB_USERNAME', env('DB_USERNAME', 'root')),
+            'password' => env('LANDLORD_DB_PASSWORD', env('DB_PASSWORD', '')),
+            'unix_socket' => env('DB_SOCKET', ''),
+            'charset' => env('DB_CHARSET', 'utf8mb4'),
+            'collation' => env('DB_COLLATION', 'utf8mb4_unicode_ci'),
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'strict' => true,
+            'engine' => null,
+        ],
+
+        'tenant' => [
+            'driver' => 'mysql',
+            'url' => env('DB_URL'),
+            'host' => env('DB_HOST', '127.0.0.1'),
+            'port' => env('DB_PORT', '3306'),
+            'database' => null, // Dynamically filled
+            'username' => env('DB_USERNAME', 'root'),
+            'password' => env('DB_PASSWORD', ''),
+            'unix_socket' => env('DB_SOCKET', ''),
+            'charset' => env('DB_CHARSET', 'utf8mb4'),
+            'collation' => env('DB_COLLATION', 'utf8mb4_unicode_ci'),
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'strict' => true,
+            'engine' => null,
+        ],
+
         'mariadb' => [
             'driver' => 'mariadb',
             'url' => env('DB_URL'),
