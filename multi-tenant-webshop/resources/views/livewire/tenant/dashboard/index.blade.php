@@ -51,10 +51,10 @@
         <div class="rounded-2xl bg-white p-6 shadow-sm border border-neutral-200 dark:bg-neutral-800 dark:border-neutral-700">
             <h2 class="text-xl font-bold mb-4">Snelkoppelingen</h2>
             <div class="space-y-3">
-                <flux:button :href="route('tenant.products.create', ['tenant' => request()->route('tenant')])" variant="filled" class="w-full justify-start" icon="plus" wire:navigate>
+                <flux:button :href="route('tenant.products.create')" variant="filled" class="w-full justify-start" icon="plus" wire:navigate>
                     {{ __('Nieuw Product Toevoegen') }}
                 </flux:button>
-                <flux:button :href="route('tenant.settings', ['tenant' => request()->route('tenant')])" variant="ghost" class="w-full justify-start" icon="cog-6-tooth" wire:navigate>
+                <flux:button :href="route('tenant.settings')" variant="ghost" class="w-full justify-start" icon="cog-6-tooth" wire:navigate>
                     {{ __('Winkel Instellingen') }}
                 </flux:button>
             </div>

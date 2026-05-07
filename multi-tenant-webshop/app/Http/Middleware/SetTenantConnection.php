@@ -39,8 +39,14 @@ class SetTenantConnection
             abort(500, 'Interne configuratiefout: Webshop database niet ingesteld.');
         }
 
-        // Switch the connection
-        $this->tenantManager->setTenant($domain->tenant);
+        // 3. Set Tenant Context
+        $tenantManager = app(\App\Services\TenantManager::class);
+        $tenantManager->setTenant($domain->tenant);
+
+        // 4. Set Global Route Default for 'tenant' parameter
+        \Illuminate\Support\Facades\URL::defaults([
+            'tenant' => $domain->tenant->slug
+        ]);
 
         return $next($request);
     }

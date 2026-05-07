@@ -46,7 +46,7 @@ Route::domain('{tenant}.' . config('app.central_domain', 'localhost'))->middlewa
             Route::get('/categories', function() { return 'Categorieën Overzicht (Coming Soon)'; })->name('tenant.categories.index');
             Route::get('/orders', function() { return 'Bestellingen Overzicht (Coming Soon)'; })->name('tenant.orders.index');
             Route::get('/customers', function() { return 'Klanten Overzicht (Coming Soon)'; })->name('tenant.customers.index');
-            Route::get('/settings', function() { return 'Winkel Instellingen (Coming Soon)'; })->name('tenant.settings');
+            Route::get('/settings', \App\Livewire\Tenant\Settings\StyleDashboard::class)->name('tenant.settings');
         });
     });
 });

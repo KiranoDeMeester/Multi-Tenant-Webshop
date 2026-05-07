@@ -12,13 +12,6 @@ class Index extends Component
 {
     use WithPagination;
 
-    public string $tenantSlug = '';
-
-    public function mount()
-    {
-        $this->tenantSlug = app(\App\Services\TenantManager::class)->getTenant()->slug;
-    }
-
     public function deleteProduct($id)
     {
         $product = Product::findOrFail($id);
