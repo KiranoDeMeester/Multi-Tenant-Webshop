@@ -65,7 +65,7 @@ return [
         ],
 
         'landlord' => [
-            'driver' => 'mysql',
+            'driver' => env('LANDLORD_DB_DRIVER', 'mysql'),
             'url' => env('DB_URL'),
             'host' => env('LANDLORD_DB_HOST', env('DB_HOST', '127.0.0.1')),
             'port' => env('LANDLORD_DB_PORT', env('DB_PORT', '3306')),

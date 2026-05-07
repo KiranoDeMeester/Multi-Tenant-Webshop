@@ -19,6 +19,8 @@ foreach ($centralDomains as $domain) {
             Route::get('admin/tenants', \App\Livewire\Admin\Tenants\Index::class)->name('admin.tenants');
         });
 
+        require base_path('vendor/laravel/fortify/routes/routes.php');
+
         require __DIR__.'/settings.php';
     });
 }

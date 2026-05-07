@@ -32,7 +32,7 @@ This file tracks the implementation steps. Each step corresponds to a GitHub Iss
   - Configure Laravel to handle `{tenant}.localhost` and `platform.localhost`.
   - Implement a `CentralDomain` check to prevent tenants from accessing the landlord admin.
 
-- [ ] **Step 07: Platform Admin Auth (Landlord)**
+- [x] **Step 07: Platform Admin Auth (Landlord)**
   - Setup authentication for the platform owners (the people who manage the SaaS).
 
 - [ ] **Step 08: Tenant Customer Auth (Storefront)**
