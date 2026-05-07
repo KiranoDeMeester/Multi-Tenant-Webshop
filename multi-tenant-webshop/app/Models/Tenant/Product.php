@@ -7,6 +7,7 @@ use App\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 use Spatie\MediaLibrary\HasMedia;
@@ -18,6 +19,22 @@ class Product extends Model implements HasMedia
     use HasFactory, HasTenantConnection, HasUuid, SoftDeletes, InteractsWithMedia;
 
     protected $guarded = [];
+
+    /**
+     * Get the variations for the product.
+     */
+    public function variations(): HasMany
+    {
+        return $this->hasMany(ProductVariation::class);
+    }
+
+    /**
+     * Determine if the product has variations.
+     */
+    public function getHasVariationsAttribute(): bool
+    {
+        return $this->variations()->exists();
+    }
 
     /**
      * Get the category that owns the product.
