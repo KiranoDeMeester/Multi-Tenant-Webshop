@@ -2,16 +2,15 @@
 
 namespace App\Models\Tenant;
 
+use App\Traits\HasTenantConnection;
+use App\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Support\Str;
 
 class Customer extends Authenticatable
 {
-    use HasFactory, Notifiable;
-
-    protected $connection = 'tenant';
+    use HasFactory, Notifiable, HasTenantConnection, HasUuid;
 
     protected $guarded = [];
 
@@ -24,18 +23,4 @@ class Customer extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
-
-    public $incrementing = false;
-    protected $keyType = 'string';
-
-    protected static function boot()
-    {
-        parent::boot();
-
-        static::creating(function ($model) {
-            if (empty($model->{$model->getKeyName()})) {
-                $model->{$model->getKeyName()} = (string) Str::uuid();
-            }
-        });
-    }
 }
