@@ -23,7 +23,8 @@ class SetTenantConnection
         $centralDomain = config('app.central_domain', env('CENTRAL_DOMAIN', 'localhost'));
 
         // If we are on the central domain, keep the landlord connection
-        if ($host === $centralDomain || $host === 'platform.' . $centralDomain) {
+        $allowedCentralHosts = [$centralDomain, 'platform.' . $centralDomain, 'localhost', '127.0.0.1'];
+        if (in_array($host, $allowedCentralHosts)) {
             return $next($request);
         }
 
@@ -32,7 +33,7 @@ class SetTenantConnection
 
         if (!$domain) {
             // Rule: No fallback to wrong tenant, abort if not found
-            abort(404, 'Webshop not found.');
+            abort(404, 'Webshop niet gevonden.');
         }
 
         // Switch the connection

@@ -22,13 +22,13 @@ This file tracks the implementation steps. Each step corresponds to a GitHub Iss
   - Build the `tenants:migrate` Artisan command.
   - Setup separate migration paths for `database/migrations/landlord` and `database/migrations/tenant`.
 
-- [ ] **Step 05: Global Tenant Context & Helper Functions**
+- [x] **Step 05: Global Tenant Context & Helper Functions**
   - Create helper functions to access current tenant data (`tenant()`).
   - Implement a `TenantScope` for any shared platform models (if any).
 
 ## Phase 2: Domain, Routing & Multi-Auth
 
-- [ ] **Step 06: Wildcard Subdomain Routing**
+- [x] **Step 06: Wildcard Subdomain Routing**
   - Configure Laravel to handle `{tenant}.localhost` and `platform.localhost`.
   - Implement a `CentralDomain` check to prevent tenants from accessing the landlord admin.
 
