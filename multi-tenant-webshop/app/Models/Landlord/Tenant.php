@@ -44,4 +44,12 @@ class Tenant extends Model
     {
         return $this->hasMany(Domain::class);
     }
+
+    /**
+     * Get the tenant's slug (domain prefix).
+     */
+    public function getSlugAttribute(): string
+    {
+        return Str::before($this->domains->first()?->domain ?? '', '.');
+    }
 }

@@ -37,6 +37,57 @@ class Product extends Model implements HasMedia
     }
 
     /**
+     * Get the total stock across all variations or from the product itself.
+     */
+    public function getTotalStockAttribute(): int
+    {
+        if ($this->has_variations) {
+            return (int) $this->variations()->sum('stock');
+        }
+
+        return (int) $this->stock;
+    }
+
+    /**
+     * Determine if the product is in stock.
+     */
+    public function getIsInStockAttribute(): bool
+    {
+        return $this->total_stock > 0;
+    }
+
+    /**
+     * Decrement the stock of a simple product.
+     * Note: If the product has variations, you should call decrementStock on the specific variation.
+     *
+     * @throws \Exception
+     */
+    public function decrementStock(int $quantity = 1): void
+    {
+        if ($this->has_variations) {
+            throw new \Exception("Dit product heeft variaties. Verlaag de voorraad via de specifieke variatie.");
+        }
+
+        if ($this->stock < $quantity) {
+            throw new \Exception("Onvoldoende voorraad voor product: {$this->name}");
+        }
+
+        $this->decrement('stock', $quantity);
+    }
+
+    /**
+     * Increment the stock of a simple product.
+     */
+    public function incrementStock(int $quantity = 1): void
+    {
+        if ($this->has_variations) {
+            throw new \Exception("Dit product heeft variaties. Verhoog de voorraad via de specifieke variatie.");
+        }
+
+        $this->increment('stock', $quantity);
+    }
+
+    /**
      * Get the category that owns the product.
      */
     public function category(): BelongsTo

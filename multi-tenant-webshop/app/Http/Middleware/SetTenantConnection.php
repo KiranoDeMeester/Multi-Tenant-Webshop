@@ -29,11 +29,14 @@ class SetTenantConnection
         }
 
         // Try to find the tenant by domain
-        $domain = Domain::where('domain', $host)->with('tenant')->first();
+        $domain = \App\Models\Landlord\Domain::where('domain', $host)->with('tenant')->first();
 
-        if (!$domain) {
-            // Rule: No fallback to wrong tenant, abort if not found
+        if (!$domain || !$domain->tenant) {
             abort(404, 'Webshop niet gevonden.');
+        }
+
+        if (empty($domain->tenant->db_name)) {
+            abort(500, 'Interne configuratiefout: Webshop database niet ingesteld.');
         }
 
         // Switch the connection

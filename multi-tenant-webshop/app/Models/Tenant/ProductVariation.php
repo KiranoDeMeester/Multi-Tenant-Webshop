@@ -39,4 +39,34 @@ class ProductVariation extends Model
     {
         return $this->price ?? $this->product->price;
     }
+
+    /**
+     * Determine if the variation is in stock.
+     */
+    public function getIsInStockAttribute(): bool
+    {
+        return $this->stock > 0;
+    }
+
+    /**
+     * Decrement the stock of the variation.
+     *
+     * @throws \Exception
+     */
+    public function decrementStock(int $quantity = 1): void
+    {
+        if ($this->stock < $quantity) {
+            throw new \Exception("Onvoldoende voorraad voor variatie: {$this->sku}");
+        }
+
+        $this->decrement('stock', $quantity);
+    }
+
+    /**
+     * Increment the stock of the variation.
+     */
+    public function incrementStock(int $quantity = 1): void
+    {
+        $this->increment('stock', $quantity);
+    }
 }

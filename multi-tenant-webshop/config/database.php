@@ -82,20 +82,11 @@ return [
         ],
 
         'tenant' => [
-            'driver' => 'mysql',
+            'driver' => 'sqlite',
             'url' => env('DB_URL'),
-            'host' => env('DB_HOST', '127.0.0.1'),
-            'port' => env('DB_PORT', '3306'),
-            'database' => null, // Dynamically filled
-            'username' => env('DB_USERNAME', 'root'),
-            'password' => env('DB_PASSWORD', ''),
-            'unix_socket' => env('DB_SOCKET', ''),
-            'charset' => env('DB_CHARSET', 'utf8mb4'),
-            'collation' => env('DB_COLLATION', 'utf8mb4_unicode_ci'),
+            'database' => ':memory:', // Fallback to avoid crash, will be dynamically filled with path to .sqlite file
             'prefix' => '',
-            'prefix_indexes' => true,
-            'strict' => true,
-            'engine' => null,
+            'foreign_key_constraints' => env('DB_FOREIGN_KEYS', true),
         ],
 
         'mariadb' => [
