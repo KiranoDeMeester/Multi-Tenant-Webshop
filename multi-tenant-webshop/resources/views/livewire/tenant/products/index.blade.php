@@ -4,7 +4,7 @@
             <flux:heading size="xl" level="1">{{ __('Producten') }}</flux:heading>
             <flux:text>{{ __('Beheer je assortiment en voorraad.') }}</flux:text>
         </div>
-        <flux:button :href="route('tenant.products.create', ['tenant' => $tenantSlug])" variant="primary" icon="plus" wire:navigate>{{ __('Product Toevoegen') }}</flux:button>
+        <flux:button :href="route('tenant.products.create')" variant="primary" icon="plus" wire:navigate>{{ __('Product Toevoegen') }}</flux:button>
     </div>
 
     <flux:card class="p-0 overflow-hidden">
@@ -52,7 +52,7 @@
                             <flux:dropdown>
                                 <flux:button variant="ghost" icon="ellipsis-horizontal" size="sm" />
                                 <flux:menu>
-                                    <flux:menu.item icon="pencil-square" :href="route('tenant.products.edit', ['tenant' => $tenantSlug, 'product' => $product->id])" wire:navigate>{{ __('Bewerken') }}</flux:menu.item>
+                                    <flux:menu.item icon="pencil-square" :href="route('tenant.products.edit', ['product' => $product->id])" wire:navigate>{{ __('Bewerken') }}</flux:menu.item>
                                     <flux:menu.item icon="trash" variant="danger" wire:click="deleteProduct('{{ $product->id }}')" wire:confirm="{{ __('Weet je zeker dat je dit product wilt verwijderen?') }}">{{ __('Verwijderen') }}</flux:menu.item>
                                 </flux:menu>
                             </flux:dropdown>

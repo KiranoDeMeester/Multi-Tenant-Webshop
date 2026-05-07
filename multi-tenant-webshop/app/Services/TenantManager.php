@@ -54,4 +54,18 @@ class TenantManager
     {
         return $this->currentTenant;
     }
+
+    /**
+     * Get theme settings for the current tenant.
+     */
+    public function getThemeSettings(): array
+    {
+        if (!$this->currentTenant) {
+            return [];
+        }
+
+        return \App\Models\Tenant\Setting::where('key', 'like', 'theme_%')
+            ->pluck('value', 'key')
+            ->toArray();
+    }
 }

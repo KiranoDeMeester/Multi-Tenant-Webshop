@@ -11,31 +11,31 @@
 
     <flux:sidebar.nav>
         <flux:sidebar.group :heading="__('Winkel Beheer')" class="grid">
-            <flux:sidebar.item icon="home" :href="route('tenant.dashboard', ['tenant' => $tenant->slug])" :current="request()->routeIs('tenant.dashboard')" wire:navigate>
+            <flux:sidebar.item icon="home" :href="route('tenant.dashboard')" :current="request()->routeIs('tenant.dashboard')" wire:navigate>
                 {{ __('Dashboard') }}
             </flux:sidebar.item>
             
-            <flux:sidebar.item icon="archive-box" :href="route('tenant.products.index', ['tenant' => $tenant->slug])" :current="request()->routeIs('tenant.products.*')" wire:navigate>
+            <flux:sidebar.item icon="archive-box" :href="route('tenant.products.index')" :current="request()->routeIs('tenant.products.*')" wire:navigate>
                 {{ __('Producten') }}
             </flux:sidebar.item>
 
-            <flux:sidebar.item icon="tag" :href="route('tenant.categories.index', ['tenant' => $tenant->slug])" :current="request()->routeIs('tenant.categories.*')" wire:navigate>
+            <flux:sidebar.item icon="tag" :href="route('tenant.categories.index')" :current="request()->routeIs('tenant.categories.*')" wire:navigate>
                 {{ __('Categorieën') }}
             </flux:sidebar.item>
         </flux:sidebar.group>
 
         <flux:sidebar.group :heading="__('Verkoop')" class="grid">
-            <flux:sidebar.item icon="shopping-cart" :href="route('tenant.orders.index', ['tenant' => $tenant->slug])" :current="request()->routeIs('tenant.orders.*')" wire:navigate>
+            <flux:sidebar.item icon="shopping-cart" :href="route('tenant.orders.index')" :current="request()->routeIs('tenant.orders.*')" wire:navigate>
                 {{ __('Bestellingen') }}
             </flux:sidebar.item>
             
-            <flux:sidebar.item icon="users" :href="route('tenant.customers.index', ['tenant' => $tenant->slug])" :current="request()->routeIs('tenant.customers.*')" wire:navigate>
+            <flux:sidebar.item icon="users" :href="route('tenant.customers.index')" :current="request()->routeIs('tenant.customers.*')" wire:navigate>
                 {{ __('Klanten') }}
             </flux:sidebar.item>
         </flux:sidebar.group>
 
         <flux:sidebar.group :heading="__('Instellingen')" class="grid">
-            <flux:sidebar.item icon="cog-6-tooth" :href="route('tenant.settings', ['tenant' => $tenant->slug])" :current="request()->routeIs('tenant.settings')" wire:navigate>
+            <flux:sidebar.item icon="cog-6-tooth" :href="route('tenant.settings')" :current="request()->routeIs('tenant.settings')" wire:navigate>
                 {{ __('Winkel Instellingen') }}
             </flux:sidebar.item>
         </flux:sidebar.group>
