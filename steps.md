@@ -1,24 +1,24 @@
-# Project Roadmap — Multi-Tenant Webshop (Master Edition)
+# Project Roadmap — Multi-Tenant Webshop
 
 This file tracks the implementation steps. Each step corresponds to a GitHub Issue.
 
 ## Phase 1: Core Multi-Database Infrastructure
 
-- [ ] **Step 01: Landlord Model Architecture**
+- [x] **Step 01: Landlord Model Architecture**
   - Setup the `Landlord` database connection.
   - Create `Tenant` and `Domain` models + migrations.
   - Implement a basic `TenantResource` in the platform admin.
 
-- [ ] **Step 02: Dynamic DB Connection Switcher**
+- [x] **Step 02: Dynamic DB Connection Switcher**
   - Create `TenantManager` service.
   - Implement runtime connection switching logic.
   - Add `SetTenantConnection` middleware.
 
-- [ ] **Step 03: Tenant Database Provisioning**
+- [x] **Step 03: Tenant Database Provisioning**
   - Create `CreateTenantDatabaseAction`.
   - Implement raw SQL logic to create isolated databases and users.
 
-- [ ] **Step 04: The Multi-Tenant Migrator**
+- [x] **Step 04: The Multi-Tenant Migrator**
   - Build the `tenants:migrate` Artisan command.
   - Setup separate migration paths for `database/migrations/landlord` and `database/migrations/tenant`.
 
