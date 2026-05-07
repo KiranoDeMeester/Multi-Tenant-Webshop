@@ -21,7 +21,7 @@ class TenantFactory extends Factory
     {
         return [
             'name' => $this->faker->company(),
-            'db_name' => 'tenant_' . $this->faker->unique()->word(),
+            'db_name' => 'tenant_' . strtolower(\Illuminate\Support\Str::random(10)),
             'stripe_account_id' => 'acct_' . $this->faker->unique()->lexify('????????????'),
         ];
     }

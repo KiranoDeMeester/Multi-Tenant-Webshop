@@ -14,6 +14,10 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->web(append: [
             \App\Http\Middleware\SetTenantConnection::class,
         ]);
+
+        $middleware->alias([
+            'central' => \App\Http\Middleware\EnsureCentralDomain::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
