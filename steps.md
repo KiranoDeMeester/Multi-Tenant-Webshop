@@ -41,7 +41,7 @@ This file tracks the implementation steps. Each step corresponds to a GitHub Iss
 
 ## Phase 3: Tenant Business Logic (Core)
 
-- [ ] **Step 09: Category & Product Schema**
+- [x] **Step 09: Category & Product Schema**
   - Create Tenant-side migrations for `categories` and `products`.
   - Implement soft deletes and UUIDs for public-facing IDs.
 
