@@ -49,7 +49,7 @@ This file tracks the implementation steps. Each step corresponds to a GitHub Iss
   - Implement Spatie Media Library (or custom) for product images.
   - Setup disk partitioning (e.g., `storage/app/public/tenants/{id}/media`).
 
-- [ ] **Step 11: Product Variations (Colors/Sizes)**
+- [x] **Step 11: Product Variations (Colors/Sizes)**
   - Implement a `ProductAttribute` system for variations.
   - Logic for different prices per variation.
 
