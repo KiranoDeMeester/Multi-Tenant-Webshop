@@ -35,7 +35,7 @@ This file tracks the implementation steps. Each step corresponds to a GitHub Iss
 - [x] **Step 07: Platform Admin Auth (Landlord)**
   - Setup authentication for the platform owners (the people who manage the SaaS).
 
-- [ ] **Step 08: Tenant Customer Auth (Storefront)**
+- [x] **Step 08: Tenant Customer Auth (Storefront)**
   - Implement a custom Auth Guard for customers *within* a specific tenant database.
   - Ensure a customer of `Tenant A` cannot log into `Tenant B`.
 
