@@ -45,7 +45,7 @@ This file tracks the implementation steps. Each step corresponds to a GitHub Iss
   - Create Tenant-side migrations for `categories` and `products`.
   - Implement soft deletes and UUIDs for public-facing IDs.
 
-- [ ] **Step 10: Media Management (Images)**
+- [x] **Step 10: Media Management (Images)**
   - Implement Spatie Media Library (or custom) for product images.
   - Setup disk partitioning (e.g., `storage/app/public/tenants/{id}/media`).
 
