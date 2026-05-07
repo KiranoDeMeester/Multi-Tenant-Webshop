@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignUuid('category_id')->constrained()->cascadeOnDelete();
             $table->string('name');
             $table->string('slug')->unique();
+            $table->string('sku')->unique()->after('name');
             $table->text('description')->nullable();
             $table->decimal('price', 10, 2);
             $table->integer('stock')->default(0);

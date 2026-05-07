@@ -11,13 +11,28 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        $middleware->web(append: [
+        $middleware->web(prepend: [
             \App\Http\Middleware\SetTenantConnection::class,
         ]);
 
         $middleware->alias([
             'central' => \App\Http\Middleware\EnsureCentralDomain::class,
+            'tenant' => \App\Http\Middleware\SetTenantConnection::class,
         ]);
+
+        $middleware->redirectGuestsTo(function (\Illuminate\Http\Request $request) {
+            $host = $request->getHost();
+            $centralDomain = config('app.central_domain', 'localhost');
+            $allowedCentralHosts = [$centralDomain, 'platform.' . $centralDomain, 'localhost', '127.0.0.1'];
+
+            if (!in_array($host, $allowedCentralHosts)) {
+                // Extract tenant subdomain from host (e.g. demo-shop.localhost -> demo-shop)
+                $tenant = \Illuminate\Support\Str::before($host, '.');
+                return route('tenant.login', ['tenant' => $tenant]);
+            }
+
+            return route('login');
+        });
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

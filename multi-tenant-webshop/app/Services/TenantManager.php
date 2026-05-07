@@ -18,21 +18,32 @@ class TenantManager
     {
         $this->currentTenant = $tenant;
 
-        // Update the 'tenant' connection configuration dynamically
-        Config::set('database.connections.tenant.database', $tenant->db_name);
+        // Determine the path to the SQLite database file
+        $dbPath = database_path('tenants/' . $tenant->db_name . '.sqlite');
+        $dbDir = dirname($dbPath);
 
-        // Purge the connection to ensure the next call uses the new config
+        // Ensure the directory exists
+        if (!file_exists($dbDir)) {
+            mkdir($dbDir, 0755, true);
+        }
+
+        // Ensure the SQLite file exists
+        if (!file_exists($dbPath)) {
+            touch($dbPath);
+        }
+
+        // 1. Update the 'tenant' connection configuration dynamically
+        Config::set('database.connections.tenant.database', $dbPath);
+
+        // 2. Purge the connection so Laravel is forced to re-read the config next time it's used
         DB::purge('tenant');
 
-        // Reconnect to the tenant database
-        DB::reconnect('tenant');
-
-        // Set the default connection to 'tenant' for this request
+        // 3. Set the default connection to 'tenant' for this request
         Config::set('database.default', 'tenant');
 
-        Log::info('Database connection switched to tenant: ' . $tenant->name, [
+        Log::info('Database connection switched to SQLite tenant: ' . $tenant->name, [
             'tenant_id' => $tenant->id,
-            'db_name' => $tenant->db_name,
+            'db_path' => $dbPath,
         ]);
     }
 
