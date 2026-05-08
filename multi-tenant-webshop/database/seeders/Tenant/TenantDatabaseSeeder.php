@@ -39,9 +39,26 @@ class TenantDatabaseSeeder extends Seeder
             ]
         );
 
-        // 2. Create Categories
-        $electronics = Category::updateOrCreate(['slug' => 'electronics'], ['name' => 'Elektronica']);
-        $clothing = Category::updateOrCreate(['slug' => 'clothing'], ['name' => 'Kleding']);
+        // 2. Create 10 Fixed Categories
+        $fixedCategories = [
+            ['name' => 'Elektronica', 'slug' => 'elektronica'],
+            ['name' => 'Kleding', 'slug' => 'kleding'],
+            ['name' => 'Wonen & Keuken', 'slug' => 'wonen-keuken'],
+            ['name' => 'Sport & Vrije tijd', 'slug' => 'sport-vrije-tijd'],
+            ['name' => 'Beauty & Verzorging', 'slug' => 'beauty-verzorging'],
+            ['name' => 'Speelgoed', 'slug' => 'speelgoed'],
+            ['name' => 'Boeken', 'slug' => 'boeken'],
+            ['name' => 'Tuin & Terras', 'slug' => 'tuin-terras'],
+            ['name' => 'Auto & Motor', 'slug' => 'auto-motor'],
+            ['name' => 'Zakelijk & Industrie', 'slug' => 'zakelijk-industrie'],
+        ];
+
+        foreach ($fixedCategories as $cat) {
+            Category::updateOrCreate(['slug' => $cat['slug']], $cat);
+        }
+
+        $electronics = Category::where('slug', 'elektronica')->first();
+        $clothing = Category::where('slug', 'kleding')->first();
 
         // 3. Create Simple Product
         Product::updateOrCreate(

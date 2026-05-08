@@ -26,7 +26,7 @@ class ProductFactory extends Factory
             'description' => $this->faker->paragraphs(3, true),
             'price' => $this->faker->randomFloat(2, 5, 500),
             'stock' => $this->faker->numberBetween(0, 100),
-            'category_id' => \App\Models\Tenant\Category::factory(),
+            'category_id' => \App\Models\Tenant\Category::inRandomOrder()->first()?->id ?? \App\Models\Tenant\Category::factory(),
             'image_url' => 'https://picsum.photos/seed/' . \Illuminate\Support\Str::random(10) . '/800/1000',
         ];
     }

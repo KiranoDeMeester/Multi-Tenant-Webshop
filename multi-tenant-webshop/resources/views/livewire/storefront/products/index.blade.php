@@ -67,42 +67,53 @@
             @else
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                     @foreach($products as $product)
-                        <div class="group relative flex flex-col">
-                            <a href="{{ route('storefront.products.show', ['slug' => $product->slug]) }}" class="relative aspect-[4/5] rounded-3xl overflow-hidden bg-neutral-100 mb-4 block">
+                        <div class="group flex flex-col">
+                            <div class="relative aspect-[4/5] rounded-[2rem] overflow-hidden bg-neutral-50 mb-6 border-2 border-black transition-all duration-500 group-hover:shadow-[10px_10px_0px_0px_rgba(0,0,0,1)]">
                                 @php
                                     $displayImage = $product->getFirstMediaUrl('products', 'large') ?: $product->image_url;
                                 @endphp
                                 @if($displayImage)
-                                    <img src="{{ $displayImage }}" alt="{{ $product->name }}" class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                                    <img src="{{ $displayImage }}" alt="{{ $product->name }}" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
                                 @else
-                                    <div class="absolute inset-0 flex items-center justify-center text-neutral-300">
+                                    <div class="absolute inset-0 flex items-center justify-center text-neutral-200">
                                         <flux:icon name="photo" size="xl" />
                                     </div>
                                 @endif
                                 
-                                <div class="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                                    <flux:button variant="outline" icon="plus" size="sm" class="shadow-lg bg-white" circular />
+                                @if($product->stock <= 0)
+                                    <div class="absolute top-6 left-6 z-20">
+                                        <span class="bg-black text-white text-[9px] font-black px-3 py-1.5 rounded-full uppercase tracking-[0.2em] high-contrast-dark">{{ __('Uitverkocht') }}</span>
+                                    </div>
+                                @endif
+                                
+                                <div class="absolute inset-0 flex items-center justify-center z-30 pointer-events-none">
+                                    <div class="opacity-0 group-hover:opacity-100 translate-y-8 group-hover:translate-y-0 transition-all duration-500 pointer-events-auto">
+                                        @if($product->stock > 0)
+                                            <button wire:click.prevent="quickAddToCart('{{ $product->id }}')" class="bg-black text-white px-8 py-4 rounded-2xl font-black uppercase tracking-widest text-[10px] hover:bg-neutral-800 transition-all shadow-2xl active:scale-95 flex items-center gap-2 high-contrast-dark">
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-4 h-4">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
+                                                </svg>
+                                                {{ __('In mandje') }}
+                                            </button>
+                                        @else
+                                            <a href="{{ route('storefront.products.show', ['slug' => $product->slug]) }}" class="bg-white text-black border-2 border-black px-8 py-4 rounded-2xl font-black uppercase tracking-widest text-[10px] hover:bg-black hover:text-white transition-all shadow-2xl block active:scale-95">
+                                                {{ __('Bekijk details') }}
+                                            </a>
+                                        @endif
+                                    </div>
                                 </div>
-                            </a>
+                            </div>
 
-                            <div class="flex-1 flex flex-col">
-                                <div class="flex justify-between items-start mb-1">
-                                    <h3 class="text-lg font-bold text-neutral-900 group-hover:text-primary transition-colors">
+                            <div class="flex flex-col">
+                                <div class="flex justify-between items-start gap-4 mb-2">
+                                    <h3 class="text-sm font-black text-black uppercase tracking-wider leading-tight">
                                         <a href="{{ route('storefront.products.show', ['slug' => $product->slug]) }}">
                                             {{ $product->name }}
                                         </a>
                                     </h3>
                                     <span class="font-black text-lg">€{{ number_format($product->price, 2) }}</span>
                                 </div>
-                                <flux:text size="sm" class="mb-4">{{ $product->category->name ?? '' }}</flux:text>
-                                
-                                <div class="mt-auto">
-                                    @if($product->stock > 0)
-                                        <flux:button variant="primary" class="w-full" icon="shopping-bag">{{ __('In winkelmand') }}</flux:button>
-                                    @else
-                                        <flux:button variant="filled" disabled class="w-full">{{ __('Uitverkocht') }}</flux:button>
-                                    @endif
-                                </div>
+                                <div class="text-[9px] font-black uppercase tracking-[0.3em] text-neutral-400">{{ $product->category->name ?? '' }}</div>
                             </div>
                         </div>
                     @endforeach

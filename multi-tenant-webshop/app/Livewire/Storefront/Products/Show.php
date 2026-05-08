@@ -35,8 +35,12 @@ class Show extends Component
 
     public function addToCart()
     {
-        // To be implemented in Step 16
-        session()->flash('message', __('Product toegevoegd aan winkelmand! (Demo)'));
+        app(\App\Services\CartService::class)->add($this->product, $this->quantity);
+        
+        $this->dispatch('product-added-to-cart');
+        $this->dispatch('open-cart');
+        
+        session()->flash('message', __('Product toegevoegd aan winkelmand!'));
     }
 
     public function render()

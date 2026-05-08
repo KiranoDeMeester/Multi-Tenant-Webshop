@@ -51,9 +51,15 @@
             </div>
         @else
             <form wire:submit="login" class="p-8 space-y-6">
-                <flux:input wire:model="email" type="email" :label="__('E-mailadres')" placeholder="je@voorbeeld.be" icon="envelope" />
+                <flux:field>
+                    <flux:label class="text-black font-bold">{{ __('E-mailadres') }}</flux:label>
+                    <flux:input wire:model="email" type="email" placeholder="je@voorbeeld.be" icon="envelope" input:class="!text-black !font-bold" />
+                </flux:field>
                 
-                <flux:input wire:model="password" type="password" :label="__('Wachtwoord')" placeholder="••••••••" icon="lock-closed" />
+                <flux:field>
+                    <flux:label class="text-black font-bold">{{ __('Wachtwoord') }}</flux:label>
+                    <flux:input wire:model="password" type="password" placeholder="••••••••" icon="lock-closed" input:class="!text-black !font-bold" viewable />
+                </flux:field>
 
                 <div class="flex items-center justify-between">
                     <flux:checkbox :label="__('Onthoud mij')" />

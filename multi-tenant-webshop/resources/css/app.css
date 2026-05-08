@@ -37,28 +37,69 @@
 }
 
 @layer base {
+    .is-storefront {
+        @apply text-black antialiased selection:bg-black selection:text-white bg-white;
+    }
 
-    *,
-    ::after,
-    ::before,
-    ::backdrop,
-    ::file-selector-button {
-        border-color: var(--color-gray-200, currentColor);
+    /* Force all headings and text to be black by default - STOREFRONT ONLY */
+    .is-storefront h1, 
+    .is-storefront h2, 
+    .is-storefront h3, 
+    .is-storefront h4, 
+    .is-storefront h5, 
+    .is-storefront h6, 
+    .is-storefront p, 
+    .is-storefront span, 
+    .is-storefront a, 
+    .is-storefront div, 
+    .is-storefront label {
+        @apply text-black;
+    }
+
+    /* Exceptions for dark sections - STOREFRONT ONLY */
+    .is-storefront .high-contrast-dark, 
+    .is-storefront .high-contrast-dark *:not(.text-black):not(.text-neutral-950) {
+        @apply text-white;
+    }
+
+    /* Global Input Overhaul - STOREFRONT ONLY */
+    .is-storefront input, 
+    .is-storefront textarea, 
+    .is-storefront select {
+        @apply !text-black !font-bold !border-black !border-2 focus:!ring-black focus:!ring-offset-2 transition-all duration-200 !bg-white;
+    }
+
+    /* Flux specific overrides for high contrast - STOREFRONT ONLY */
+    .is-storefront [data-flux-control] {
+        @apply !text-black !font-bold !border-black !border-2 !bg-white;
+    }
+
+    .is-storefront [data-flux-label] {
+        @apply !text-black !font-black !uppercase !tracking-widest !text-[10px] !mb-1;
+    }
+
+    .is-storefront [data-flux-button] {
+        @apply !font-black !transition-transform active:!scale-95;
+    }
+
+    /* Standard Button High Contrast */
+    .is-storefront .btn-high-contrast {
+        @apply bg-black text-white px-6 py-3 rounded-xl font-black hover:bg-neutral-800 transition-all active:scale-95 shadow-xl shadow-neutral-200 flex items-center justify-center gap-2;
+    }
+
+    .is-storefront .btn-high-contrast-outline {
+        @apply border-2 border-black text-black px-6 py-3 rounded-xl font-black hover:bg-black hover:text-white transition-all active:scale-95 flex items-center justify-center gap-2;
     }
 }
 
-[data-flux-field]:not(ui-radio, ui-checkbox) {
-    @apply grid gap-2;
+.is-storefront [data-flux-field]:not(ui-radio, ui-checkbox) {
+    @apply grid gap-1;
 }
 
-[data-flux-label] {
-    @apply  !mb-0 !leading-tight;
-}
-
-input:focus[data-flux-control],
-textarea:focus[data-flux-control],
-select:focus[data-flux-control] {
-    @apply outline-hidden ring-2 ring-accent ring-offset-2 ring-offset-accent-foreground;
+.is-storefront input:focus[data-flux-control],
+.is-storefront textarea:focus[data-flux-control],
+.is-storefront select:focus[data-flux-control] {
+    @apply outline-hidden ring-2 ring-black ring-offset-2;
 }
 
 /* \[:where(&)\]:size-4 {
