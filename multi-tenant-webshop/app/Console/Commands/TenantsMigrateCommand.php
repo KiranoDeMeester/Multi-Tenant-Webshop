@@ -55,6 +55,7 @@ class TenantsMigrateCommand extends Command
             if ($this->option('seed')) {
                 $this->info("Seeding tenant: {$tenant->name}");
                 Artisan::call('db:seed', [
+                    '--class' => 'Database\\Seeders\\Tenant\\TenantDatabaseSeeder',
                     '--force' => true,
                     '--database' => 'tenant',
                 ]);

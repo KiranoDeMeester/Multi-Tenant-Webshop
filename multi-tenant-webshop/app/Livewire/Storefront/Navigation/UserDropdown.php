@@ -9,6 +9,7 @@ use Livewire\Component;
 class UserDropdown extends Component
 {
     #[On('user-logged-in')]
+    #[On('profile-updated')]
     public function refresh() {}
 
     public function logout()

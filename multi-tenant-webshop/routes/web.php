@@ -30,6 +30,10 @@ Route::domain('{tenant}.' . config('app.central_domain', 'localhost'))->middlewa
     // Public Storefront
     Route::get('/', \App\Livewire\Storefront\Products\Index::class)->name('storefront.products.index');
     Route::get('/product/{slug}', \App\Livewire\Storefront\Products\Show::class)->name('storefront.products.show');
+    Route::get('/winkelwagen', \App\Livewire\Storefront\Cart\Index::class)->name('storefront.cart.index');
+    Route::get('/mijn-account', \App\Livewire\Storefront\Account\Dashboard::class)->name('storefront.account')->middleware('auth:customer,tenant');
+    Route::get('/mijn-account/profiel', \App\Livewire\Storefront\Account\Profile::class)->name('storefront.account.profile')->middleware('auth:customer,tenant');
+    Route::get('/mijn-account/adressen', \App\Livewire\Storefront\Account\Addresses::class)->name('storefront.account.addresses')->middleware('auth:customer,tenant');
     
     // Auth Routes for customers
     Route::get('/login', \App\Livewire\Storefront\Auth\Login::class)->name('storefront.login');
@@ -64,7 +68,9 @@ Route::domain('{tenant}.' . config('app.central_domain', 'localhost'))->middlewa
             Route::get('/products', \App\Livewire\Tenant\Products\Index::class)->name('tenant.products.manage');
             Route::get('/products/create', \App\Livewire\Tenant\Products\Create::class)->name('tenant.products.create');
             Route::get('/products/{product}/edit', \App\Livewire\Tenant\Products\Edit::class)->name('tenant.products.edit');
-            Route::get('/categories', function() { return 'Categorieën Overzicht (Coming Soon)'; })->name('tenant.categories.index');
+            Route::get('/categories', \App\Livewire\Tenant\Categories\Index::class)->name('tenant.categories.index');
+            Route::get('/categories/create', \App\Livewire\Tenant\Categories\Create::class)->name('tenant.categories.create');
+            Route::get('/categories/{category}/edit', \App\Livewire\Tenant\Categories\Edit::class)->name('tenant.categories.edit');
             Route::get('/orders', function() { return 'Bestellingen Overzicht (Coming Soon)'; })->name('tenant.orders.index');
             Route::get('/customers', function() { return 'Klanten Overzicht (Coming Soon)'; })->name('tenant.customers.index');
             Route::get('/settings', \App\Livewire\Tenant\Settings\StyleDashboard::class)->name('tenant.settings');

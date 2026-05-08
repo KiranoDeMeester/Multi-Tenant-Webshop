@@ -40,6 +40,15 @@ class Index extends Component
         $this->resetPage();
     }
 
+    public function quickAddToCart(string $productId)
+    {
+        $product = Product::findOrFail($productId);
+        app(\App\Services\CartService::class)->add($product, 1);
+        
+        $this->dispatch('product-added-to-cart');
+        $this->dispatch('open-cart');
+    }
+
     public function render()
     {
         $products = Product::query()
