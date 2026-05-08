@@ -10,12 +10,18 @@
     </flux:sidebar.header>
 
     <flux:sidebar.nav>
+        <flux:sidebar.item icon="globe-alt" :href="route('storefront.products.index')">
+            {{ __('Terug naar website') }}
+        </flux:sidebar.item>
+
+        <flux:separator />
+
         <flux:sidebar.group :heading="__('Winkel Beheer')" class="grid">
             <flux:sidebar.item icon="home" :href="route('tenant.dashboard')" :current="request()->routeIs('tenant.dashboard')" wire:navigate>
                 {{ __('Dashboard') }}
             </flux:sidebar.item>
             
-            <flux:sidebar.item icon="archive-box" :href="route('tenant.products.index')" :current="request()->routeIs('tenant.products.*')" wire:navigate>
+            <flux:sidebar.item icon="archive-box" :href="route('tenant.products.manage')" :current="request()->routeIs('tenant.products.*')" wire:navigate>
                 {{ __('Producten') }}
             </flux:sidebar.item>
 

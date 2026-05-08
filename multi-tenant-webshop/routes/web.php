@@ -28,19 +28,40 @@ foreach ($centralDomains as $domain) {
 // Tenant Domain Routes (Webshops)
 Route::domain('{tenant}.' . config('app.central_domain', 'localhost'))->middleware(['tenant'])->group(function () {
     // Public Storefront
-    Route::get('/', function () {
-        return view('welcome_tenant');
-    })->name('tenant.home');
+    Route::get('/', \App\Livewire\Storefront\Products\Index::class)->name('storefront.products.index');
+    Route::get('/product/{slug}', \App\Livewire\Storefront\Products\Show::class)->name('storefront.products.show');
+    
+    // Auth Routes for customers
+    Route::get('/login', \App\Livewire\Storefront\Auth\Login::class)->name('storefront.login');
+    
+    Route::post('/logout', function () {
+        $wasTenant = auth('tenant')->check();
 
-    // Tenant Dashboard (Step 12b)
+        auth('tenant')->logout();
+        auth('web')->logout();
+        auth('customer')->logout();
+
+        request()->session()->invalidate();
+        request()->session()->regenerateToken();
+
+        if ($wasTenant) {
+            return redirect()->route('tenant.login');
+        }
+
+        return redirect()->route('storefront.products.index');
+    })->name('tenant.logout');
+
+    // Tenant Dashboard (Merchant View)
     Route::prefix('dashboard')->group(function () {
-        Route::get('login', \App\Livewire\Tenant\Dashboard\Login::class)->name('tenant.login')->middleware('guest:tenant');
+        Route::get('login', function() {
+            return redirect()->route('storefront.login');
+        })->name('tenant.login')->middleware('guest:tenant');
         
         Route::middleware(['auth:tenant'])->group(function () {
             Route::get('/', \App\Livewire\Tenant\Dashboard\Index::class)->name('tenant.dashboard');
             
             // Management routes
-            Route::get('/products', \App\Livewire\Tenant\Products\Index::class)->name('tenant.products.index');
+            Route::get('/products', \App\Livewire\Tenant\Products\Index::class)->name('tenant.products.manage');
             Route::get('/products/create', \App\Livewire\Tenant\Products\Create::class)->name('tenant.products.create');
             Route::get('/products/{product}/edit', \App\Livewire\Tenant\Products\Edit::class)->name('tenant.products.edit');
             Route::get('/categories', function() { return 'Categorieën Overzicht (Coming Soon)'; })->name('tenant.categories.index');

@@ -5,12 +5,15 @@ namespace App\Livewire\Tenant\Products;
 use App\Models\Tenant\Product;
 use App\Models\Tenant\Category;
 use Livewire\Component;
+use Livewire\WithFileUploads;
 use Livewire\Attributes\Layout;
 use Illuminate\Support\Str;
 
 #[Layout('layouts.tenant')]
 class Edit extends Component
 {
+    use WithFileUploads;
+
     public Product $product;
     
     public string $name = '';
@@ -19,6 +22,7 @@ class Edit extends Component
     public float $price = 0;
     public int $stock = 0;
     public ?string $category_id = null;
+    public $newImage;
 
     protected function rules()
     {
@@ -28,6 +32,7 @@ class Edit extends Component
             'price' => 'required|numeric|min:0',
             'stock' => 'required|integer|min:0',
             'category_id' => 'nullable|exists:categories,id',
+            'newImage' => 'nullable|image|max:2048',
         ];
     }
 
@@ -56,11 +61,18 @@ class Edit extends Component
             'category_id' => $this->category_id,
         ]);
 
+        if ($this->newImage) {
+            $this->product->clearMediaCollection('products');
+            $this->product->addMedia($this->newImage->getRealPath())
+                ->usingFileName($this->newImage->getClientOriginalName())
+                ->toMediaCollection('products');
+        }
+
         session()->flash('message', 'Product succesvol bijgewerkt!');
 
         $tenant = app(\App\Services\TenantManager::class)->getTenant();
 
-        return redirect()->route('tenant.products.index', ['tenant' => $tenant->slug]);
+        return redirect()->route('tenant.products.manage', ['tenant' => $tenant->slug]);
     }
 
     public function render()

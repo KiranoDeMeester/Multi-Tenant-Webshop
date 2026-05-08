@@ -22,7 +22,10 @@
             <flux:menu.item :href="route('profile.edit')" icon="cog" wire:navigate>
                 {{ __('Settings') }}
             </flux:menu.item>
-            <form method="POST" action="{{ route('logout') }}" class="w-full">
+            @php
+                $currentTenant = app(\App\Services\TenantManager::class)->getTenant();
+            @endphp
+            <form method="POST" action="{{ route('tenant.logout', ['tenant' => $currentTenant?->slug]) }}" class="w-full">
                 @csrf
                 <flux:menu.item
                     as="button"

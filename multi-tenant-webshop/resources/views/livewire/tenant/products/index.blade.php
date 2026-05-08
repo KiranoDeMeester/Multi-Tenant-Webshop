@@ -23,8 +23,11 @@
                         <flux:table.cell>
                             <div class="flex items-center gap-3">
                                 <div class="h-10 w-10 rounded-lg bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center overflow-hidden">
-                                    @if($product->image_url)
-                                        <img src="{{ $product->image_url }}" alt="" class="object-cover w-full h-full">
+                                    @php
+                                        $displayImage = $product->getFirstMediaUrl('products', 'thumb') ?: $product->image_url;
+                                    @endphp
+                                    @if($displayImage)
+                                        <img src="{{ $displayImage }}" alt="" class="object-cover w-full h-full">
                                     @else
                                         <flux:icon name="archive-box" class="text-zinc-400" />
                                     @endif
