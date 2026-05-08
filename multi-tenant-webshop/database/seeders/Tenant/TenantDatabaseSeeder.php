@@ -92,5 +92,8 @@ class TenantDatabaseSeeder extends Seeder
             ]
         );
         $varL->attributeValues()->sync([$sizeL->id]);
+
+        // 5. Generate more random products for the catalog
+        Product::factory()->count(20)->create();
     }
 }

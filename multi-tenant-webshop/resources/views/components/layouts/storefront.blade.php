@@ -44,6 +44,23 @@
     </head>
     <body class="min-h-screen bg-neutral-50 font-sans antialiased text-neutral-900">
         
+        @if(auth('tenant')->check())
+            <div class="bg-indigo-600 text-white py-2 px-4 shadow-sm relative z-[60]">
+                <div class="max-w-7xl mx-auto flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                        <span class="text-xs font-bold tracking-wider uppercase">{{ __('Admin Modus Actief') }}</span>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <flux:text size="sm" class="text-indigo-100 hidden sm:block">{{ __('Je bekijkt de shop als beheerder') }}</flux:text>
+                        <flux:button variant="primary" size="xs" icon="squares-2x2" :href="route('tenant.dashboard')" class="bg-white !text-indigo-600 hover:bg-indigo-50 border-none font-bold">
+                            {{ __('Dashboard') }}
+                        </flux:button>
+                    </div>
+                </div>
+            </div>
+        @endif
+
         <!-- Navbar -->
         <header class="bg-white border-b border-neutral-100 sticky top-0 z-50">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -54,8 +71,8 @@
                         </a>
                         
                         <nav class="hidden md:flex items-center gap-6">
-                            <a href="/" class="text-sm font-medium hover:text-primary transition-colors">{{ __('Home') }}</a>
-                            <a href="#" class="text-sm font-medium hover:text-primary transition-colors">{{ __('Producten') }}</a>
+                            <a href="{{ route('storefront.products.index') }}" class="text-sm font-medium hover:text-primary transition-colors">{{ __('Home') }}</a>
+                            <a href="{{ route('storefront.products.index') }}" class="text-sm font-medium hover:text-primary transition-colors">{{ __('Producten') }}</a>
                             <a href="#" class="text-sm font-medium hover:text-primary transition-colors">{{ __('Over ons') }}</a>
                         </nav>
                     </div>
@@ -63,8 +80,10 @@
                     <div class="flex items-center gap-4">
                         <flux:button variant="ghost" icon="magnifying-glass" size="sm" />
                         <flux:button variant="ghost" icon="shopping-bag" size="sm" />
+                        
                         <div class="h-6 w-px bg-neutral-200"></div>
-                        <flux:button variant="ghost" icon="user" href="/login" size="sm" />
+
+                        <livewire:storefront.navigation.user-dropdown />
                     </div>
                 </div>
             </div>

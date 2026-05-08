@@ -5,18 +5,22 @@ namespace App\Livewire\Tenant\Products;
 use App\Models\Tenant\Product;
 use App\Models\Tenant\Category;
 use Livewire\Component;
+use Livewire\WithFileUploads;
 use Livewire\Attributes\Layout;
 use Illuminate\Support\Str;
 
 #[Layout('layouts.tenant')]
 class Create extends Component
 {
+    use WithFileUploads;
+
     public string $name = '';
     public string $sku = '';
     public string $description = '';
     public float $price = 0;
     public int $stock = 0;
     public ?string $category_id = null;
+    public $image;
 
     protected $rules = [
         'name' => 'required|string|max:255',
@@ -24,13 +28,14 @@ class Create extends Component
         'price' => 'required|numeric|min:0',
         'stock' => 'required|integer|min:0',
         'category_id' => 'nullable|exists:categories,id',
+        'image' => 'nullable|image|max:2048',
     ];
 
     public function save()
     {
         $this->validate();
 
-        Product::create([
+        $product = Product::create([
             'name' => $this->name,
             'slug' => Str::slug($this->name) . '-' . Str::random(5),
             'sku' => $this->sku,
@@ -40,11 +45,17 @@ class Create extends Component
             'category_id' => $this->category_id,
         ]);
 
+        if ($this->image) {
+            $product->addMedia($this->image->getRealPath())
+                ->usingFileName($this->image->getClientOriginalName())
+                ->toMediaCollection('products');
+        }
+
         session()->flash('message', 'Product succesvol aangemaakt!');
 
         $tenant = app(\App\Services\TenantManager::class)->getTenant();
 
-        return redirect()->route('tenant.products.index', ['tenant' => $tenant->slug]);
+        return redirect()->route('tenant.products.manage', ['tenant' => $tenant->slug]);
     }
 
     public function render()

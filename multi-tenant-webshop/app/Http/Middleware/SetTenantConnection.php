@@ -25,6 +25,8 @@ class SetTenantConnection
         // If we are on the central domain, keep the landlord connection
         $allowedCentralHosts = [$centralDomain, 'platform.' . $centralDomain, 'localhost', '127.0.0.1'];
         if (in_array($host, $allowedCentralHosts)) {
+            \Illuminate\Support\Facades\Config::set('database.default', env('DB_CONNECTION', 'landlord'));
+            \Illuminate\Support\Facades\DB::purge('tenant');
             return $next($request);
         }
 
