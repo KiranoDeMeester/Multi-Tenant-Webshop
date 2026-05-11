@@ -15,6 +15,10 @@ return Application::configure(basePath: dirname(__DIR__))
             \App\Http\Middleware\SetTenantConnection::class,
         ]);
 
+        $middleware->validateCsrfTokens(except: [
+            'stripe/webhook',
+        ]);
+
         $middleware->alias([
             'central' => \App\Http\Middleware\EnsureCentralDomain::class,
             'tenant' => \App\Http\Middleware\SetTenantConnection::class,

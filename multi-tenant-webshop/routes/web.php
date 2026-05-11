@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\StripeConnectController;
+use App\Http\Controllers\StripeWebhookController;
 
 // Central Domain Routes (Platform Admin)
 $centralDomains = [
@@ -22,6 +23,8 @@ foreach ($centralDomains as $domain) {
             // Stripe Callback (must be on central domain)
             Route::get('stripe/callback', [StripeConnectController::class, 'callback'])->name('stripe.callback');
         });
+
+        Route::post('stripe/webhook', [StripeWebhookController::class, 'handle'])->name('stripe.webhook');
 
         require base_path('vendor/laravel/fortify/routes/routes.php');
 

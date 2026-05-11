@@ -40,6 +40,7 @@ return [
         'secret' => env('STRIPE_SECRET'),
         'client_id' => env('STRIPE_CLIENT_ID'),
         'platform_fee' => env('PLATFORM_FEE_PERCENTAGE', 5),
+        'webhook_secret' => env('STRIPE_WEBHOOK_SECRET'),
     ],
 
 ];

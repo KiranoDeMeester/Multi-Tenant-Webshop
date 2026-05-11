@@ -81,12 +81,17 @@
                         <span class="text-4xl font-black text-white tracking-tighter">€{{ number_format($total, 2) }}</span>
                     </div>
 
-                    <button wire:click="checkout" wire:loading.attr="disabled" class="w-full h-20 bg-white text-black text-xl font-black uppercase tracking-[0.2em] rounded-3xl hover:bg-indigo-400 hover:text-white transition-all flex items-center justify-center gap-4 group disabled:opacity-50 disabled:cursor-not-allowed">
-                        <span wire:loading.remove>{{ __('Afrekenen') }}</span>
-                        <span wire:loading>{{ __('Verwerken...') }}</span>
-                        <svg wire:loading.remove xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-6 h-6 group-hover:translate-x-2 transition-transform">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
-                        </svg>
+                    <button wire:click="checkout" wire:loading.attr="disabled" 
+                        class="w-full h-20 bg-white border-4 border-black rounded-[2rem] shadow-[10px_10px_0px_0px_rgba(79,70,229,1)] hover:shadow-none hover:translate-x-1 hover:translate-y-1 transition-all flex items-center justify-center gap-4 group disabled:opacity-50 disabled:cursor-not-allowed !text-black">
+                        <div wire:loading.remove class="flex items-center gap-4 !text-black">
+                            <span class="text-xl font-black uppercase tracking-[0.2em] !text-black">{{ __('Afrekenen') }}</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-6 h-6 group-hover:translate-x-2 transition-transform !text-black">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+                            </svg>
+                        </div>
+                        <div wire:loading class="flex items-center gap-4 !text-black">
+                            <span class="text-xl font-black uppercase tracking-[0.2em] !text-black">{{ __('Verwerken...') }}</span>
+                        </div>
                     </button>
 
                     <div class="mt-12 grid grid-cols-3 gap-6 opacity-40">
