@@ -3,6 +3,7 @@
 namespace App\Livewire\Storefront\Cart;
 
 use App\Services\CartService;
+use App\Actions\Tenant\PrepareCheckoutAction;
 use Livewire\Component;
 use Livewire\Attributes\Title;
 
@@ -19,6 +20,19 @@ class Index extends Component
     {
         app(CartService::class)->updateQuantity($key, $quantity);
         $this->dispatch('cart-updated');
+    }
+
+    public function checkout(PrepareCheckoutAction $prepareCheckout)
+    {
+        try {
+            $checkoutUrl = $prepareCheckout->execute();
+            return redirect($checkoutUrl);
+        } catch (\Exception $e) {
+            $this->dispatch('toast', [
+                'type' => 'error',
+                'message' => $e->getMessage()
+            ]);
+        }
     }
 
     public function render()
