@@ -25,7 +25,7 @@ class PrepareCheckoutAction
      * @return string The Stripe Checkout URL
      * @throws \Exception
      */
-    public function execute(): string
+    public function execute(string $notes = ''): string
     {
         $tenant = $this->tenantManager->getTenant();
         
@@ -39,7 +39,7 @@ class PrepareCheckoutAction
         }
 
         try {
-            return DB::transaction(function () use ($tenant, $items) {
+            return DB::transaction(function () use ($tenant, $items, $notes) {
                 $total = (int) round($this->cartService->getTotal() * 100);
 
                 // 1. Create Order
@@ -48,6 +48,7 @@ class PrepareCheckoutAction
                     'total_amount' => $total,
                     'status' => 'pending',
                     'customer_id' => auth('customer')->id(),
+                    'notes' => $notes,
                 ]);
 
                 // 2. Create Order Items (Snapshots)

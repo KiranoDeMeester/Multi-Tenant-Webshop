@@ -96,9 +96,27 @@
                             <div class="text-xs text-zinc-500">{{ $order->customer->email }}</div>
                         </div>
                     </div>
+                    
+                    @if($order->notes)
+                        <div class="mt-8 pt-8 border-t">
+                            <flux:heading size="md" class="mb-4">{{ __('Bestelnotitie van klant') }}</flux:heading>
+                            <div class="bg-amber-50 border border-amber-200 p-4 rounded-xl text-sm text-amber-900 italic">
+                                "{{ $order->notes }}"
+                            </div>
+                        </div>
+                    @endif
+
                     <flux:button variant="ghost" size="sm" class="w-full" href="{{ route('tenant.customers.index') }}">{{ __('Bekijk Klant') }}</flux:button>
                 @else
                     <p class="text-sm text-zinc-500">{{ __('Gastbestelling') }}</p>
+                    @if($order->notes)
+                        <div class="mt-8 pt-8 border-t">
+                            <flux:heading size="md" class="mb-4">{{ __('Bestelnotitie van klant') }}</flux:heading>
+                            <div class="bg-amber-50 border border-amber-200 p-4 rounded-xl text-sm text-amber-900 italic">
+                                "{{ $order->notes }}"
+                            </div>
+                        </div>
+                    @endif
                 @endif
             </flux:card>
 

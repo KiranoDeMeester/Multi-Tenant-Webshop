@@ -95,6 +95,7 @@ This file tracks the implementation steps. Each step corresponds to a GitHub Iss
 
 - [ ] **Step 21: PDF Invoicing**
   - Generate professional PDF invoices per order with tenant branding.
+  - Configure VAT (BTW) percentage per tenant for invoice accuracy.
   - Automated email sending of invoices.
 
 - [ ] **Step 22: Tenant Sales Analytics Dashboard**
@@ -105,6 +106,7 @@ This file tracks the implementation steps. Each step corresponds to a GitHub Iss
 
 - [ ] **Step 24: SEO & Meta Tag Management**
   - Allow tenants to set custom Meta Titles and Descriptions for every product/page.
+  - Configure flat-fee shipping or free shipping thresholds.
 
 ## Phase 7: Final Polish & Deployment
 
@@ -120,3 +122,9 @@ This file tracks the implementation steps. Each step corresponds to a GitHub Iss
   - Polish the Landlord admin.
   - Create a "Demo Seeder" that generates a beautiful shop with sample products.
 
+## Future Implementations (Backlog)
+
+- [ ] **Step 28: Guest Order Tracking**
+  - Unique tracking links in emails for customers without an account.
+- [ ] **Step 29: Branded Error Pages**
+  - Custom 404/500 pages that maintain tenant styling.

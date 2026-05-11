@@ -10,6 +10,8 @@ use Livewire\Attributes\Title;
 #[Title('Winkelwagen')]
 class Index extends Component
 {
+    public $notes = '';
+
     public function removeItem(string $key)
     {
         app(CartService::class)->remove($key);
@@ -25,7 +27,7 @@ class Index extends Component
     public function checkout(PrepareCheckoutAction $prepareCheckout)
     {
         try {
-            $checkoutUrl = $prepareCheckout->execute();
+            $checkoutUrl = $prepareCheckout->execute($this->notes);
             return redirect($checkoutUrl);
         } catch (\Exception $e) {
             $this->dispatch('toast', [

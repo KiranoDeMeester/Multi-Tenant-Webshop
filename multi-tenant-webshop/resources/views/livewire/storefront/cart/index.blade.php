@@ -74,6 +74,10 @@
                             <span class="text-xs font-black uppercase tracking-widest">{{ __('Verzending') }}</span>
                             <span class="font-black text-indigo-400 uppercase tracking-widest text-[10px]">{{ __('Gratis') }}</span>
                         </div>
+
+                        <div class="pt-6">
+                            <flux:textarea wire:model="notes" placeholder="{{ __('Boodschap voor de winkelier (optioneel)...') }}" label="{{ __('Bestelnotitie') }}" rows="3" />
+                        </div>
                     </div>
 
                     <div class="pt-10 border-t-2 border-neutral-900 flex justify-between items-center mb-12">
