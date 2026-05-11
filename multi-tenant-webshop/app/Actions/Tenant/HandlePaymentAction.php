@@ -10,7 +10,7 @@ class HandlePaymentAction
     /**
      * Handle a successful payment for an order.
      */
-    public function execute(string $orderId, string $paymentIntentId): void
+    public function execute(string $orderId, string $paymentIntentId, ?array $customerDetails = null): void
     {
         $order = Order::findOrFail($orderId);
 
@@ -22,6 +22,7 @@ class HandlePaymentAction
         $order->update([
             'status' => 'paid',
             'stripe_payment_intent_id' => $paymentIntentId,
+            'customer_details' => $customerDetails ?? $order->customer_details,
         ]);
 
         Log::info('Order marked as paid via webhook', [
@@ -29,6 +30,7 @@ class HandlePaymentAction
             'payment_intent_id' => $paymentIntentId
         ]);
 
-        // Future: trigger stock updates, send confirmation emails, etc. (Step 20)
+        // Finalize order logic (Stock decrement, Email)
+        app(FinalizeOrderAction::class)->execute($order);
     }
 }

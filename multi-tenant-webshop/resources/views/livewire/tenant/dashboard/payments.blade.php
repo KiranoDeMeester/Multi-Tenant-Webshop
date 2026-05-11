@@ -56,7 +56,7 @@
                         </div>
 
                         <div class="flex flex-col gap-4">
-                            <flux:button href="{{ route('stripe.connect') }}" variant="primary" size="lg" class="w-full sm:w-auto" icon="link">
+                            <flux:button href="{{ route('stripe.connect') }}" variant="primary" class="w-full sm:w-auto" icon="link">
                                 Verbinden met Stripe
                             </flux:button>
                             <p class="text-xs text-neutral-500">Je wordt doorgestuurd naar Stripe om de koppeling te voltooien.</p>
