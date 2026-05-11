@@ -39,6 +39,10 @@ Route::domain('{tenant}.' . config('app.central_domain', 'localhost'))->middlewa
     Route::get('/mijn-account/profiel', \App\Livewire\Storefront\Account\Profile::class)->name('storefront.account.profile')->middleware('auth:customer,tenant');
     Route::get('/mijn-account/adressen', \App\Livewire\Storefront\Account\Addresses::class)->name('storefront.account.addresses')->middleware('auth:customer,tenant');
     
+    // Checkout flow
+    Route::get('/checkout/success', \App\Livewire\Storefront\Checkout\Success::class)->name('storefront.checkout.success');
+    Route::get('/checkout/cancel', \App\Livewire\Storefront\Checkout\Cancel::class)->name('storefront.checkout.cancel');
+
     // Auth Routes for customers
     Route::get('/login', \App\Livewire\Storefront\Auth\Login::class)->name('storefront.login');
     
