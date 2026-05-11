@@ -82,7 +82,9 @@ Route::domain('{tenant}.' . config('app.central_domain', 'localhost'))->middlewa
             Route::get('/categories', \App\Livewire\Tenant\Categories\Index::class)->name('tenant.categories.index');
             Route::get('/categories/create', \App\Livewire\Tenant\Categories\Create::class)->name('tenant.categories.create');
             Route::get('/categories/{category}/edit', \App\Livewire\Tenant\Categories\Edit::class)->name('tenant.categories.edit');
-            Route::get('/orders', function() { return 'Bestellingen Overzicht (Coming Soon)'; })->name('tenant.orders.index');
+            Route::get('/orders', \App\Livewire\Tenant\Orders\Index::class)->name('tenant.orders.index');
+            Route::get('/orders/{order}', \App\Livewire\Tenant\Orders\Show::class)->name('tenant.orders.show');
+            Route::get('/orders/{order}/edit', \App\Livewire\Tenant\Orders\Edit::class)->name('tenant.orders.edit');
             Route::get('/customers', function() { return 'Klanten Overzicht (Coming Soon)'; })->name('tenant.customers.index');
             Route::get('/settings', \App\Livewire\Tenant\Settings\StyleDashboard::class)->name('tenant.settings');
             Route::get('/payments', \App\Livewire\Tenant\Dashboard\Payments::class)->name('tenant.payments');

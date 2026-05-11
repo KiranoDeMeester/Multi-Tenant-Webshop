@@ -81,9 +81,19 @@ class StripeWebhookController extends Controller
             // 1. Switch naar de juiste tenant database context
             app(TenantManager::class)->setTenant($tenant);
 
+            // Extract customer details for snapshots
+            $customerDetails = [
+                'email' => $session->customer_details->email ?? null,
+                'name' => $session->customer_details->name ?? null,
+                'address' => $session->customer_details->address ?? null,
+            ];
+
             // 2. Voer de betalings-afhandeling uit binnen die context
-            // We gebruiken de container om de Action te resolven zodat dependencies geïnjecteerd worden
-            app(HandlePaymentAction::class)->execute($orderId, $session->payment_intent ?? 'n/a');
+            app(HandlePaymentAction::class)->execute(
+                $orderId, 
+                $session->payment_intent ?? 'n/a',
+                $customerDetails
+            );
 
             Log::info("Stripe Webhook succesvol verwerkt voor tenant {$tenant->name}", [
                 'order_id' => $orderId
