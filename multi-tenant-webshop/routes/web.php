@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\StripeConnectController;
 
 // Central Domain Routes (Platform Admin)
 $centralDomains = [
@@ -17,6 +18,9 @@ foreach ($centralDomains as $domain) {
         Route::middleware(['auth', 'verified'])->group(function () {
             Route::view('dashboard', 'dashboard')->name('dashboard');
             Route::get('admin/tenants', \App\Livewire\Admin\Tenants\Index::class)->name('admin.tenants');
+            
+            // Stripe Callback (must be on central domain)
+            Route::get('stripe/callback', [StripeConnectController::class, 'callback'])->name('stripe.callback');
         });
 
         require base_path('vendor/laravel/fortify/routes/routes.php');
@@ -74,6 +78,8 @@ Route::domain('{tenant}.' . config('app.central_domain', 'localhost'))->middlewa
             Route::get('/orders', function() { return 'Bestellingen Overzicht (Coming Soon)'; })->name('tenant.orders.index');
             Route::get('/customers', function() { return 'Klanten Overzicht (Coming Soon)'; })->name('tenant.customers.index');
             Route::get('/settings', \App\Livewire\Tenant\Settings\StyleDashboard::class)->name('tenant.settings');
+            Route::get('/payments', \App\Livewire\Tenant\Dashboard\Payments::class)->name('tenant.payments');
+            Route::get('/stripe/connect', [StripeConnectController::class, 'redirect'])->name('stripe.connect');
         });
     });
 });

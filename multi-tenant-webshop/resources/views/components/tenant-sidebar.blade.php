@@ -44,6 +44,9 @@
             <flux:sidebar.item icon="cog-6-tooth" :href="route('tenant.settings')" :current="request()->routeIs('tenant.settings')" wire:navigate>
                 {{ __('Winkel Instellingen') }}
             </flux:sidebar.item>
+            <flux:sidebar.item icon="credit-card" :href="route('tenant.payments')" :current="request()->routeIs('tenant.payments')" wire:navigate>
+                {{ __('Betalingen & Stripe') }}
+            </flux:sidebar.item>
         </flux:sidebar.group>
     </flux:sidebar.nav>
 

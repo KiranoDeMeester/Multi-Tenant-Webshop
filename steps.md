@@ -53,21 +53,21 @@ This file tracks the implementation steps. Each step corresponds to a GitHub Iss
   - Implement a `ProductAttribute` system for variations.
   - Logic for different prices per variation.
 
-- [ ] **Step 12: Stock & Inventory Control**
+- [x] **Step 12: Stock & Inventory Control**
   - Add stock tracking to products.
   - Implement "Out of stock" logic in the frontend.
 
 ## Phase 4: The Storefront & Theming
 
-- [ ] **Step 13: Dynamic CSS Variable Injection**
+- [x] **Step 13: Dynamic CSS Variable Injection**
   - Create a "Style Dashboard" for tenants to pick colors/fonts.
   - Inject these into the root layout via Blade.
 
-- [ ] **Step 14: Layout Selection System**
+- [x] **Step 14: Layout Selection System**
   - Implement multiple layout components (Modern vs. Minimal).
   - Allow tenants to toggle features (e.g., "Show Hero Banner", "Newsletter Popup").
 
-- [ ] **Step 15: Storefront: Product Catalog**
+- [x] **Step 15: Storefront: Product Catalog**
   - Build the listing page with Livewire (Filters for categories, price, search).
   - Implement the "Product Details" page.
 
