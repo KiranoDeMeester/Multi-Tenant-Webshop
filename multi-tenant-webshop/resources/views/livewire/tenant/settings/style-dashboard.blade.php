@@ -27,6 +27,10 @@
                 class="pb-4 px-2 text-sm font-bold transition-all border-b-2 {{ $tab === 'layout' ? 'border-indigo-600 text-indigo-600' : 'border-transparent text-neutral-500 hover:text-neutral-700' }}">
             {{ __('Layout & Functies') }}
         </button>
+        <a href="{{ route('tenant.settings.invoice') }}" 
+                class="pb-4 px-2 text-sm font-bold transition-all border-b-2 border-transparent text-neutral-500 hover:text-neutral-700">
+            {{ __('Factuur Instellingen') }}
+        </a>
     </div>
 
     <form wire:submit="save">

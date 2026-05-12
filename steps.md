@@ -71,24 +71,24 @@ This file tracks the implementation steps. Each step corresponds to a GitHub Iss
   - Build the listing page with Livewire (Filters for categories, price, search).
   - Implement the "Product Details" page.
 
-- [ ] **Step 16: Interactive Shopping Cart**
+- [x] **Step 16: Interactive Shopping Cart**
   - Build a persistent database-driven or session-based cart system.
   - Add Livewire "Side-cart" animations.
 
 ## Phase 5: Payments & Stripe Connect (The "Money" Phase)
 
-- [ ] **Step 17: Stripe Connect Onboarding Flow**
+- [x] **Step 17: Stripe Connect Onboarding Flow**
   - Build the "Connect with Stripe" dashboard for tenants.
   - Handle the OAuth callback and secure the `stripe_account_id`.
 
-- [ ] **Step 18: Checkout Engine**
+- [x] **Step 18: Checkout Engine**
   - Implement Stripe Checkout sessions.
   - Use "Destination Charges" to route money to tenants while taking a platform fee.
 
-- [ ] **Step 19: Webhook Global Handler**
+- [x] **Step 19: Webhook Global Handler**
   - Build a system that listens to all Stripe webhooks and routes them to the specific tenant's `HandlePaymentAction`.
 
-- [ ] **Step 20: Order Management & Logic**
+- [x] **Step 20: Order Management & Logic**
   - Implement the "Success" flow: Mark paid, update stock, notify customer.
 
 ## Phase 6: Advanced Business Features

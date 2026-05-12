@@ -42,7 +42,10 @@
 
         <flux:sidebar.group :heading="__('Instellingen')" class="grid">
             <flux:sidebar.item icon="cog-6-tooth" :href="route('tenant.settings')" :current="request()->routeIs('tenant.settings')" wire:navigate>
-                {{ __('Winkel Instellingen') }}
+                {{ __('Huisstijl & Layout') }}
+            </flux:sidebar.item>
+            <flux:sidebar.item icon="document-text" :href="route('tenant.settings.invoice')" :current="request()->routeIs('tenant.settings.invoice')" wire:navigate>
+                {{ __('Factuur Instellingen') }}
             </flux:sidebar.item>
             <flux:sidebar.item icon="credit-card" :href="route('tenant.payments')" :current="request()->routeIs('tenant.payments')" wire:navigate>
                 {{ __('Betalingen & Stripe') }}

@@ -87,6 +87,7 @@ Route::domain('{tenant}.' . config('app.central_domain', 'localhost'))->middlewa
             Route::get('/orders/{order}/edit', \App\Livewire\Tenant\Orders\Edit::class)->name('tenant.orders.edit');
             Route::get('/customers', function() { return 'Klanten Overzicht (Coming Soon)'; })->name('tenant.customers.index');
             Route::get('/settings', \App\Livewire\Tenant\Settings\StyleDashboard::class)->name('tenant.settings');
+            Route::get('/settings/invoice', \App\Livewire\Tenant\Settings\InvoiceSettings::class)->name('tenant.settings.invoice');
             Route::get('/payments', \App\Livewire\Tenant\Dashboard\Payments::class)->name('tenant.payments');
             Route::get('/stripe/connect', [StripeConnectController::class, 'redirect'])->name('stripe.connect');
         });
