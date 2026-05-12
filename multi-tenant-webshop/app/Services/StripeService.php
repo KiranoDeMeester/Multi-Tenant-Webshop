@@ -39,6 +39,20 @@ class StripeService
                 ];
             })->toArray();
 
+            // Add shipping as a line item if it exists
+            if ($order->shipping_amount > 0) {
+                $lineItems[] = [
+                    'price_data' => [
+                        'currency' => 'eur',
+                        'product_data' => [
+                            'name' => __('Verzendkosten'),
+                        ],
+                        'unit_amount' => $order->shipping_amount,
+                    ],
+                    'quantity' => 1,
+                ];
+            }
+
             return Session::create([
                 'payment_method_types' => ['card', 'ideal'],
                 'line_items' => $lineItems,

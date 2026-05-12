@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Tenant\Product;
+use App\Models\Tenant\Setting;
 use Illuminate\Support\Facades\Session;
 
 class CartService
@@ -94,5 +95,30 @@ class CartService
         return array_reduce($this->getItems(), function ($count, $item) {
             return $count + $item['quantity'];
         }, 0);
+    }
+
+    /**
+     * Get shipping fee based on settings and total.
+     */
+    public function getShippingFee(): float
+    {
+        $total = $this->getTotal();
+        
+        $shippingFee = (float) (Setting::where('key', 'shipping_fee')->first()?->value ?? 0);
+        $threshold = (float) (Setting::where('key', 'free_shipping_threshold')->first()?->value ?? 0);
+
+        if ($threshold > 0 && $total >= $threshold) {
+            return 0;
+        }
+
+        return $shippingFee;
+    }
+
+    /**
+     * Get grand total including shipping.
+     */
+    public function getGrandTotal(): float
+    {
+        return $this->getTotal() + $this->getShippingFee();
     }
 }

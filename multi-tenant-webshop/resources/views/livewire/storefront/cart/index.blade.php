@@ -72,7 +72,11 @@
                         </div>
                         <div class="flex justify-between text-neutral-400">
                             <span class="text-xs font-black uppercase tracking-widest">{{ __('Verzending') }}</span>
-                            <span class="font-black text-indigo-400 uppercase tracking-widest text-[10px]">{{ __('Gratis') }}</span>
+                            @if($shippingFee > 0)
+                                <span class="font-black text-white">€{{ number_format($shippingFee, 2) }}</span>
+                            @else
+                                <span class="font-black text-indigo-400 uppercase tracking-widest text-[10px]">{{ __('Gratis') }}</span>
+                            @endif
                         </div>
 
                         <div class="pt-6">
@@ -82,7 +86,7 @@
 
                     <div class="pt-10 border-t-2 border-neutral-900 flex justify-between items-center mb-12">
                         <span class="text-xs font-black uppercase tracking-[0.3em]">{{ __('Totaal') }}</span>
-                        <span class="text-4xl font-black text-white tracking-tighter">€{{ number_format($total, 2) }}</span>
+                        <span class="text-4xl font-black text-white tracking-tighter">€{{ number_format($grandTotal, 2) }}</span>
                     </div>
 
                     <button wire:click="checkout" wire:loading.attr="disabled" 

@@ -40,12 +40,15 @@ class PrepareCheckoutAction
 
         try {
             return DB::transaction(function () use ($tenant, $items, $notes) {
-                $total = (int) round($this->cartService->getTotal() * 100);
+                $subtotal = (int) round($this->cartService->getTotal() * 100);
+                $shipping = (int) round($this->cartService->getShippingFee() * 100);
+                $total = $subtotal + $shipping;
 
                 // 1. Create Order
                 $order = Order::create([
                     'order_number' => 'ORD-' . strtoupper(Str::random(8)),
                     'total_amount' => $total,
+                    'shipping_amount' => $shipping,
                     'status' => 'pending',
                     'customer_id' => auth('customer')->id(),
                     'notes' => $notes,

@@ -22,6 +22,8 @@ class Edit extends Component
     public float $price = 0;
     public int $stock = 0;
     public ?string $category_id = null;
+    public string $meta_title = '';
+    public string $meta_description = '';
     public $newImage;
 
     protected function rules()
@@ -32,6 +34,8 @@ class Edit extends Component
             'price' => 'required|numeric|min:0',
             'stock' => 'required|integer|min:0',
             'category_id' => 'nullable|exists:categories,id',
+            'meta_title' => 'nullable|string|max:255',
+            'meta_description' => 'nullable|string|max:1000',
             'newImage' => 'nullable|image|max:2048',
         ];
     }
@@ -45,6 +49,8 @@ class Edit extends Component
         $this->price = (float) $product->price;
         $this->stock = (int) $product->stock;
         $this->category_id = $product->category_id;
+        $this->meta_title = $product->meta_title ?? '';
+        $this->meta_description = $product->meta_description ?? '';
     }
 
     public function save()
@@ -59,6 +65,8 @@ class Edit extends Component
             'price' => $this->price,
             'stock' => $this->stock,
             'category_id' => $this->category_id,
+            'meta_title' => $this->meta_title,
+            'meta_description' => $this->meta_description,
         ]);
 
         if ($this->newImage) {

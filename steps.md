@@ -104,7 +104,7 @@ This file tracks the implementation steps. Each step corresponds to a GitHub Iss
 - [x] **Step 23: Customer Order History**
   - Build a "My Account" area for storefront customers.
 
-- [ ] **Step 24: SEO & Meta Tag Management**
+- [x] **Step 24: SEO & Meta Tag Management**
   - Allow tenants to set custom Meta Titles and Descriptions for every product/page.
   - Configure flat-fee shipping or free shipping thresholds.
 

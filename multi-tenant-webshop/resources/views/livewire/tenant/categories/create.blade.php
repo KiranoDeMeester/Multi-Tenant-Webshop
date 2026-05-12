@@ -17,6 +17,14 @@
             
             <flux:textarea wire:model="description" :label="__('Beschrijving')" rows="4" placeholder="{{ __('Korte beschrijving van deze categorie...') }}" />
 
+            <div class="pt-6 border-t border-zinc-100 dark:border-zinc-800 space-y-6">
+                <flux:heading size="lg">{{ __('SEO Instellingen') }}</flux:heading>
+                <flux:text size="sm">{{ __('Optimaliseer hoe deze categorie verschijnt in zoekmachines.') }}</flux:text>
+                
+                <flux:input wire:model="meta_title" :label="__('Meta Title')" :placeholder="$name ?: __('Kies een titel...')" />
+                <flux:textarea wire:model="meta_description" :label="__('Meta Description')" rows="3" :placeholder="__('Korte samenvatting voor zoekresultaten...')" />
+            </div>
+
             <div class="flex items-center justify-end gap-3 pt-4 border-t border-zinc-100 dark:border-zinc-800">
                 <flux:button :href="route('tenant.categories.index', ['tenant' => request()->route('tenant')])" variant="ghost">{{ __('Annuleren') }}</flux:button>
                 <flux:button type="submit" variant="primary">{{ __('Categorie Opslaan') }}</flux:button>

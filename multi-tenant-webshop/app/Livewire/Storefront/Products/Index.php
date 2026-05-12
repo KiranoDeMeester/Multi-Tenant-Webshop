@@ -74,9 +74,16 @@ class Index extends Component
 
         $categories = Category::all();
 
+        $selectedCategory = null;
+        if ($this->category) {
+            $selectedCategory = Category::where('slug', $this->category)->first();
+        }
+
         return view('livewire.storefront.products.index', [
             'products' => $products,
             'categories' => $categories,
+            'title' => $selectedCategory?->meta_title ?: $selectedCategory?->name,
+            'meta_description' => $selectedCategory?->meta_description ?: ($selectedCategory ? str($selectedCategory->description)->limit(160) : null),
         ]);
     }
 }

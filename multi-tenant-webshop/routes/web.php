@@ -93,6 +93,7 @@ Route::domain('{tenant}.' . config('app.central_domain', 'localhost'))->middlewa
             Route::get('/customers', \App\Livewire\Tenant\Customers\Index::class)->name('tenant.customers.index');
             Route::get('/customers/{customer}', \App\Livewire\Tenant\Customers\Show::class)->name('tenant.customers.show');
             Route::get('/settings', \App\Livewire\Tenant\Settings\StyleDashboard::class)->name('tenant.settings');
+            Route::get('/settings/shop', \App\Livewire\Tenant\Settings\ShopSettings::class)->name('tenant.settings.shop');
             Route::get('/settings/invoice', \App\Livewire\Tenant\Settings\InvoiceSettings::class)->name('tenant.settings.invoice');
             Route::get('/payments', \App\Livewire\Tenant\Dashboard\Payments::class)->name('tenant.payments');
             Route::get('/stripe/connect', [StripeConnectController::class, 'redirect'])->name('stripe.connect');

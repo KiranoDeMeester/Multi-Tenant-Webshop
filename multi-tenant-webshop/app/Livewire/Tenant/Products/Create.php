@@ -20,6 +20,8 @@ class Create extends Component
     public float $price = 0;
     public int $stock = 0;
     public ?string $category_id = null;
+    public string $meta_title = '';
+    public string $meta_description = '';
     public $image;
 
     protected $rules = [
@@ -28,6 +30,8 @@ class Create extends Component
         'price' => 'required|numeric|min:0',
         'stock' => 'required|integer|min:0',
         'category_id' => 'nullable|exists:categories,id',
+        'meta_title' => 'nullable|string|max:255',
+        'meta_description' => 'nullable|string|max:1000',
         'image' => 'nullable|image|max:2048',
     ];
 
@@ -43,6 +47,8 @@ class Create extends Component
             'price' => $this->price,
             'stock' => $this->stock,
             'category_id' => $this->category_id,
+            'meta_title' => $this->meta_title,
+            'meta_description' => $this->meta_description,
         ]);
 
         if ($this->image) {
