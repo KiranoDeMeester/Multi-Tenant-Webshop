@@ -39,9 +39,14 @@ Route::domain('{tenant}.' . config('app.central_domain', 'localhost'))->middlewa
     Route::get('/product/{slug}', \App\Livewire\Storefront\Products\Show::class)->name('storefront.products.show');
     Route::get('/winkelwagen', \App\Livewire\Storefront\Cart\Index::class)->name('storefront.cart.index');
     Route::get('/mijn-account', \App\Livewire\Storefront\Account\Dashboard::class)->name('storefront.account')->middleware('auth:customer,tenant');
+    Route::get('/mijn-account/bestellingen', \App\Livewire\Storefront\Account\Orders::class)->name('storefront.account.orders')->middleware('auth:customer,tenant');
     Route::get('/mijn-account/profiel', \App\Livewire\Storefront\Account\Profile::class)->name('storefront.account.profile')->middleware('auth:customer,tenant');
     Route::get('/mijn-account/adressen', \App\Livewire\Storefront\Account\Addresses::class)->name('storefront.account.addresses')->middleware('auth:customer,tenant');
     
+    // Info pages
+    Route::get('/verzending', \App\Livewire\Storefront\Pages\Shipping::class)->name('storefront.pages.shipping');
+    Route::get('/retourneren', \App\Livewire\Storefront\Pages\Returns::class)->name('storefront.pages.returns');
+
     // Checkout flow
     Route::get('/checkout/success', \App\Livewire\Storefront\Checkout\Success::class)->name('storefront.checkout.success');
     Route::get('/checkout/cancel', \App\Livewire\Storefront\Checkout\Cancel::class)->name('storefront.checkout.cancel');
@@ -85,7 +90,8 @@ Route::domain('{tenant}.' . config('app.central_domain', 'localhost'))->middlewa
             Route::get('/orders', \App\Livewire\Tenant\Orders\Index::class)->name('tenant.orders.index');
             Route::get('/orders/{order}', \App\Livewire\Tenant\Orders\Show::class)->name('tenant.orders.show');
             Route::get('/orders/{order}/edit', \App\Livewire\Tenant\Orders\Edit::class)->name('tenant.orders.edit');
-            Route::get('/customers', function() { return 'Klanten Overzicht (Coming Soon)'; })->name('tenant.customers.index');
+            Route::get('/customers', \App\Livewire\Tenant\Customers\Index::class)->name('tenant.customers.index');
+            Route::get('/customers/{customer}', \App\Livewire\Tenant\Customers\Show::class)->name('tenant.customers.show');
             Route::get('/settings', \App\Livewire\Tenant\Settings\StyleDashboard::class)->name('tenant.settings');
             Route::get('/settings/invoice', \App\Livewire\Tenant\Settings\InvoiceSettings::class)->name('tenant.settings.invoice');
             Route::get('/payments', \App\Livewire\Tenant\Dashboard\Payments::class)->name('tenant.payments');

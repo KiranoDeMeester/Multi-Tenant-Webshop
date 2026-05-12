@@ -11,7 +11,7 @@
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
         <!-- Bestellingen Kaart -->
-        <a href="#" class="bg-white p-8 rounded-3xl shadow-sm border border-zinc-100 flex flex-col items-center text-center group hover:border-indigo-400 hover:shadow-md transition-all duration-300">
+        <a href="{{ route('storefront.account.orders') }}" wire:navigate class="bg-white p-8 rounded-3xl shadow-sm border border-zinc-100 flex flex-col items-center text-center group hover:border-indigo-400 hover:shadow-md transition-all duration-300">
             <div class="w-14 h-14 bg-zinc-950 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-indigo-600 transition-colors">
                 <flux:icon name="shopping-bag" class="text-white" />
             </div>

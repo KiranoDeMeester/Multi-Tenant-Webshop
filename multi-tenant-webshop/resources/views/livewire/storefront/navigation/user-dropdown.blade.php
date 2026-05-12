@@ -16,7 +16,7 @@
                         <flux:menu.separator />
                     @endif
                     <flux:menu.item icon="user-circle" :href="route('storefront.account')" wire:navigate>{{ __('Mijn Account') }}</flux:menu.item>
-                    <flux:menu.item icon="shopping-bag">{{ __('Mijn Bestellingen') }}</flux:menu.item>
+                    <flux:menu.item icon="shopping-bag" :href="route('storefront.account.orders')" wire:navigate>{{ __('Mijn Bestellingen') }}</flux:menu.item>
                     <flux:menu.separator />
                     <flux:menu.item wire:click="logout" wire:confirm="{{ __('Weet je zeker dat je wilt uitloggen?') }}" icon="arrow-right-start-on-rectangle" variant="danger">{{ __('Uitloggen') }}</flux:menu.item>
                 </flux:menu>
