@@ -101,7 +101,7 @@ This file tracks the implementation steps. Each step corresponds to a GitHub Iss
 - [x] **Step 22: Tenant Sales Analytics Dashboard**
   - Build charts (Chart.js) for Sales Volume, Top Products, and Customer Growth.
 
-- [ ] **Step 23: Customer Order History**
+- [x] **Step 23: Customer Order History**
   - Build a "My Account" area for storefront customers.
 
 - [ ] **Step 24: SEO & Meta Tag Management**

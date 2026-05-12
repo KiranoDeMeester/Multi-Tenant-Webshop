@@ -118,8 +118,8 @@
                     <h4 class="text-xs font-black uppercase tracking-[0.3em] mb-8 text-neutral-500">{{ __('Support') }}</h4>
                     <ul class="space-y-4 text-sm font-bold">
                         <li><a href="#" class="hover:text-indigo-400 transition-colors uppercase tracking-widest">{{ __('Contact') }}</a></li>
-                        <li><a href="#" class="hover:text-indigo-400 transition-colors uppercase tracking-widest">{{ __('Verzending') }}</a></li>
-                        <li><a href="#" class="hover:text-indigo-400 transition-colors uppercase tracking-widest">{{ __('Retourneren') }}</a></li>
+                        <li><a href="{{ route('storefront.pages.shipping') }}" wire:navigate class="hover:text-indigo-400 transition-colors uppercase tracking-widest">{{ __('Verzending') }}</a></li>
+                        <li><a href="{{ route('storefront.pages.returns') }}" wire:navigate class="hover:text-indigo-400 transition-colors uppercase tracking-widest">{{ __('Retourneren') }}</a></li>
                     </ul>
                 </div>
                 <div>
