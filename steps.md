@@ -93,7 +93,7 @@ This file tracks the implementation steps. Each step corresponds to a GitHub Iss
 
 ## Phase 6: Advanced Business Features
 
-- [ ] **Step 21: PDF Invoicing**
+- [x] **Step 21: PDF Invoicing**
   - Generate professional PDF invoices per order with tenant branding.
   - Automated email sending of invoices.
 
