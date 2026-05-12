@@ -3,9 +3,11 @@
 namespace App\Mail;
 
 use App\Models\Tenant\Order;
+use App\Services\Tenant\InvoiceService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
@@ -52,6 +54,12 @@ class OrderPaidMail extends Mailable implements ShouldQueue
      */
     public function attachments(): array
     {
-        return [];
+        $invoiceService = app(InvoiceService::class);
+        $pdfContent = $invoiceService->generate($this->order);
+
+        return [
+            Attachment::fromData(fn () => $pdfContent, "Factuur-{$this->order->order_number}.pdf")
+                ->withMime('application/pdf'),
+        ];
     }
 }
