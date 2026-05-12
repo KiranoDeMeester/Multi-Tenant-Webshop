@@ -44,6 +44,8 @@ class Index extends Component
         return view('livewire.storefront.cart.index', [
             'items' => $cartService->getItems(),
             'total' => $cartService->getTotal(),
+            'shippingFee' => $cartService->getShippingFee(),
+            'grandTotal' => $cartService->getGrandTotal(),
             'count' => $cartService->getCount(),
         ])->layout('components.layouts.storefront');
     }

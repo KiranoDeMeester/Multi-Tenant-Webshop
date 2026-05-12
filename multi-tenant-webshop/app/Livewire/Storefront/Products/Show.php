@@ -45,6 +45,9 @@ class Show extends Component
 
     public function render()
     {
-        return view('livewire.storefront.products.show');
+        return view('livewire.storefront.products.show', [
+            'title' => $this->product->meta_title ?: $this->product->name,
+            'meta_description' => $this->product->meta_description ?: str($this->product->description)->limit(160),
+        ]);
     }
 }

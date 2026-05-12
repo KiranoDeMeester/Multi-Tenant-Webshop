@@ -69,6 +69,16 @@
                 </div>
             </flux:card>
 
+            <flux:card>
+                <flux:heading size="lg" class="mb-6">{{ __('SEO Instellingen') }}</flux:heading>
+                <flux:text class="mb-6">{{ __('Optimaliseer hoe dit product verschijnt in zoekmachines zoals Google.') }}</flux:text>
+                
+                <div class="space-y-6">
+                    <flux:input wire:model="meta_title" :label="__('Meta Title')" :placeholder="$name ?: __('Kies een titel...')" />
+                    <flux:textarea wire:model="meta_description" :label="__('Meta Description')" rows="3" :placeholder="__('Korte samenvatting voor zoekresultaten...')" />
+                </div>
+            </flux:card>
+
             <div class="flex items-center justify-end gap-4 pt-4">
                 <flux:button :href="route('tenant.products.manage', ['tenant' => request()->route('tenant')])" variant="ghost" class="px-8">{{ __('Annuleren') }}</flux:button>
                 <flux:button type="submit" variant="primary" class="px-10 h-12 text-lg">{{ __('Product Opslaan') }}</flux:button>

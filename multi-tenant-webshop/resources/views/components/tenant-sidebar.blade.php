@@ -44,6 +44,9 @@
             <flux:sidebar.item icon="cog-6-tooth" :href="route('tenant.settings')" :current="request()->routeIs('tenant.settings')" wire:navigate>
                 {{ __('Huisstijl & Layout') }}
             </flux:sidebar.item>
+            <flux:sidebar.item icon="adjustments-horizontal" :href="route('tenant.settings.shop')" :current="request()->routeIs('tenant.settings.shop')" wire:navigate>
+                {{ __('Winkel Instellingen') }}
+            </flux:sidebar.item>
             <flux:sidebar.item icon="document-text" :href="route('tenant.settings.invoice')" :current="request()->routeIs('tenant.settings.invoice')" wire:navigate>
                 {{ __('Factuur Instellingen') }}
             </flux:sidebar.item>

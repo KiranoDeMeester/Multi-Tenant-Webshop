@@ -12,10 +12,14 @@ class Create extends Component
 {
     public string $name = '';
     public string $description = '';
+    public string $meta_title = '';
+    public string $meta_description = '';
 
     protected $rules = [
         'name' => 'required|string|max:255',
         'description' => 'nullable|string',
+        'meta_title' => 'nullable|string|max:255',
+        'meta_description' => 'nullable|string|max:1000',
     ];
 
     public function save()
@@ -26,6 +30,8 @@ class Create extends Component
             'name' => $this->name,
             'slug' => Str::slug($this->name) . '-' . Str::random(5),
             'description' => $this->description,
+            'meta_title' => $this->meta_title,
+            'meta_description' => $this->meta_description,
         ]);
 
         session()->flash('message', __('Categorie succesvol aangemaakt!'));
