@@ -98,7 +98,7 @@ This file tracks the implementation steps. Each step corresponds to a GitHub Iss
   - Configure VAT (BTW) percentage per tenant for invoice accuracy.
   - Automated email sending of invoices.
 
-- [ ] **Step 22: Tenant Sales Analytics Dashboard**
+- [x] **Step 22: Tenant Sales Analytics Dashboard**
   - Build charts (Chart.js) for Sales Volume, Top Products, and Customer Growth.
 
 - [ ] **Step 23: Customer Order History**
