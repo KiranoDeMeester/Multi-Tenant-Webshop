@@ -135,9 +135,9 @@
                     &copy; {{ date('Y') }} {{ app(\App\Services\TenantManager::class)->getTenant()->name }}. Powered by Kirano Platform.
                 </div>
                 <div class="flex gap-8 text-[10px] font-black uppercase tracking-[0.3em] text-neutral-600">
-                    <a href="#">Privacy</a>
-                    <a href="#">Terms</a>
-                    <a href="#">Cookies</a>
+                    <a href="{{ route('storefront.pages.privacy') }}" wire:navigate>{{ __('Privacy') }}</a>
+                    <a href="#">{{ __('Terms') }}</a>
+                    <a href="#">{{ __('Cookies') }}</a>
                 </div>
             </div>
         </footer>
@@ -147,6 +147,8 @@
                 <flux:toast />
             </flux:toast.group>
         @endpersist
+
+        <livewire:storefront.cookie-banner />
 
         @fluxScripts
     </body>

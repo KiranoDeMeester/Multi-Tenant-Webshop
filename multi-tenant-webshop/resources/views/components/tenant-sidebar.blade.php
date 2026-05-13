@@ -50,6 +50,9 @@
             <flux:sidebar.item icon="document-text" :href="route('tenant.settings.invoice')" :current="request()->routeIs('tenant.settings.invoice')" wire:navigate>
                 {{ __('Factuur Instellingen') }}
             </flux:sidebar.item>
+            <flux:sidebar.item icon="shield-check" :href="route('tenant.settings.compliance')" :current="request()->routeIs('tenant.settings.compliance')" wire:navigate>
+                {{ __('GDPR & Compliance') }}
+            </flux:sidebar.item>
             <flux:sidebar.item icon="credit-card" :href="route('tenant.payments')" :current="request()->routeIs('tenant.payments')" wire:navigate>
                 {{ __('Betalingen & Stripe') }}
             </flux:sidebar.item>
