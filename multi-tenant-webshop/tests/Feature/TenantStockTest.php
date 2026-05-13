@@ -7,7 +7,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 
-uses(RefreshDatabase::class);
+// uses(RefreshDatabase::class);
 
 beforeEach(function () {
     // Setup tenant connection to use sqlite in-memory
@@ -43,6 +43,7 @@ test('can manage stock for a simple product', function () {
         'category_id' => $category->id,
         'name' => 'Charger',
         'slug' => 'charger',
+        'sku' => 'CHG-001',
         'price' => 10.00,
         'stock' => 10,
     ]);
@@ -63,6 +64,7 @@ test('cannot decrement simple product stock below zero', function () {
         'category_id' => $category->id,
         'name' => 'Charger',
         'slug' => 'charger',
+        'sku' => 'CHG-002',
         'price' => 10.00,
         'stock' => 2,
     ]);
@@ -76,6 +78,7 @@ test('aggregate stock works for products with variations', function () {
         'category_id' => $category->id,
         'name' => 'T-Shirt',
         'slug' => 't-shirt',
+        'sku' => 'TSHIRT-STOCK',
         'price' => 20.00,
         'stock' => 100, // Should be ignored if variations exist
     ]);
@@ -105,6 +108,7 @@ test('cannot decrement variation stock below zero', function () {
         'category_id' => $category->id,
         'name' => 'T-Shirt',
         'slug' => 't-shirt',
+        'sku' => 'TSHIRT-VAR-BASE',
         'price' => 20.00,
     ]);
 

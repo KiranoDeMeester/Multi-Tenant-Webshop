@@ -4,7 +4,7 @@ use App\Models\Landlord\Tenant;
 use App\Services\TenantManager;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
-uses(RefreshDatabase::class);
+// uses(RefreshDatabase::class);
 
 test('the tenant helper returns the current tenant', function () {
     $tenant = new Tenant([

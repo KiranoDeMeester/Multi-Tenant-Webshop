@@ -9,6 +9,10 @@ use Illuminate\Support\Str;
 
 uses(RefreshDatabase::class);
 
+beforeEach(function () {
+    $this->migrateLandlord();
+});
+
 test('the platform admin is accessible from platform.localhost', function () {
     Config::set('app.central_domain', 'localhost');
 
@@ -32,20 +36,33 @@ test('the tenant webshop is accessible from a tenant subdomain', function () {
     $fullDomain = $subdomain . '.localhost';
 
     // Create a tenant and a domain record
-    $tenant = Tenant::factory()->create();
+    $tenant = Tenant::factory()->create(['db_name' => ':memory:']);
     Domain::create([
         'domain' => $fullDomain,
         'tenant_id' => $tenant->id,
         'is_primary' => true,
     ]);
 
-    // Mock TenantManager
-    $this->mock(TenantManager::class, function ($mock) {
-        $mock->shouldReceive('setTenant')->andReturnNull();
-    });
+    // 2. Use a file-based database so it persists during the request
+    $dbPath = database_path('tenants/test_routing.sqlite');
+    if (!file_exists(dirname($dbPath))) mkdir(dirname($dbPath), 0755, true);
+    touch($dbPath);
+
+    Config::set('database.connections.tenant.driver', 'sqlite');
+    Config::set('database.connections.tenant.database', $dbPath);
+    $this->migrateTenant();
+    
+    // Ensure the tenant record points to this file
+    $tenant->update(['db_name' => 'test_routing']);
 
     $response = $this->get('http://' . $fullDomain . '/');
 
     $response->assertStatus(200);
-    $response->assertSee('Welcome to webshop: ' . $subdomain);
+    $response->assertSee($tenant->name);
+
+    // Cleanup
+    if (file_exists($dbPath)) {
+        \Illuminate\Support\Facades\DB::purge('tenant');
+        unlink($dbPath);
+    }
 });

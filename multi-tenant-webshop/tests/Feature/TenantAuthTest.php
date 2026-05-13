@@ -7,14 +7,10 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 
-uses(RefreshDatabase::class);
+// uses(RefreshDatabase::class);
 
 beforeEach(function () {
-    // Migrate landlord tables
-    $this->artisan('migrate', [
-        '--path' => 'database/migrations/landlord',
-        '--realpath' => true,
-    ]);
+    $this->migrateLandlord();
 
     // Setup two tenants for testing isolation
     $this->tenantA = Tenant::create([
@@ -42,11 +38,7 @@ test('customer can log into their own tenant shop', function () {
     // Manually migrate Tenant A's database
     Config::set('database.connections.tenant.driver', 'sqlite');
     Config::set('database.connections.tenant.database', ':memory:');
-    $this->artisan('migrate', [
-        '--database' => 'tenant',
-        '--path' => 'database/migrations/tenant',
-        '--realpath' => true,
-    ]);
+    $this->migrateTenant();
 
     // Create customer in Tenant A
     $customer = Customer::on('tenant')->create([
@@ -90,7 +82,7 @@ test('customer cannot log into a different tenant shop', function () {
     \Illuminate\Support\Facades\DB::purge('tenant');
     \Illuminate\Support\Facades\DB::reconnect('tenant');
 
-    $this->artisan('migrate', ['--database' => 'tenant', '--path' => 'database/migrations/tenant', '--realpath' => true]);
+        $this->migrateTenant();
 
     // Try to log in on Tenant B with Tenant A's credentials
     $success = Auth::guard('customer')->once([

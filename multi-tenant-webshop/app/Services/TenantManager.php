@@ -18,18 +18,23 @@ class TenantManager
     {
         $this->currentTenant = $tenant;
 
-        // Determine the path to the SQLite database file
-        $dbPath = database_path('tenants/' . $tenant->db_name . '.sqlite');
-        $dbDir = dirname($dbPath);
+        // Handle :memory: database (primarily for testing)
+        if ($tenant->db_name === ':memory:') {
+            $dbPath = ':memory:';
+        } else {
+            // Determine the path to the SQLite database file
+            $dbPath = database_path('tenants/' . $tenant->db_name . '.sqlite');
+            $dbDir = dirname($dbPath);
 
-        // Ensure the directory exists
-        if (!file_exists($dbDir)) {
-            mkdir($dbDir, 0755, true);
-        }
+            // Ensure the directory exists
+            if (!file_exists($dbDir)) {
+                mkdir($dbDir, 0755, true);
+            }
 
-        // Ensure the SQLite file exists
-        if (!file_exists($dbPath)) {
-            touch($dbPath);
+            // Ensure the SQLite file exists
+            if (!file_exists($dbPath)) {
+                touch($dbPath);
+            }
         }
 
         // 1. Update the 'tenant' connection configuration dynamically
@@ -67,5 +72,15 @@ class TenantManager
         return \App\Models\Tenant\Setting::where('key', 'like', 'theme_%')
             ->pluck('value', 'key')
             ->toArray();
+    }
+
+    /**
+     * Reset the tenant manager state.
+     */
+    public function reset(): void
+    {
+        $this->currentTenant = null;
+        Config::set('database.default', 'sqlite'); // Hardcoded for this app's architecture
+        DB::purge('tenant');
     }
 }

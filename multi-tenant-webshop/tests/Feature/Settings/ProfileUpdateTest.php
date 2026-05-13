@@ -2,6 +2,13 @@
 
 use App\Models\User;
 use Livewire\Livewire;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
+
+uses(DatabaseMigrations::class);
+
+beforeEach(function () {
+    $this->migrateLandlord();
+});
 
 test('profile page is displayed', function () {
     $this->actingAs($user = User::factory()->create());
