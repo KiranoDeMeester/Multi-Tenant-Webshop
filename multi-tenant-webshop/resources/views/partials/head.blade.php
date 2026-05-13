@@ -3,8 +3,10 @@
 
 @php
     $tenantManager = app(\App\Services\TenantManager::class);
-    $globalMetaTitle = \App\Models\Tenant\Setting::where('key', 'shop_meta_title')->first()?->value ?? $tenantManager->getTenant()?->name;
-    $globalMetaDescription = \App\Models\Tenant\Setting::where('key', 'shop_meta_description')->first()?->value ?? '';
+    $currentTenant = $tenantManager->getTenant();
+    
+    $globalMetaTitle = $currentTenant ? (\App\Models\Tenant\Setting::where('key', 'shop_meta_title')->first()?->value ?? $currentTenant->name) : config('app.name');
+    $globalMetaDescription = $currentTenant ? (\App\Models\Tenant\Setting::where('key', 'shop_meta_description')->first()?->value ?? '') : '';
     
     $displayTitle = $meta_title ?? $title ?? $globalMetaTitle;
     $displayDescription = $meta_description ?? $globalMetaDescription;

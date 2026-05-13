@@ -7,10 +7,7 @@ use Illuminate\Support\Facades\Config;
 uses(RefreshDatabase::class);
 
 beforeEach(function () {
-    $this->artisan('migrate', [
-        '--path' => 'database/migrations/landlord',
-        '--realpath' => true,
-    ]);
+    $this->migrateLandlord();
 });
 
 test('login page is accessible on central domain', function () {

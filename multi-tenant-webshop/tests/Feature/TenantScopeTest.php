@@ -16,9 +16,11 @@ class TestTenantModel extends Model
     protected $fillable = ['name', 'tenant_id'];
 }
 
-uses(RefreshDatabase::class);
+// uses(RefreshDatabase::class);
 
 beforeEach(function () {
+    $this->migrateLandlord();
+    
     Schema::create('test_tenant_models', function (Blueprint $table) {
         $table->id();
         $table->string('name');

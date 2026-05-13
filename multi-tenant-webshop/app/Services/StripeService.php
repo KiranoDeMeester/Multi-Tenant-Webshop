@@ -17,7 +17,7 @@ class StripeService
     /**
      * Create a Stripe Checkout session with Destination Charges.
      */
-    public function createCheckoutSession(Order $order, string $connectedAccountId): Session
+    public function createCheckoutSession(Order $order, string $connectedAccountId)
     {
         try {
             $platformFeePercentage = config('services.stripe.platform_fee', 5);

@@ -24,8 +24,9 @@
             </flux:menu.item>
             @php
                 $currentTenant = app(\App\Services\TenantManager::class)->getTenant();
+                $logoutRoute = $currentTenant ? route('tenant.logout', ['tenant' => $currentTenant->slug]) : route('logout');
             @endphp
-            <form method="POST" action="{{ route('tenant.logout', ['tenant' => $currentTenant?->slug]) }}" class="w-full">
+            <form method="POST" action="{{ $logoutRoute }}" class="w-full">
                 @csrf
                 <flux:menu.item
                     as="button"

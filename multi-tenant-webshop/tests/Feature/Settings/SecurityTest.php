@@ -4,8 +4,12 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Fortify\Features;
 use Livewire\Livewire;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
+
+uses(DatabaseMigrations::class);
 
 beforeEach(function () {
+    $this->migrateLandlord();
     $this->skipUnlessFortifyHas(Features::twoFactorAuthentication());
 
     Features::twoFactorAuthentication([
@@ -66,7 +70,7 @@ test('two factor authentication disabled when confirmation abandoned between req
         'id' => $user->id,
         'two_factor_secret' => null,
         'two_factor_recovery_codes' => null,
-    ]);
+    ], 'landlord');
 });
 
 test('password can be updated', function () {

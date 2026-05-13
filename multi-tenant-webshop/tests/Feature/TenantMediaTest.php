@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
-uses(RefreshDatabase::class);
+// uses(RefreshDatabase::class);
 
 beforeEach(function () {
     // Setup tenant connection to use sqlite in-memory
@@ -47,6 +47,7 @@ test('product image is stored in tenant specific folder', function () {
         'category_id' => $category->id,
         'name' => 'Test Product',
         'slug' => 'test-product',
+        'sku' => 'TEST-SKU-1',
         'price' => 100,
     ]);
 
@@ -83,6 +84,7 @@ test('intervention image conversions are generated', function () {
         'category_id' => $category->id,
         'name' => 'Test Product',
         'slug' => 'test-product',
+        'sku' => 'TEST-SKU-2',
         'price' => 100,
     ]);
 

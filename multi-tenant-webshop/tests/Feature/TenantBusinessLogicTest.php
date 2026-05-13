@@ -6,7 +6,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 
-uses(RefreshDatabase::class);
+// uses(RefreshDatabase::class);
 
 beforeEach(function () {
     // Setup tenant connection to use sqlite in-memory
@@ -45,6 +45,7 @@ test('can create a product linked to a category', function () {
         'category_id' => $category->id,
         'name' => 'MacBook Pro',
         'slug' => 'macbook-pro',
+        'sku' => 'MBP-001',
         'price' => 1999.99,
         'stock' => 10,
     ]);
@@ -60,6 +61,7 @@ test('soft deletes work for products', function () {
         'category_id' => $category->id,
         'name' => 'Delete Me',
         'slug' => 'delete-me',
+        'sku' => 'DEL-001',
         'price' => 10.00,
     ]);
 

@@ -2,6 +2,13 @@
 
 use App\Models\User;
 use Laravel\Fortify\Features;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
+
+uses(DatabaseMigrations::class);
+
+beforeEach(function () {
+    $this->migrateLandlord();
+});
 
 test('login screen can be rendered', function () {
     $response = $this->get(route('login'));

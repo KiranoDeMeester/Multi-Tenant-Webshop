@@ -9,7 +9,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 
-uses(RefreshDatabase::class);
+// uses(RefreshDatabase::class);
 
 beforeEach(function () {
     // Setup tenant connection to use sqlite in-memory
@@ -45,6 +45,7 @@ test('can create product variations with attributes', function () {
         'category_id' => $category->id,
         'name' => 'T-Shirt',
         'slug' => 't-shirt',
+        'sku' => 'TSHIRT-BASE',
         'price' => 20.00,
     ]);
 
@@ -74,6 +75,7 @@ test('variation price falls back to product price if null', function () {
         'category_id' => $category->id,
         'name' => 'Phone Case',
         'slug' => 'phone-case',
+        'sku' => 'CASE-BASE',
         'price' => 15.00,
     ]);
 
@@ -93,6 +95,7 @@ test('product can detect if it has variations', function () {
         'category_id' => $category->id,
         'name' => 'Simple Product',
         'slug' => 'simple',
+        'sku' => 'SIMPLE-001',
         'price' => 10.00,
     ]);
 
