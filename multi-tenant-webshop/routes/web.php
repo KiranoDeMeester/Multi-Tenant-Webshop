@@ -46,6 +46,7 @@ Route::domain('{tenant}.' . config('app.central_domain', 'localhost'))->middlewa
     // Info pages
     Route::get('/verzending', \App\Livewire\Storefront\Pages\Shipping::class)->name('storefront.pages.shipping');
     Route::get('/retourneren', \App\Livewire\Storefront\Pages\Returns::class)->name('storefront.pages.returns');
+    Route::get('/privacy', \App\Livewire\Storefront\Pages\PrivacyPolicy::class)->name('storefront.pages.privacy');
 
     // Checkout flow
     Route::get('/checkout/success', \App\Livewire\Storefront\Checkout\Success::class)->name('storefront.checkout.success');
@@ -95,6 +96,7 @@ Route::domain('{tenant}.' . config('app.central_domain', 'localhost'))->middlewa
             Route::get('/settings', \App\Livewire\Tenant\Settings\StyleDashboard::class)->name('tenant.settings');
             Route::get('/settings/shop', \App\Livewire\Tenant\Settings\ShopSettings::class)->name('tenant.settings.shop');
             Route::get('/settings/invoice', \App\Livewire\Tenant\Settings\InvoiceSettings::class)->name('tenant.settings.invoice');
+            Route::get('/settings/compliance', \App\Livewire\Tenant\Settings\ComplianceSettings::class)->name('tenant.settings.compliance');
             Route::get('/payments', \App\Livewire\Tenant\Dashboard\Payments::class)->name('tenant.payments');
             Route::get('/stripe/connect', [StripeConnectController::class, 'redirect'])->name('stripe.connect');
         });

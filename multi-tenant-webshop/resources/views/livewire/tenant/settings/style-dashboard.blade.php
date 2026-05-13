@@ -29,7 +29,11 @@
         </button>
         <a href="{{ route('tenant.settings.invoice') }}" 
                 class="pb-4 px-2 text-sm font-bold transition-all border-b-2 border-transparent text-neutral-500 hover:text-neutral-700">
-            {{ __('Factuur Instellingen') }}
+            {{ __('Factuur') }}
+        </a>
+        <a href="{{ route('tenant.settings.compliance') }}" 
+                class="pb-4 px-2 text-sm font-bold transition-all border-b-2 border-transparent text-neutral-500 hover:text-neutral-700">
+            {{ __('GDPR') }}
         </a>
     </div>
 
