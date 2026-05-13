@@ -110,15 +110,15 @@ This file tracks the implementation steps. Each step corresponds to a GitHub Iss
 
 ## Phase 7: Final Polish & Deployment
 
-- [ ] **Step 25: GDPR & Cookie Compliance**
+- [x] **Step 25: GDPR & Cookie Compliance**
   - Add a configurable cookie banner that adapts to tenant colors.
   - Auto-generate a "Privacy Policy" template for tenants.
 
-- [ ] **Step 26: Automated Testing Suite**
+- [x] **Step 26: Automated Testing Suite**
   - Comprehensive Pest tests for Database Isolation (Critical!).
   - Integration tests for the Checkout flow.
 
-- [ ] **Step 27: Final UI Audit & Demo Data**
+- [x] **Step 27: Final UI Audit & Demo Data**
   - Polish the Landlord admin.
   - Create a "Demo Seeder" that generates a beautiful shop with sample products.
 

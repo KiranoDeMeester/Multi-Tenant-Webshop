@@ -13,12 +13,9 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
-        User::factory()->create([
-            'name' => 'Platform Admin',
-            'email' => 'admin@platform.test',
-            'password' => \Illuminate\Support\Facades\Hash::make('password'),
+        $this->call([
+            Landlord\LandlordSeeder::class,
+            Landlord\DemoTenantSeeder::class,
         ]);
     }
 }

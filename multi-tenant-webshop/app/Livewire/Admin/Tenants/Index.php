@@ -13,7 +13,9 @@ class Index extends Component
     public function render()
     {
         return view('livewire.admin.tenants.index', [
-            'tenants' => Tenant::query()->paginate(10),
+            'tenants' => Tenant::with('domains')->latest()->paginate(10),
+            'totalTenants' => Tenant::count(),
+            'totalDomains' => \App\Models\Landlord\Domain::count(),
         ]);
     }
 }
