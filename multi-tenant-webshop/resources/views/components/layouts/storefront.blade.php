@@ -26,6 +26,7 @@
                 --secondary-color: {{ $secondaryColor }};
                 --accent-color: {{ $accentColor }};
                 --font-family: '{{ $fontFamily }}', sans-serif;
+                --font-sans: '{{ $fontFamily }}', sans-serif !important;
             }
 
             body {
@@ -37,9 +38,17 @@
                 color: white;
             }
 
-            .text-primary { color: var(--primary-color); }
-            .bg-primary { background-color: var(--primary-color); }
-            .border-primary { border-color: var(--primary-color); }
+            .text-primary { color: var(--primary-color) !important; }
+            .bg-primary { background-color: var(--primary-color) !important; }
+            .border-primary { border-color: var(--primary-color) !important; }
+
+            .text-secondary { color: var(--secondary-color) !important; }
+            .bg-secondary { background-color: var(--secondary-color) !important; }
+            .border-secondary { border-color: var(--secondary-color) !important; }
+
+            .text-accent { color: var(--accent-color) !important; }
+            .bg-accent { background-color: var(--accent-color) !important; }
+            .border-accent { border-color: var(--accent-color) !important; }
         </style>
     </head>
     <body class="min-h-screen bg-white font-sans antialiased text-black is-storefront">
@@ -62,25 +71,25 @@
         @endif
 
         <!-- Navbar -->
-        <header class="bg-white border-b-2 border-black sticky {{ auth('tenant')->check() ? 'top-[48px]' : 'top-0' }} z-50">
+        <header class="bg-white {{ $layoutType === 'minimal' ? 'border-b border-neutral-100' : 'border-b-2 border-black' }} sticky {{ auth('tenant')->check() ? 'top-[48px]' : 'top-0' }} z-50">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="flex justify-between items-center h-20">
+                <div class="flex justify-between items-center {{ $layoutType === 'minimal' ? 'h-16' : 'h-20' }}">
                     <div class="flex items-center gap-12">
-                        <a href="/" class="text-3xl font-black tracking-tighter text-black uppercase">
+                        <a href="/" class="{{ $layoutType === 'minimal' ? 'text-2xl font-semibold tracking-tight text-neutral-900' : 'text-3xl font-black tracking-tighter text-black uppercase' }}">
                             {{ app(\App\Services\TenantManager::class)->getTenant()->name }}
                         </a>
                         
                         <nav class="hidden md:flex items-center gap-8">
-                            <a href="{{ route('storefront.products.index') }}#products" class="text-xs font-black uppercase tracking-[0.2em] hover:text-indigo-600 transition-colors">{{ __('Producten') }}</a>
-                            <a href="{{ route('storefront.pages.collections') }}" wire:navigate class="text-xs font-black uppercase tracking-[0.2em] hover:text-indigo-600 transition-colors">{{ __('Collecties') }}</a>
-                            <a href="{{ route('storefront.pages.about-us') }}" wire:navigate class="text-xs font-black uppercase tracking-[0.2em] hover:text-indigo-600 transition-colors">{{ __('Over ons') }}</a>
+                            <a href="{{ route('storefront.products.index') }}#products" class="{{ $layoutType === 'minimal' ? 'text-sm font-medium text-neutral-600 hover:text-primary transition-colors' : 'text-xs font-black uppercase tracking-[0.2em] hover:text-primary transition-colors' }}">{{ __('Producten') }}</a>
+                            <a href="{{ route('storefront.pages.collections') }}" wire:navigate class="{{ $layoutType === 'minimal' ? 'text-sm font-medium text-neutral-600 hover:text-primary transition-colors' : 'text-xs font-black uppercase tracking-[0.2em] hover:text-primary transition-colors' }}">{{ __('Collecties') }}</a>
+                            <a href="{{ route('storefront.pages.about-us') }}" wire:navigate class="{{ $layoutType === 'minimal' ? 'text-sm font-medium text-neutral-600 hover:text-primary transition-colors' : 'text-xs font-black uppercase tracking-[0.2em] hover:text-primary transition-colors' }}">{{ __('Over ons') }}</a>
                         </nav>
                     </div>
 
                     <div class="flex items-center gap-6">
                         <livewire:storefront.navigation.cart-button />
                         
-                        <div class="h-8 w-0.5 bg-black"></div>
+                        <div class="h-8 w-0.5 {{ $layoutType === 'minimal' ? 'bg-neutral-200' : 'bg-black' }}"></div>
 
                         <livewire:storefront.navigation.user-dropdown />
                     </div>
@@ -98,37 +107,37 @@
         </main>
 
         <!-- Footer -->
-        <footer class="bg-black py-20 mt-20 high-contrast-dark">
+        <footer class="{{ $layoutType === 'minimal' ? 'bg-neutral-50 text-neutral-700 py-20 mt-20 border-t border-neutral-100' : 'bg-black py-20 mt-20 high-contrast-dark' }}">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-4 gap-16">
                 <div class="col-span-1 md:col-span-2">
-                    <div class="text-3xl font-black mb-6 uppercase tracking-tighter">
+                    <div class="text-3xl font-black mb-6 uppercase tracking-tighter {{ $layoutType === 'minimal' ? 'text-neutral-900' : 'text-white' }}">
                         {{ app(\App\Services\TenantManager::class)->getTenant()->name }}
                     </div>
-                    <p class="text-neutral-400 max-w-sm font-medium leading-relaxed">
+                    <p class="{{ $layoutType === 'minimal' ? 'text-neutral-500' : 'text-neutral-400' }} max-w-sm font-medium leading-relaxed">
                         De beste producten, speciaal voor jou geselecteerd met oog voor kwaliteit en design. Ervaar de nieuwe standaard in online shoppen.
                     </p>
                 </div>
                 <div>
-                    <h4 class="text-xs font-black uppercase tracking-[0.3em] mb-8 text-neutral-500">{{ __('Support') }}</h4>
+                    <h4 class="text-xs font-black uppercase tracking-[0.3em] mb-8 {{ $layoutType === 'minimal' ? 'text-neutral-400' : 'text-neutral-500' }}">{{ __('Support') }}</h4>
                     <ul class="space-y-4 text-sm font-bold">
-                        <li><a href="#" class="hover:text-indigo-400 transition-colors uppercase tracking-widest">{{ __('Contact') }}</a></li>
-                        <li><a href="{{ route('storefront.pages.shipping') }}" wire:navigate class="hover:text-indigo-400 transition-colors uppercase tracking-widest">{{ __('Verzending') }}</a></li>
-                        <li><a href="{{ route('storefront.pages.returns') }}" wire:navigate class="hover:text-indigo-400 transition-colors uppercase tracking-widest">{{ __('Retourneren') }}</a></li>
+                        <li><a href="#" class="hover:text-primary transition-colors uppercase tracking-widest">{{ __('Contact') }}</a></li>
+                        <li><a href="{{ route('storefront.pages.shipping') }}" wire:navigate class="hover:text-primary transition-colors uppercase tracking-widest">{{ __('Verzending') }}</a></li>
+                        <li><a href="{{ route('storefront.pages.returns') }}" wire:navigate class="hover:text-primary transition-colors uppercase tracking-widest">{{ __('Retourneren') }}</a></li>
                     </ul>
                 </div>
                 <div>
-                    <h4 class="text-xs font-black uppercase tracking-[0.3em] mb-8 text-neutral-500">{{ __('Connect') }}</h4>
+                    <h4 class="text-xs font-black uppercase tracking-[0.3em] mb-8 {{ $layoutType === 'minimal' ? 'text-neutral-400' : 'text-neutral-500' }}">{{ __('Connect') }}</h4>
                     <div class="flex gap-6">
-                        <a href="#" class="text-white hover:text-indigo-400 transition-colors font-black uppercase tracking-widest">{{ __('Instagram') }}</a>
-                        <a href="#" class="text-white hover:text-indigo-400 transition-colors font-black uppercase tracking-widest">{{ __('Tiktok') }}</a>
+                        <a href="#" class="{{ $layoutType === 'minimal' ? 'text-neutral-600 hover:text-primary' : 'text-white hover:text-primary' }} transition-colors font-black uppercase tracking-widest">{{ __('Instagram') }}</a>
+                        <a href="#" class="{{ $layoutType === 'minimal' ? 'text-neutral-600 hover:text-primary' : 'text-white hover:text-primary' }} transition-colors font-black uppercase tracking-widest">{{ __('Tiktok') }}</a>
                     </div>
                 </div>
             </div>
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-20 pt-10 border-t border-neutral-900 flex flex-col md:flex-row justify-between items-center gap-6">
-                <div class="text-[10px] font-black uppercase tracking-[0.3em] text-neutral-600">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-20 pt-10 border-t {{ $layoutType === 'minimal' ? 'border-neutral-200' : 'border-neutral-900' }} flex flex-col md:flex-row justify-between items-center gap-6">
+                <div class="text-[10px] font-black uppercase tracking-[0.3em] {{ $layoutType === 'minimal' ? 'text-neutral-400' : 'text-neutral-600' }}">
                     &copy; {{ date('Y') }} {{ app(\App\Services\TenantManager::class)->getTenant()->name }}. Powered by Kirano Platform.
                 </div>
-                <div class="flex gap-8 text-[10px] font-black uppercase tracking-[0.3em] text-neutral-600">
+                <div class="flex gap-8 text-[10px] font-black uppercase tracking-[0.3em] {{ $layoutType === 'minimal' ? 'text-neutral-400' : 'text-neutral-600' }}">
                     <a href="{{ route('storefront.pages.privacy') }}" wire:navigate>{{ __('Privacy') }}</a>
                     <a href="{{ route('storefront.pages.terms') }}" wire:navigate>{{ __('Terms') }}</a>
                     <a href="#" onclick="Livewire.dispatch('show-cookie-banner')">{{ __('Cookies') }}</a>

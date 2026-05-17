@@ -22,7 +22,9 @@ class StyleDashboard extends Component
     public string $hero_image_url = '';
     public $hero_image_upload;
     public bool $has_uploaded_hero_image = false;
-    public bool $show_newsletter_popup = false;
+    
+    public string $hero_title = '';
+    public string $hero_subtitle = '';
 
     public string $tab = 'design';
 
@@ -35,12 +37,12 @@ class StyleDashboard extends Component
         
         $this->layout_type = Setting::where('key', 'layout_type')->first()?->value ?? 'modern';
         $this->show_hero_banner = (bool) (Setting::where('key', 'show_hero_banner')->first()?->value ?? true);
+        $this->hero_title = Setting::where('key', 'hero_title')->first()?->value ?? '';
+        $this->hero_subtitle = Setting::where('key', 'hero_subtitle')->first()?->value ?? '';
         
         $heroSetting = Setting::firstOrCreate(['key' => 'hero_image_url'], ['value' => '']);
         $this->has_uploaded_hero_image = $heroSetting->hasMedia('hero_image');
         $this->hero_image_url = $heroSetting->getFirstMediaUrl('hero_image') ?: $heroSetting->value;
-        
-        $this->show_newsletter_popup = (bool) (Setting::where('key', 'show_newsletter_popup')->first()?->value ?? false);
     }
 
     public function save()
@@ -52,6 +54,8 @@ class StyleDashboard extends Component
         
         Setting::updateOrCreate(['key' => 'layout_type'], ['value' => $this->layout_type]);
         Setting::updateOrCreate(['key' => 'show_hero_banner'], ['value' => $this->show_hero_banner]);
+        Setting::updateOrCreate(['key' => 'hero_title'], ['value' => $this->hero_title]);
+        Setting::updateOrCreate(['key' => 'hero_subtitle'], ['value' => $this->hero_subtitle]);
         
         $heroSetting = Setting::updateOrCreate(['key' => 'hero_image_url'], ['value' => $this->hero_image_url]);
         
@@ -66,8 +70,6 @@ class StyleDashboard extends Component
             $this->has_uploaded_hero_image = true;
             $this->hero_image_upload = null;
         }
-        
-        Setting::updateOrCreate(['key' => 'show_newsletter_popup'], ['value' => $this->show_newsletter_popup]);
 
         session()->flash('message', 'Huisstijl en layout succesvol bijgewerkt!');
     }

@@ -1,7 +1,7 @@
 <div class="py-24">
     <div class="max-w-3xl mx-auto text-center">
         <div class="mb-12 flex justify-center">
-            <div class="h-32 w-32 bg-indigo-600 rounded-[2.5rem] flex items-center justify-center shadow-[15px_15px_0px_0px_rgba(0,0,0,1)] border-4 border-black">
+            <div class="h-32 w-32 bg-primary rounded-[2.5rem] flex items-center justify-center shadow-[15px_15px_0px_0px_rgba(0,0,0,1)] border-4 border-black">
                 <flux:icon name="check" size="xl" class="text-white h-16 w-16" />
             </div>
         </div>

@@ -18,8 +18,11 @@
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-20">
         <!-- Product Image -->
         <div class="aspect-square rounded-[3rem] overflow-hidden bg-neutral-50 border-2 border-black hover:shadow-[20px_20px_0px_0px_rgba(0,0,0,1)] transition-all duration-500">
-            @if($product->image_url)
-                <img src="{{ $product->image_url }}" alt="{{ $product->name }}" class="w-full h-full object-cover">
+            @php
+                $displayImage = $product->getFirstMediaUrl('products', 'large') ?: $product->image_url;
+            @endphp
+            @if($displayImage)
+                <img src="{{ $displayImage }}" alt="{{ $product->name }}" class="w-full h-full object-cover">
             @else
                 <div class="w-full h-full flex items-center justify-center text-neutral-200">
                     <flux:icon name="photo" size="xl" class="h-32 w-32" />
@@ -29,7 +32,7 @@
 
         <!-- Product Info -->
         <div class="flex flex-col justify-center">
-            <div class="text-[10px] font-black uppercase tracking-[0.3em] text-neutral-400 mb-4">{{ $product->category->name ?? '' }}</div>
+            <div class="text-[10px] font-black uppercase tracking-[0.3em] text-secondary mb-4">{{ $product->category->name ?? '' }}</div>
             <h1 class="text-5xl md:text-6xl font-black mb-4 uppercase tracking-tighter">{{ $product->name }}</h1>
             <div class="text-xs font-bold text-neutral-400 uppercase tracking-widest mb-10">SKU: {{ $product->sku }}</div>
 
