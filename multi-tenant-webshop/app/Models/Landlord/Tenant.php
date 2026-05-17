@@ -5,11 +5,12 @@ namespace App\Models\Landlord;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 
 class Tenant extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $connection = 'landlord';
 
@@ -17,6 +18,11 @@ class Tenant extends Model
         'name',
         'db_name',
         'stripe_account_id',
+        'is_active',
+    ];
+
+    protected $casts = [
+        'is_active' => 'boolean',
     ];
 
     protected static function boot()

@@ -1,9 +1,10 @@
 <div class="py-12 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="mb-12">
-        <flux:breadcrumbs>
-            <flux:breadcrumbs.item :href="route('storefront.account')">{{ __('Mijn Account') }}</flux:breadcrumbs.item>
-            <flux:breadcrumbs.item>{{ __('Mijn Bestellingen') }}</flux:breadcrumbs.item>
-        </flux:breadcrumbs>
+        <div class="flex items-center gap-2 text-sm font-bold text-zinc-500">
+            <a href="{{ route('storefront.account') }}" wire:navigate class="hover:text-black transition-colors">{{ __('Mijn Account') }}</a>
+            <flux:icon name="chevron-right" size="xs" />
+            <span class="text-black">{{ __('Mijn Bestellingen') }}</span>
+        </div>
 
         <div class="mt-6 flex items-center justify-between">
             <h1 class="text-3xl font-black text-black">{{ __('Mijn Bestellingen') }}</h1>

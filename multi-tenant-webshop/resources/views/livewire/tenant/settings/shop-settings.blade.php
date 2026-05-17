@@ -6,6 +6,16 @@
 
     <form wire:submit="save">
         <div class="space-y-8">
+            <!-- Pages Section -->
+            <flux:card>
+                <flux:heading size="lg" class="mb-6">{{ __('Winkel Informatie') }}</flux:heading>
+                <flux:text class="mb-6">{{ __('Beheer hier de algemene informatie en de Over Ons pagina van je webshop.') }}</flux:text>
+                
+                <div class="space-y-6">
+                    <flux:textarea wire:model="about_us_content" :label="__('Over Ons Inhoud')" rows="6" :placeholder="__('Vertel het verhaal van jouw webshop...')" />
+                </div>
+            </flux:card>
+
             <!-- SEO Section -->
             <flux:card>
                 <flux:heading size="lg" class="mb-6">{{ __('Algemene SEO') }}</flux:heading>

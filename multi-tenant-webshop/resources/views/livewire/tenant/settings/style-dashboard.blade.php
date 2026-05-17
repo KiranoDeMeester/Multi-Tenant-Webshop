@@ -107,7 +107,57 @@
                             <div class="space-y-4 pt-4 border-t border-neutral-100 dark:border-neutral-800">
                                 <flux:heading size="md">{{ __('Extra Functies') }}</flux:heading>
                                 
-                                <flux:switch wire:model="show_hero_banner" :label="__('Toon Hero Banner op homepagina')" />
+                                <div class="space-y-4">
+                                    <flux:switch wire:model.live="show_hero_banner" :label="__('Toon Hero Banner op homepagina')" />
+                                    
+                                    @if($show_hero_banner)
+                                        <div class="pl-4 border-l-2 border-neutral-100 dark:border-neutral-800 space-y-4">
+                                            
+                                            <div class="space-y-2">
+                                                <flux:label>{{ __('Upload Hero Afbeelding') }}</flux:label>
+                                                <div class="flex items-center gap-4">
+                                                    @if ($hero_image_upload)
+                                                        <div class="w-16 h-16 rounded-lg overflow-hidden border border-neutral-200 shrink-0 flex items-center justify-center bg-neutral-50">
+                                                            @if(method_exists($hero_image_upload, 'isPreviewable') && $hero_image_upload->isPreviewable())
+                                                                <img src="{{ $hero_image_upload->temporaryUrl() }}" class="w-full h-full object-cover">
+                                                            @else
+                                                                <flux:icon name="photo" class="text-neutral-400" />
+                                                            @endif
+                                                        </div>
+                                                    @elseif ($hero_image_url)
+                                                        <div class="w-16 h-16 rounded-lg overflow-hidden border border-neutral-200 shrink-0">
+                                                            <img src="{{ $hero_image_url }}" class="w-full h-full object-cover">
+                                                        </div>
+                                                    @endif
+                                                    
+                                                    <div class="flex-1">
+                                                        <input type="file" wire:model="hero_image_upload" id="hero_image_upload" class="hidden" accept="image/*">
+                                                        <label for="hero_image_upload" class="inline-flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-lg border border-neutral-200 bg-white text-neutral-800 hover:bg-neutral-50 cursor-pointer shadow-sm dark:bg-zinc-800 dark:border-zinc-700 dark:text-white dark:hover:bg-zinc-700 transition-colors">
+                                                            <flux:icon name="photo" class="size-4" />
+                                                            {{ __('Kies Afbeelding') }}
+                                                        </label>
+                                                        @if($has_uploaded_hero_image)
+                                                            <flux:button size="sm" variant="danger" wire:click="deleteHeroImage" icon="trash" class="ml-2">
+                                                                {{ __('Verwijder') }}
+                                                            </flux:button>
+                                                        @endif
+                                                        <div wire:loading wire:target="hero_image_upload" class="text-sm text-neutral-500 ml-2">
+                                                            {{ __('Uploaden...') }}
+                                                        </div>
+                                                        @error('hero_image_upload') <span class="text-red-500 text-sm mt-1">{{ $message }}</span> @enderror
+                                                    </div>
+                                                </div>
+                                                @if(!$has_uploaded_hero_image && !$hero_image_upload)
+                                                    <flux:text size="xs" class="text-neutral-500">{{ __('Of geef een URL op (bijv. van Unsplash):') }}</flux:text>
+                                                @endif
+                                            </div>
+
+                                            @if(!$has_uploaded_hero_image && !$hero_image_upload)
+                                                <flux:input wire:model="hero_image_url" :placeholder="__('https://example.com/afbeelding.jpg')" />
+                                            @endif
+                                        </div>
+                                    @endif
+                                </div>
                                 <flux:switch wire:model="show_newsletter_popup" :label="__('Toon Nieuwsbrief Popup')" />
                             </div>
                         </flux:card>

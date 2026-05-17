@@ -44,9 +44,12 @@ Route::domain('{tenant}.' . config('app.central_domain', 'localhost'))->middlewa
     Route::get('/mijn-account/adressen', \App\Livewire\Storefront\Account\Addresses::class)->name('storefront.account.addresses')->middleware('auth:customer,tenant');
     
     // Info pages
+    Route::get('/collecties', \App\Livewire\Storefront\Pages\Collections::class)->name('storefront.pages.collections');
+    Route::get('/over-ons', \App\Livewire\Storefront\Pages\AboutUs::class)->name('storefront.pages.about-us');
     Route::get('/verzending', \App\Livewire\Storefront\Pages\Shipping::class)->name('storefront.pages.shipping');
     Route::get('/retourneren', \App\Livewire\Storefront\Pages\Returns::class)->name('storefront.pages.returns');
     Route::get('/privacy', \App\Livewire\Storefront\Pages\PrivacyPolicy::class)->name('storefront.pages.privacy');
+    Route::get('/voorwaarden', \App\Livewire\Storefront\Pages\Terms::class)->name('storefront.pages.terms');
 
     // Checkout flow
     Route::get('/checkout/success', \App\Livewire\Storefront\Checkout\Success::class)->name('storefront.checkout.success');

@@ -37,6 +37,10 @@ class SetTenantConnection
             abort(404, 'Webshop niet gevonden.');
         }
 
+        if (!$domain->tenant->is_active) {
+            abort(403, 'Deze webshop is momenteel niet beschikbaar of gedeactiveerd.');
+        }
+
         if (empty($domain->tenant->db_name)) {
             abort(500, 'Interne configuratiefout: Webshop database niet ingesteld.');
         }

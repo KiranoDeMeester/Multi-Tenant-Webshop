@@ -14,19 +14,13 @@ class Login extends Component
 
     public function login()
     {
-        // For demo purposes: if owner@example.com logs in, actually log them in
-        if ($this->email === 'owner@example.com' && $this->password === 'password') {
-            $user = \App\Models\Tenant\User::where('email', $this->email)->first();
-            if ($user) {
-                auth('tenant')->login($user);
-                $this->dispatch('user-logged-in');
-                $this->showChoiceModal = true;
-                return;
-            }
+        if (auth('tenant')->attempt(['email' => $this->email, 'password' => $this->password])) {
+            $this->dispatch('user-logged-in');
+            $this->showChoiceModal = true;
+            return;
         }
 
-        // Placeholder for customer authentication logic
-        $this->addError('email', __('Authenticatie voor klanten wordt in een volgende stap geïmplementeerd. Gebruik owner@example.com / password voor demo.'));
+        $this->addError('email', __('De inloggegevens zijn onjuist.'));
     }
 
     public function goToDashboard()
@@ -39,12 +33,6 @@ class Login extends Component
         return redirect()->route('storefront.products.index');
     }
 
-    public function loginAsOwner()
-    {
-        $this->email = 'owner@example.com';
-        $this->password = 'password';
-        $this->login();
-    }
 
     public function render()
     {

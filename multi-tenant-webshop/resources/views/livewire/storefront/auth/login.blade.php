@@ -16,17 +16,6 @@
             <div class="absolute inset-0 bg-gradient-to-br from-indigo-600/20 to-transparent"></div>
         </div>
 
-        <div class="px-8 pt-6 pb-2">
-            <div class="p-4 bg-indigo-50 border border-indigo-100 rounded-2xl flex items-center justify-between">
-                <div>
-                    <flux:text size="sm" class="text-indigo-800 font-bold">{{ __('Demo Login') }}</flux:text>
-                    <flux:text size="xs" class="text-indigo-600">{{ __('Log direct in als de shop eigenaar') }}</flux:text>
-                </div>
-                <flux:button wire:click="loginAsOwner" variant="primary" size="sm" icon="key" class="bg-indigo-600 hover:bg-indigo-700 border-none">
-                    {{ __('Auto Login') }}
-                </flux:button>
-            </div>
-        </div>
 
         @if($showChoiceModal)
             <div class="p-8 space-y-6 text-center animate-fade-in">

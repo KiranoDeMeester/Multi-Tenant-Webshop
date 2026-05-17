@@ -13,6 +13,9 @@ class ShopSettings extends Component
     public string $meta_title = '';
     public string $meta_description = '';
 
+    // Pagina's
+    public string $about_us_content = '';
+
     // Shipping
     public float $shipping_fee = 0;
     public float $free_shipping_threshold = 0;
@@ -22,6 +25,8 @@ class ShopSettings extends Component
         $this->meta_title = Setting::where('key', 'shop_meta_title')->first()?->value ?? '';
         $this->meta_description = Setting::where('key', 'shop_meta_description')->first()?->value ?? '';
         
+        $this->about_us_content = Setting::where('key', 'about_us_content')->first()?->value ?? '';
+        
         $this->shipping_fee = (float) (Setting::where('key', 'shipping_fee')->first()?->value ?? 0);
         $this->free_shipping_threshold = (float) (Setting::where('key', 'free_shipping_threshold')->first()?->value ?? 0);
     }
@@ -30,6 +35,8 @@ class ShopSettings extends Component
     {
         Setting::updateOrCreate(['key' => 'shop_meta_title'], ['value' => $this->meta_title]);
         Setting::updateOrCreate(['key' => 'shop_meta_description'], ['value' => $this->meta_description]);
+        
+        Setting::updateOrCreate(['key' => 'about_us_content'], ['value' => $this->about_us_content]);
         
         Setting::updateOrCreate(['key' => 'shipping_fee'], ['value' => $this->shipping_fee]);
         Setting::updateOrCreate(['key' => 'free_shipping_threshold'], ['value' => $this->free_shipping_threshold]);
