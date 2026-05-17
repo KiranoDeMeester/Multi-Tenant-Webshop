@@ -3,7 +3,11 @@
         <nav class="flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.2em]">
             <a href="{{ route('storefront.products.index') }}" class="text-neutral-400 hover:text-black transition-colors">{{ __('Producten') }}</a>
             <span class="text-neutral-300">/</span>
-            <span class="text-neutral-400">{{ $product->category->name ?? __('Geen categorie') }}</span>
+            @if($product->category)
+                <a href="{{ route('storefront.categories.show', ['categorySlug' => $product->category->slug]) }}" wire:navigate class="text-neutral-400 hover:text-black transition-colors">{{ $product->category->name }}</a>
+            @else
+                <span class="text-neutral-400">{{ __('Geen categorie') }}</span>
+            @endif
             <span class="text-neutral-300">/</span>
             <span class="text-black">{{ $product->name }}</span>
         </nav>

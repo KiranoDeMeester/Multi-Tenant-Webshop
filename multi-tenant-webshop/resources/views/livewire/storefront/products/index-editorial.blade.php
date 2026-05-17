@@ -18,12 +18,14 @@
                     {{ !empty($themeSettings['hero_subtitle']) ? $themeSettings['hero_subtitle'] : __('Ontdek onze nieuwste selectie meubels en designstukken, zorgvuldig ontworpen om een serene en harmonieuze sfeer te creëren in elk modern interieur.') }}
                 </p>
                 <div class="pt-4">
-                    <button wire:click="$set('category', '{{ $categories->first()?->slug ?? '' }}')" 
-                            class="group relative inline-flex items-center gap-3 px-8 py-3.5 border border-neutral-900 text-neutral-900 text-xs font-bold uppercase tracking-widest rounded-full overflow-hidden transition-all duration-500 hover:text-white">
-                        <span class="absolute inset-0 bg-neutral-900 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out z-0"></span>
-                        <span class="relative z-10">{{ __('Bekijk Collectie') }}</span>
-                        <flux:icon name="arrow-right" size="sm" class="relative z-10 group-hover:translate-x-2 transition-transform text-neutral-900 group-hover:text-white" />
-                    </button>
+                    @if($categories->isNotEmpty())
+                        <a href="{{ route('storefront.categories.show', ['categorySlug' => $categories->first()->slug]) }}" wire:navigate
+                                class="group relative inline-flex items-center gap-3 px-8 py-3.5 border border-neutral-900 text-neutral-900 text-xs font-bold uppercase tracking-widest rounded-full overflow-hidden transition-all duration-500 hover:text-white">
+                            <span class="absolute inset-0 bg-neutral-900 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out z-0"></span>
+                            <span class="relative z-10">{{ __('Bekijk Collectie') }}</span>
+                            <flux:icon name="arrow-right" size="sm" class="relative z-10 group-hover:translate-x-2 transition-transform text-neutral-900 group-hover:text-white" />
+                        </a>
+                    @endif
                 </div>
             </div>
             
@@ -62,21 +64,21 @@
             <div class="pb-6 border-b border-neutral-100">
                 <h3 class="text-xs font-bold uppercase tracking-[0.2em] text-neutral-400 mb-4">{{ __('Collecties') }}</h3>
                 <div class="flex flex-col gap-3">
-                    <button wire:click="$set('category', '')" 
+                    <a href="{{ route('storefront.products.index') }}" wire:navigate
                             class="group flex items-center justify-between text-left text-xs font-bold uppercase tracking-wider transition-all {{ $category === '' ? 'text-secondary' : 'text-neutral-500 hover:text-neutral-900' }}">
                         <span>{{ __('Alle Producten') }}</span>
                         @if($category === '')
                             <span class="h-1.5 w-1.5 rounded-full bg-secondary"></span>
                         @endif
-                    </button>
+                    </a>
                     @foreach($categories as $cat)
-                        <button wire:click="$set('category', '{{ $cat->slug }}')" 
+                        <a href="{{ route('storefront.categories.show', ['categorySlug' => $cat->slug]) }}" wire:navigate
                                 class="group flex items-center justify-between text-left text-xs font-bold uppercase tracking-wider transition-all {{ $category === $cat->slug ? 'text-secondary' : 'text-neutral-500 hover:text-neutral-900' }}">
                             <span>{{ $cat->name }}</span>
                             @if($category === $cat->slug)
                                 <span class="h-1.5 w-1.5 rounded-full bg-secondary"></span>
                             @endif
-                        </button>
+                        </a>
                     @endforeach
                 </div>
             </div>

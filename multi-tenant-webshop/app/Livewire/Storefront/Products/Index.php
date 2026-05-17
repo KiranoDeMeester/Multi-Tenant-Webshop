@@ -17,7 +17,6 @@ class Index extends Component
     #[Url]
     public string $search = '';
 
-    #[Url]
     public string $category = '';
 
     #[Url]
@@ -25,9 +24,17 @@ class Index extends Component
 
     public $themeSettings;
 
-    public function mount()
+    public function mount(?string $categorySlug = null)
     {
         $this->themeSettings = app(\App\Services\TenantManager::class)->getThemeSettings();
+
+        if ($categorySlug) {
+            $categoryExists = Category::where('slug', $categorySlug)->exists();
+            if (!$categoryExists) {
+                abort(404);
+            }
+            $this->category = $categorySlug;
+        }
     }
 
     public function updatingSearch()
