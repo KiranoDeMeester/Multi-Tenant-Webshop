@@ -126,5 +126,5 @@ This file tracks the implementation steps. Each step corresponds to a GitHub Iss
 
 - [ ] **Step 28: Guest Order Tracking**
   - Unique tracking links in emails for customers without an account.
-- [ ] **Step 29: Branded Error Pages**
+- [x] **Step 29: Branded Error Pages**
   - Custom 404/500 pages that maintain tenant styling.
