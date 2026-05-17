@@ -7,17 +7,17 @@ use Livewire\Component;
 use Livewire\Attributes\Layout;
 
 #[Layout('layouts.storefront')]
-class PrivacyPolicy extends Component
+class Terms extends Component
 {
     public string $content = '';
 
     public function mount()
     {
-        $this->content = Setting::where('key', 'privacy_policy_content')->first()?->value ?? 'Onze privacy policy is momenteel niet beschikbaar.';
+        $this->content = Setting::where('key', 'terms_conditions_content')->first()?->value ?? 'Onze algemene voorwaarden zijn momenteel niet beschikbaar.';
     }
 
     public function render()
     {
-        return view('livewire.storefront.pages.privacy-policy');
+        return view('livewire.storefront.pages.terms');
     }
 }

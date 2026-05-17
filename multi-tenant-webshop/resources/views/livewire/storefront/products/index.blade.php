@@ -2,7 +2,7 @@
     @if(($themeSettings['show_hero_banner'] ?? true) && !$search && !$category)
         <div class="relative rounded-3xl overflow-hidden bg-neutral-900 mb-12">
             <div class="absolute inset-0 opacity-40 bg-gradient-to-r from-neutral-900 to-transparent z-10"></div>
-            <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=1600&q=80" 
+            <img src="{{ $themeSettings['hero_image_url'] ?? 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=1600&q=80' }}" 
                  alt="Hero" class="absolute inset-0 w-full h-full object-cover">
             
             <div class="relative z-20 p-12 md:p-20 flex flex-col items-start justify-center min-h-[400px] max-w-2xl">
@@ -52,7 +52,7 @@
         </aside>
 
         <!-- Product Grid -->
-        <div class="flex-1">
+        <div class="flex-1" id="products">
             <div class="mb-6 flex justify-between items-center">
                 <flux:text>{{ __('Toon :count producten', ['count' => $products->total()]) }}</flux:text>
             </div>

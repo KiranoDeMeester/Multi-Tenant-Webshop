@@ -18,9 +18,6 @@
                     <flux:sidebar.item icon="users" :href="route('admin.tenants')" :current="request()->routeIs('admin.tenants')" wire:navigate>
                         {{ __('Webshops') }}
                     </flux:sidebar.item>
-                    <flux:sidebar.item icon="arrow-top-right-on-square" href="http://minimalist.localhost" target="_blank">
-                        {{ __('Demo Shop') }}
-                    </flux:sidebar.item>
                 </flux:sidebar.group>
             </flux:sidebar.nav>
 

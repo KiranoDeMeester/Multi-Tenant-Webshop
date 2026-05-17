@@ -1,6 +1,6 @@
 <div class="py-24 max-w-4xl mx-auto px-4">
     <div class="mb-20">
-        <h1 class="text-6xl font-black uppercase tracking-tighter mb-4">{{ __('Privacy Policy') }}</h1>
+        <h1 class="text-6xl font-black uppercase tracking-tighter mb-4">{{ __('Algemene Voorwaarden') }}</h1>
         <p class="text-sm font-black uppercase tracking-[0.3em] text-zinc-400">{{ __('Laatste update: ') . now()->format('d M Y') }}</p>
     </div>
 

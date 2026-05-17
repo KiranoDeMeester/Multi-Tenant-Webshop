@@ -4,7 +4,7 @@
             <h1 class="text-2xl font-black uppercase tracking-tighter">Webshops</h1>
             <p class="text-sm text-neutral-500">Beheer alle actieve webshops op het platform.</p>
         </div>
-        <flux:button variant="primary" icon="plus" class="font-bold">Nieuwe Webshop</flux:button>
+        <flux:button variant="primary" icon="plus" class="font-bold" wire:click="createTenant">Nieuwe Webshop</flux:button>
     </div>
 
     <!-- Stats Cards -->
@@ -63,7 +63,13 @@
                             </div>
                         </flux:table.cell>
                         <flux:table.cell>
-                            <flux:badge color="green" size="sm" inset>Actief</flux:badge>
+                            @if($tenant->trashed())
+                                <flux:badge color="red" size="sm" inset>Verwijderd</flux:badge>
+                            @elseif(!$tenant->is_active)
+                                <flux:badge color="zinc" size="sm" inset>Inactief</flux:badge>
+                            @else
+                                <flux:badge color="green" size="sm" inset>Actief</flux:badge>
+                            @endif
                         </flux:table.cell>
                         <flux:table.cell>
                             @if($tenant->stripe_account_id)
@@ -82,16 +88,61 @@
                             <span class="text-sm font-medium">{{ $tenant->created_at->format('d M Y') }}</span>
                         </flux:table.cell>
                         <flux:table.cell>
-                            <div class="flex items-center gap-2">
-                                <flux:button variant="ghost" size="sm" icon="pencil-square" title="Bewerken" />
-                                @if($tenant->primary_domain)
-                                    <flux:button href="http://{{ $tenant->primary_domain->domain }}" target="_blank" variant="ghost" size="sm" icon="arrow-top-right-on-square" title="Bezoek Shop" />
-                                @endif
-                            </div>
+                            <flux:dropdown>
+                                <flux:button variant="ghost" size="sm" icon="ellipsis-horizontal" />
+                                <flux:menu>
+                                    @if(!$tenant->trashed())
+                                        <flux:menu.item icon="pencil-square" wire:click="editTenant('{{ $tenant->id }}')">Bewerken</flux:menu.item>
+                                        
+                                        @if($tenant->primary_domain)
+                                            <flux:menu.item icon="arrow-top-right-on-square" href="http://{{ $tenant->primary_domain->domain }}" target="_blank">Bezoek Shop</flux:menu.item>
+                                        @endif
+                                        
+                                        <flux:menu.item icon="{{ $tenant->is_active ? 'pause' : 'play' }}" wire:click="toggleActive('{{ $tenant->id }}')">
+                                            {{ $tenant->is_active ? 'Deactiveren' : 'Activeren' }}
+                                        </flux:menu.item>
+                                        
+                                        <flux:menu.separator />
+                                        <flux:menu.item icon="trash" variant="danger" wire:click="softDelete('{{ $tenant->id }}')">Verwijderen</flux:menu.item>
+                                    @else
+                                        <flux:menu.item icon="arrow-path" wire:click="restoreTenant('{{ $tenant->id }}')">Herstellen</flux:menu.item>
+                                        <flux:menu.separator />
+                                        <flux:menu.item icon="trash" variant="danger" wire:confirm="Weet je zeker dat je deze shop permanent wilt verwijderen? Dit wist ook de database." wire:click="hardDelete('{{ $tenant->id }}')">Definitief Verwijderen</flux:menu.item>
+                                    @endif
+                                </flux:menu>
+                            </flux:dropdown>
                         </flux:table.cell>
                     </flux:table.row>
                 @endforeach
             </flux:table.rows>
         </flux:table>
     </div>
+
+    <!-- Create/Edit Modal -->
+    <flux:modal name="tenant-modal" class="md:w-96">
+        <form wire:submit="save" class="space-y-6">
+            <div>
+                <flux:heading size="lg">{{ $isEditing ? 'Webshop Bewerken' : 'Nieuwe Webshop' }}</flux:heading>
+                <flux:text size="sm" class="mb-4">{{ $isEditing ? 'Pas de naam of het domein van de webshop aan.' : 'Vul de basisgegevens in om een nieuwe tenant en database aan te maken.' }}</flux:text>
+            </div>
+
+            <div class="space-y-4">
+                <flux:input wire:model="name" label="Naam Webshop" placeholder="Bijv. Mijn Coole Shop" required />
+                
+                <flux:input wire:model="domain" label="Domein" placeholder="Bijv. coole-shop.localhost" required>
+                    <x-slot:icon>
+                        <flux:icon name="globe-alt" class="text-neutral-400" />
+                    </x-slot:icon>
+                </flux:input>
+                <flux:text size="xs" class="text-neutral-500">Zorg ervoor dat het domein (lokaal) via je hosts file of (online) via DNS correct staat ingesteld.</flux:text>
+            </div>
+
+            <div class="flex justify-end gap-2">
+                <flux:modal.close>
+                    <flux:button variant="ghost">Annuleren</flux:button>
+                </flux:modal.close>
+                <flux:button type="submit" variant="primary">Opslaan</flux:button>
+            </div>
+        </form>
+    </flux:modal>
 </div>

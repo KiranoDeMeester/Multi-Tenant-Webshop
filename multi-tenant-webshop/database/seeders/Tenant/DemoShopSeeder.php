@@ -35,8 +35,12 @@ class DemoShopSeeder extends Seeder
             'theme_font_family' => 'Outfit',
             'layout_type' => 'modern',
             'show_hero_banner' => true,
+            'hero_image_url' => 'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=1600&q=80',
             'shop_name' => 'Minimalist Design Store',
             'shop_description' => 'Hoogwaardige producten voor de moderne minimalist.',
+            'about_us_content' => 'Wij zijn een passievol team van designers die geloven dat minder meer is. Onze missie is om rust en schoonheid te brengen in elk interieur door middel van zorgvuldig geselecteerde objecten.',
+            'privacy_policy_content' => 'Jouw privacy is belangrijk voor ons. Wij verzamelen alleen de hoogst noodzakelijke gegevens om je bestelling te verwerken en je ervaring te verbeteren.',
+            'terms_conditions_content' => 'Onze algemene voorwaarden zijn simpel en eerlijk. We streven naar 100% klanttevredenheid bij elke aankoop.',
         ];
 
         foreach ($settings as $key => $value) {

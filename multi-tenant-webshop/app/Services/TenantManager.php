@@ -69,9 +69,7 @@ class TenantManager
             return [];
         }
 
-        return \App\Models\Tenant\Setting::where('key', 'like', 'theme_%')
-            ->pluck('value', 'key')
-            ->toArray();
+        return \App\Models\Tenant\Setting::pluck('value', 'key')->toArray();
     }
 
     /**

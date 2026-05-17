@@ -4,14 +4,14 @@
             <nav class="flex items-center gap-2 text-sm font-medium mb-4">
                 <a href="{{ route('storefront.account') }}" class="text-zinc-500 hover:text-black transition-colors">{{ __('Mijn Account') }}</a>
                 <span class="text-zinc-300">/</span>
-                <span class="text-black">{{ __('Adressen') }}</span>
+                <span class="text-black font-bold uppercase tracking-widest text-[10px]">{{ __('Adressen') }}</span>
             </nav>
             
-            <h1 class="text-3xl font-black mt-4 text-black">{{ __('Mijn Adressen') }}</h1>
-            <p class="text-zinc-600 mt-1">{{ __('Beheer je bezorg- en factuuradressen.') }}</p>
+            <h1 class="text-3xl font-black mt-4 text-black uppercase tracking-tighter">{{ __('Mijn Adressen') }}</h1>
+            <p class="text-zinc-600 mt-1 font-medium">{{ __('Beheer je bezorg- en factuuradressen.') }}</p>
         </div>
         @if(!$showForm)
-            <flux:button variant="primary" icon="plus" wire:click="createAddress">{{ __('Nieuw Adres') }}</flux:button>
+            <flux:button variant="primary" icon="plus" wire:click="createAddress" class="font-bold">{{ __('Nieuw Adres') }}</flux:button>
         @endif
     </div>
 
@@ -20,41 +20,6 @@
     @endif
 
     @if($showForm)
-        <div class="bg-white p-8 rounded-3xl shadow-sm border border-zinc-100 mb-12">
-            <h2 class="text-xl font-bold mb-6 text-black">{{ $editingId ? __('Adres Bewerken') : __('Nieuw Adres Toevoegen') }}</h2>
-            
-            <form wire:submit="saveAddress" class="space-y-6">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <flux:field>
-                        <flux:label class="text-black font-bold">{{ __('Voornaam') }}</flux:label>
-                        <flux:input wire:model="first_name" input:class="!text-black !font-bold" />
-                    </flux:field>
-                    <flux:field>
-                        <flux:label class="text-black font-bold">{{ __('Achternaam') }}</flux:label>
-                        <flux:input wire:model="last_name" input:class="!text-black !font-bold" />
-                    </flux:field>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div class="md:col-span-2">
-                        <flux:field>
-                            <flux:label class="text-black font-bold">{{ __('Straat') }}</flux:label>
-                            <flux:input wire:model="street" input:class="!text-black !font-bold" />
-                        </flux:field>
-                    </div>
-                    <flux:field>
-                        <flux:label class="text-black font-bold">{{ __('Huisnummer') }}</flux:label>
-                        <flux:input wire:model="house_number" input:class="!text-black !font-bold" />
-                    </flux:field>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <flux:field>
-                        <flux:label class="text-black font-bold">{{ __('Postcode') }}</flux:label>
-                        <flux:input wire:model="postal_code" input:class="!text-black !font-bold" />
-                    </flux:field>
-                    <flux:field>
-                        <flux:label class="text-black font-bold">{{ __('Stad') }}</flux:label>
         <div class="max-w-2xl bg-white border-2 border-black rounded-[3rem] p-12 shadow-[20px_20px_0px_0px_rgba(0,0,0,1)] mb-20 animate-in fade-in slide-in-from-bottom-8 duration-500">
             <h2 class="text-3xl font-black mb-10 uppercase tracking-tight">{{ $editingId ? __('Adres Bewerken') : __('Nieuw Adres Toevoegen') }}</h2>
             
@@ -84,10 +49,10 @@
                 </flux:select>
 
                 <div class="flex items-center gap-6 pt-10">
-                    <button type="submit" class="btn-high-contrast flex-1">
+                    <button type="submit" class="w-full bg-black text-white font-black uppercase tracking-widest py-4 rounded-2xl hover:bg-zinc-800 transition-all shadow-lg">
                         {{ __('Adres Opslaan') }}
                     </button>
-                    <button type="button" wire:click="$set('showForm', false)" class="btn-high-contrast-outline">
+                    <button type="button" wire:click="$set('showForm', false)" class="w-full bg-white text-black border-2 border-black font-black uppercase tracking-widest py-4 rounded-2xl hover:bg-zinc-50 transition-all">
                         {{ __('Annuleren') }}
                     </button>
                 </div>
@@ -97,7 +62,7 @@
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
         @foreach($addresses as $address)
-            <div class="group bg-white border-2 border-black rounded-[2.5rem] p-10 hover:shadow-[15px_15px_0px_0px_rgba(0,0,0,1)] transition-all duration-500 flex flex-col justify-between">
+            <div class="group bg-white border-2 border-black rounded-[2.5rem] p-10 hover:shadow-[15px_15px_0px_0px_rgba(0,0,0,1)] transition-all duration-500 flex flex-col justify-between" wire:key="{{ $address->id }}">
                 <div>
                     <div class="flex justify-between items-start mb-8">
                         <span class="text-[10px] font-black uppercase tracking-[0.3em] px-4 py-1.5 bg-neutral-100 rounded-full text-neutral-400 group-hover:bg-black group-hover:text-white transition-all">
@@ -122,5 +87,6 @@
                     </div>
                 </div>
             </div>
+        @endforeach
     </div>
 </div>

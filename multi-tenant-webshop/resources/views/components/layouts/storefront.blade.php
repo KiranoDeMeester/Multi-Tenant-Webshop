@@ -71,19 +71,13 @@
                         </a>
                         
                         <nav class="hidden md:flex items-center gap-8">
-                            <a href="{{ route('storefront.products.index') }}" class="text-xs font-black uppercase tracking-[0.2em] hover:text-indigo-600 transition-colors">{{ __('Producten') }}</a>
-                            <a href="#" class="text-xs font-black uppercase tracking-[0.2em] hover:text-indigo-600 transition-colors">{{ __('Collecties') }}</a>
-                            <a href="#" class="text-xs font-black uppercase tracking-[0.2em] hover:text-indigo-600 transition-colors">{{ __('Over ons') }}</a>
+                            <a href="{{ route('storefront.products.index') }}#products" class="text-xs font-black uppercase tracking-[0.2em] hover:text-indigo-600 transition-colors">{{ __('Producten') }}</a>
+                            <a href="{{ route('storefront.pages.collections') }}" wire:navigate class="text-xs font-black uppercase tracking-[0.2em] hover:text-indigo-600 transition-colors">{{ __('Collecties') }}</a>
+                            <a href="{{ route('storefront.pages.about-us') }}" wire:navigate class="text-xs font-black uppercase tracking-[0.2em] hover:text-indigo-600 transition-colors">{{ __('Over ons') }}</a>
                         </nav>
                     </div>
 
                     <div class="flex items-center gap-6">
-                        <button class="p-2 text-black hover:scale-110 transition-transform">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-6 h-6">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
-                            </svg>
-                        </button>
-                        
                         <livewire:storefront.navigation.cart-button />
                         
                         <div class="h-8 w-0.5 bg-black"></div>
@@ -136,8 +130,8 @@
                 </div>
                 <div class="flex gap-8 text-[10px] font-black uppercase tracking-[0.3em] text-neutral-600">
                     <a href="{{ route('storefront.pages.privacy') }}" wire:navigate>{{ __('Privacy') }}</a>
-                    <a href="#">{{ __('Terms') }}</a>
-                    <a href="#">{{ __('Cookies') }}</a>
+                    <a href="{{ route('storefront.pages.terms') }}" wire:navigate>{{ __('Terms') }}</a>
+                    <a href="#" onclick="Livewire.dispatch('show-cookie-banner')">{{ __('Cookies') }}</a>
                 </div>
             </div>
         </footer>
