@@ -13,7 +13,7 @@
                 <flux:text class="text-neutral-400">{{ __('Log in op je account bij :name', ['name' => app(\App\Services\TenantManager::class)->getTenant()->name]) }}</flux:text>
             </div>
             <!-- Decorative gradient -->
-            <div class="absolute inset-0 bg-gradient-to-br from-indigo-600/20 to-transparent"></div>
+            <div class="absolute inset-0 bg-gradient-to-br from-primary/20 to-transparent"></div>
         </div>
 
 
@@ -30,10 +30,10 @@
                         </div>
                     </flux:button>
 
-                    <flux:button wire:click="goToDashboard" variant="primary" icon="squares-2x2" class="h-16 text-lg justify-start px-6">
+                    <flux:button wire:click="goToDashboard" variant="primary" icon="squares-2x2" class="h-16 text-lg justify-start px-6 bg-primary hover:bg-primary/90 border-none">
                         <div class="text-left">
                             <div class="font-bold">{{ __('Ik wil beheren') }}</div>
-                            <div class="text-xs text-indigo-200">{{ __('Ga naar het merchant dashboard') }}</div>
+                            <div class="text-xs text-white/80">{{ __('Ga naar het merchant dashboard') }}</div>
                         </div>
                     </flux:button>
                 </div>
@@ -55,7 +55,7 @@
                     <flux:link href="#" class="text-sm">{{ __('Wachtwoord vergeten?') }}</flux:link>
                 </div>
 
-                <flux:button type="submit" variant="primary" class="w-full h-12 bg-indigo-600 hover:bg-indigo-700 border-none">{{ __('Inloggen') }}</flux:button>
+                <flux:button type="submit" variant="primary" class="w-full h-12 bg-primary hover:bg-primary/95 border-none">{{ __('Inloggen') }}</flux:button>
 
                 <div class="pt-6 border-t border-neutral-100 text-center space-y-4">
                     <flux:text size="sm">

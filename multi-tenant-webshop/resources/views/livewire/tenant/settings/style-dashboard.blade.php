@@ -87,7 +87,7 @@
                         <flux:card class="space-y-6">
                             <div>
                                 <flux:label>{{ __('Webshop Layout') }}</flux:label>
-                                <div class="grid grid-cols-2 gap-4 mt-2">
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-2">
                                     <label class="relative flex flex-col items-center gap-2 p-4 border-2 rounded-xl cursor-pointer transition-all {{ $layout_type === 'modern' ? 'border-indigo-600 bg-indigo-50/50' : 'border-neutral-200 hover:border-neutral-300' }}">
                                         <input type="radio" wire:model.live="layout_type" value="modern" class="sr-only">
                                         <flux:icon name="rectangle-group" class="h-8 w-8 {{ $layout_type === 'modern' ? 'text-indigo-600' : 'text-neutral-400' }}" />
@@ -100,6 +100,13 @@
                                         <flux:icon name="queue-list" class="h-8 w-8 {{ $layout_type === 'minimal' ? 'text-indigo-600' : 'text-neutral-400' }}" />
                                         <span class="font-bold {{ $layout_type === 'minimal' ? 'text-indigo-900' : 'text-neutral-700' }}">{{ __('Minimal') }}</span>
                                         <span class="text-xs text-center text-neutral-500">{{ __('Compact, focus op producten.') }}</span>
+                                    </label>
+
+                                    <label class="relative flex flex-col items-center gap-2 p-4 border-2 rounded-xl cursor-pointer transition-all {{ $layout_type === 'editorial' ? 'border-indigo-600 bg-indigo-50/50' : 'border-neutral-200 hover:border-neutral-300' }}">
+                                        <input type="radio" wire:model.live="layout_type" value="editorial" class="sr-only">
+                                        <flux:icon name="squares-plus" class="h-8 w-8 {{ $layout_type === 'editorial' ? 'text-indigo-600' : 'text-neutral-400' }}" />
+                                        <span class="font-bold {{ $layout_type === 'editorial' ? 'text-indigo-900' : 'text-neutral-700' }}">{{ __('Editorial') }}</span>
+                                        <span class="text-xs text-center text-neutral-500">{{ __('Asymmetrisch, luxe magazine stijl.') }}</span>
                                     </label>
                                 </div>
                             </div>
@@ -155,10 +162,14 @@
                                             @if(!$has_uploaded_hero_image && !$hero_image_upload)
                                                 <flux:input wire:model="hero_image_url" :placeholder="__('https://example.com/afbeelding.jpg')" />
                                             @endif
+
+                                            <div class="grid grid-cols-1 gap-4 pt-2 border-t border-neutral-100 dark:border-neutral-800">
+                                                <flux:input wire:model.live="hero_title" :label="__('Hero Titel')" :placeholder="__('Laat leeg voor standaardtekst')" />
+                                                <flux:textarea wire:model.live="hero_subtitle" :label="__('Hero Subtitel / Beschrijving')" :placeholder="__('Laat leeg voor standaardtekst')" rows="2" />
+                                            </div>
                                         </div>
                                     @endif
                                 </div>
-                                <flux:switch wire:model="show_newsletter_popup" :label="__('Toon Nieuwsbrief Popup')" />
                             </div>
                         </flux:card>
                     </div>
@@ -187,10 +198,10 @@
                     <div class="space-y-4">
                         <!-- Hero Preview -->
                         @if($show_hero_banner)
-                            <div class="relative h-24 rounded-lg flex items-center justify-center overflow-hidden" style="background-color: {{ $primary_color }}20">
-                                <div class="text-center">
-                                    <div class="text-[10px] font-bold uppercase tracking-wider mb-1" style="color: {{ $primary_color }}">{{ __('Nieuwe Collectie') }}</div>
-                                    <div class="text-xs font-bold" style="color: {{ $primary_color }}">{{ __('Ontdek onze shop') }}</div>
+                            <div class="relative h-24 rounded-lg flex items-center justify-center overflow-hidden px-4" style="background-color: {{ $primary_color }}20">
+                                <div class="text-center max-w-[80%]">
+                                    <div class="text-[9px] font-bold uppercase tracking-wider mb-1 line-clamp-1" style="color: {{ $primary_color }}">{{ $hero_title ?: __('Nieuwe Collectie') }}</div>
+                                    <div class="text-[8px] font-medium line-clamp-2 leading-tight" style="color: {{ $primary_color }}">{{ $hero_subtitle ?: __('Ontdek onze shop') }}</div>
                                 </div>
                                 <div class="absolute bottom-1 right-1 h-8 w-8 rounded-full flex items-center justify-center text-white" style="background-color: {{ $accent_color }}">
                                     <flux:icon name="shopping-cart" size="xs" />
@@ -198,23 +209,52 @@
                             </div>
                         @endif
 
-                        <div class="{{ $layout_type === 'minimal' ? 'space-y-2' : 'grid grid-cols-2 gap-2' }}">
-                            <div class="aspect-square rounded-lg bg-neutral-50 dark:bg-neutral-800 border border-neutral-100 flex flex-col p-2">
-                                <div class="flex-1 bg-neutral-200 dark:bg-neutral-700 rounded mb-2"></div>
-                                <div class="h-1.5 w-full bg-neutral-300 dark:bg-neutral-600 rounded mb-1"></div>
-                                <div class="h-1.5 w-1/2 bg-neutral-400 dark:bg-neutral-500 rounded"></div>
+                        @if($layout_type === 'minimal')
+                            <div class="space-y-2">
+                                <div class="rounded-lg bg-neutral-50 dark:bg-neutral-800 border border-neutral-100 flex items-center p-2 gap-3">
+                                    <div class="h-10 w-10 bg-neutral-200 dark:bg-neutral-700 rounded shrink-0"></div>
+                                    <div class="flex-1 space-y-1">
+                                        <div class="h-1.5 w-1/2 bg-neutral-300 dark:bg-neutral-600 rounded"></div>
+                                        <div class="h-1 w-1/4 bg-neutral-400 dark:bg-neutral-500 rounded"></div>
+                                    </div>
+                                </div>
+                                <div class="rounded-lg bg-neutral-50 dark:bg-neutral-800 border border-neutral-100 flex items-center p-2 gap-3">
+                                    <div class="h-10 w-10 bg-neutral-200 dark:bg-neutral-700 rounded shrink-0"></div>
+                                    <div class="flex-1 space-y-1">
+                                        <div class="h-1.5 w-1/2 bg-neutral-300 dark:bg-neutral-600 rounded"></div>
+                                        <div class="h-1 w-1/4 bg-neutral-400 dark:bg-neutral-500 rounded"></div>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="aspect-square rounded-lg bg-neutral-50 dark:bg-neutral-800 border border-neutral-100 flex flex-col p-2">
-                                <div class="flex-1 bg-neutral-200 dark:bg-neutral-700 rounded mb-2"></div>
-                                <div class="h-1.5 w-full bg-neutral-300 dark:bg-neutral-600 rounded mb-1"></div>
-                                <div class="h-1.5 w-1/2 bg-neutral-400 dark:bg-neutral-500 rounded"></div>
+                        @elseif($layout_type === 'editorial')
+                            <div class="space-y-4">
+                                <div class="rounded-[1.5rem] bg-neutral-50 dark:bg-neutral-800 border border-neutral-100 flex flex-col p-3">
+                                    <div class="aspect-[16/10] bg-neutral-200 dark:bg-neutral-700 rounded-xl mb-2"></div>
+                                    <div class="flex justify-between items-center">
+                                        <div class="h-1.5 w-1/2 bg-neutral-300 dark:bg-neutral-600 rounded"></div>
+                                        <div class="h-1.5 w-10 bg-neutral-400 dark:bg-neutral-500 rounded"></div>
+                                    </div>
+                                </div>
+                                <div class="rounded-[2rem] bg-neutral-50 dark:bg-neutral-800 border border-neutral-100 flex flex-col p-3 translate-x-2">
+                                    <div class="aspect-[4/5] bg-neutral-200 dark:bg-neutral-700 rounded-[1.5rem] mb-2"></div>
+                                    <div class="flex justify-between items-center">
+                                        <div class="h-1.5 w-1/2 bg-neutral-300 dark:bg-neutral-600 rounded"></div>
+                                        <div class="h-1.5 w-10 bg-neutral-400 dark:bg-neutral-500 rounded"></div>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-
-                        @if($show_newsletter_popup)
-                            <div class="p-3 rounded-lg border-2 border-dashed border-indigo-200 bg-indigo-50/50 flex items-center justify-between">
-                                <span class="text-[10px] text-indigo-700 font-medium">{{ __('Newsletter Popup Active') }}</span>
-                                <flux:icon name="envelope" size="xs" class="text-indigo-600" />
+                        @else
+                            <div class="grid grid-cols-2 gap-2">
+                                <div class="aspect-square rounded-lg bg-neutral-50 dark:bg-neutral-800 border border-neutral-100 flex flex-col p-2">
+                                    <div class="flex-1 bg-neutral-200 dark:bg-neutral-700 rounded mb-2"></div>
+                                    <div class="h-1.5 w-full bg-neutral-300 dark:bg-neutral-600 rounded mb-1"></div>
+                                    <div class="h-1.5 w-1/2 bg-neutral-400 dark:bg-neutral-500 rounded"></div>
+                                </div>
+                                <div class="aspect-square rounded-lg bg-neutral-50 dark:bg-neutral-800 border border-neutral-100 flex flex-col p-2">
+                                    <div class="flex-1 bg-neutral-200 dark:bg-neutral-700 rounded mb-2"></div>
+                                    <div class="h-1.5 w-full bg-neutral-300 dark:bg-neutral-600 rounded mb-1"></div>
+                                    <div class="h-1.5 w-1/2 bg-neutral-400 dark:bg-neutral-500 rounded"></div>
+                                </div>
                             </div>
                         @endif
                     </div>

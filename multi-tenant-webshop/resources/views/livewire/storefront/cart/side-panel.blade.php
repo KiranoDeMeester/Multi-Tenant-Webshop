@@ -58,7 +58,7 @@
                     <div class="flex-1 min-w-0 flex flex-col justify-between">
                         <div>
                             <div class="flex justify-between items-start mb-1">
-                                <h4 class="text-sm font-bold text-black truncate pr-2 group-hover:text-indigo-600 transition-colors">{{ $item['name'] }}</h4>
+                                <h4 class="text-sm font-bold text-black truncate pr-2 group-hover:text-primary transition-colors">{{ $item['name'] }}</h4>
                                 <button wire:click="removeItem('{{ $key }}')" class="text-zinc-300 hover:text-red-500 transition-colors">
                                     <flux:icon name="trash" size="xs" />
                                 </button>
@@ -89,7 +89,7 @@
                     </div>
                     <h3 class="text-lg font-black text-black">{{ __('Je wagentje is nog leeg') }}</h3>
                     <p class="text-sm text-zinc-500 mt-2">{{ __('Voeg wat moois toe uit onze catalogus.') }}</p>
-                    <button x-on:click="close()" class="mt-8 px-8 py-3 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 transition-all">
+                    <button x-on:click="close()" class="mt-8 px-8 py-3 bg-primary text-white font-bold rounded-xl hover:opacity-90 transition-all">
                         {{ __('Verder winkelen') }}
                     </button>
                 </div>
