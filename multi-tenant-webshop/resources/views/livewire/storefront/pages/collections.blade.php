@@ -18,7 +18,7 @@
             @php
                 $displayImage = $category->getFirstMediaUrl('categories', 'large') ?: ($category->image ?: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=800&q=80');
             @endphp
-            <a href="{{ route('storefront.products.index', ['category' => $category->slug]) }}" 
+            <a href="{{ route('storefront.categories.show', ['categorySlug' => $category->slug]) }}" wire:navigate
                class="group relative aspect-[4/5] overflow-hidden transition-all duration-700 {{ $layoutType === 'minimal' ? 'rounded-2xl shadow-sm hover:shadow-lg hover:scale-[1.01]' : 'rounded-[3rem] border-2 border-black shadow-[15px_15px_0px_0px_rgba(0,0,0,1)] hover:shadow-[25px_25px_0px_0px_rgba(0,0,0,1)]' }}">
                 
                 <img src="{{ $displayImage }}" 

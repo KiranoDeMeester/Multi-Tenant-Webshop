@@ -80,7 +80,7 @@
                         </a>
                         
                         <nav class="hidden md:flex items-center gap-8">
-                            <a href="{{ route('storefront.products.index') }}#products" class="{{ $layoutType === 'minimal' ? 'text-sm font-medium text-neutral-600 hover:text-primary transition-colors' : 'text-xs font-black uppercase tracking-[0.2em] hover:text-primary transition-colors' }}">{{ __('Producten') }}</a>
+                            <a href="{{ route('storefront.products.index') }}" wire:navigate class="{{ $layoutType === 'minimal' ? 'text-sm font-medium text-neutral-600 hover:text-primary transition-colors' : 'text-xs font-black uppercase tracking-[0.2em] hover:text-primary transition-colors' }}">{{ __('Producten') }}</a>
                             <a href="{{ route('storefront.pages.collections') }}" wire:navigate class="{{ $layoutType === 'minimal' ? 'text-sm font-medium text-neutral-600 hover:text-primary transition-colors' : 'text-xs font-black uppercase tracking-[0.2em] hover:text-primary transition-colors' }}">{{ __('Collecties') }}</a>
                             <a href="{{ route('storefront.pages.about-us') }}" wire:navigate class="{{ $layoutType === 'minimal' ? 'text-sm font-medium text-neutral-600 hover:text-primary transition-colors' : 'text-xs font-black uppercase tracking-[0.2em] hover:text-primary transition-colors' }}">{{ __('Over ons') }}</a>
                         </nav>

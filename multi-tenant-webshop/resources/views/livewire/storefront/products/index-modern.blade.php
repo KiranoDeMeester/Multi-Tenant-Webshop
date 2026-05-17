@@ -37,15 +37,15 @@
             <div>
                 <flux:heading size="lg" class="mb-4">{{ __('Categorieën') }}</flux:heading>
                 <div class="space-y-2">
-                    <button wire:click="$set('category', '')" 
-                            class="w-full text-left px-3 py-2 rounded-lg text-sm transition-colors {{ $category === '' ? 'bg-secondary/10 text-secondary font-bold' : 'text-neutral-600 hover:bg-neutral-100' }}">
+                    <a href="{{ route('storefront.products.index') }}" wire:navigate
+                            class="block w-full text-left px-3 py-2 rounded-lg text-sm transition-colors {{ $category === '' ? 'bg-secondary/10 text-secondary font-bold' : 'text-neutral-600 hover:bg-neutral-100' }}">
                         {{ __('Alle Producten') }}
-                    </button>
+                    </a>
                     @foreach($categories as $cat)
-                        <button wire:click="$set('category', '{{ $cat->slug }}')" 
-                                class="w-full text-left px-3 py-2 rounded-lg text-sm transition-colors {{ $category === $cat->slug ? 'bg-secondary/10 text-secondary font-bold' : 'text-neutral-600 hover:bg-neutral-100' }}">
+                        <a href="{{ route('storefront.categories.show', ['categorySlug' => $cat->slug]) }}" wire:navigate
+                                class="block w-full text-left px-3 py-2 rounded-lg text-sm transition-colors {{ $category === $cat->slug ? 'bg-secondary/10 text-secondary font-bold' : 'text-neutral-600 hover:bg-neutral-100' }}">
                             {{ $cat->name }}
-                        </button>
+                        </a>
                     @endforeach
                 </div>
             </div>

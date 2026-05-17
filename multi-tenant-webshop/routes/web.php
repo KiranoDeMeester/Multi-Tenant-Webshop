@@ -36,6 +36,7 @@ foreach ($centralDomains as $domain) {
 Route::domain('{tenant}.' . config('app.central_domain', 'localhost'))->middleware(['tenant'])->group(function () {
     // Public Storefront
     Route::get('/', \App\Livewire\Storefront\Products\Index::class)->name('storefront.products.index');
+    Route::get('/categorie/{categorySlug}', \App\Livewire\Storefront\Products\Index::class)->name('storefront.categories.show')->where('categorySlug', '[a-z0-9-]+');
     Route::get('/product/{slug}', \App\Livewire\Storefront\Products\Show::class)->name('storefront.products.show');
     Route::get('/winkelwagen', \App\Livewire\Storefront\Cart\Index::class)->name('storefront.cart.index');
     Route::get('/mijn-account', \App\Livewire\Storefront\Account\Dashboard::class)->name('storefront.account')->middleware('auth:customer,tenant');
