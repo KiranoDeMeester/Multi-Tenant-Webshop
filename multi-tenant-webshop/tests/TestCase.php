@@ -26,6 +26,8 @@ abstract class TestCase extends BaseTestCase
 
     protected function migrateLandlord(): void
     {
+        \Illuminate\Support\Facades\DB::purge('landlord');
+
         $this->artisan('migrate', [
             '--database' => 'landlord',
             '--path' => 'database/migrations',

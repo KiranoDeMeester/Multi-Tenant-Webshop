@@ -160,7 +160,7 @@ class RegisterTenant extends Component
 
     public function render()
     {
-        // Return view without layout to define custom clean HTML structure directly in the view
-        return view('livewire.landlord.register-tenant');
+        return view('livewire.landlord.register-tenant')
+            ->layout('layouts.blank', ['title' => 'Winkel Aanmaken - ShopSaaS Onboarding']);
     }
 }

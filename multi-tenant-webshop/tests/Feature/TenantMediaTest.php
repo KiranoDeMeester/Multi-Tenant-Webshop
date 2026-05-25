@@ -18,10 +18,7 @@ beforeEach(function () {
     DB::reconnect('tenant');
 
     // Migrate landlord tables
-    $this->artisan('migrate', [
-        '--path' => 'database/migrations/landlord',
-        '--realpath' => true,
-    ]);
+    $this->migrateLandlord();
 
     Storage::fake('public');
 });

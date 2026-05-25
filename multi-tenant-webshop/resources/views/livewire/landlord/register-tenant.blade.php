@@ -1,16 +1,4 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Winkel Aanmaken - ShopSaaS Onboarding</title>
-    @fonts
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-    @fluxAppearance
-    @livewireStyles
-</head>
-<body class="bg-neutral-50 dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 antialiased min-h-screen flex items-center justify-center p-6">
-    <div class="w-full max-w-xl">
+<div class="w-full max-w-xl">
         <!-- Logo -->
         <div class="text-center mb-8">
             <div class="inline-flex h-12 w-12 bg-indigo-600 rounded-2xl items-center justify-center text-white font-extrabold text-2xl shadow-lg shadow-indigo-500/20 mb-3">
@@ -101,7 +89,3 @@
             </div>
         @endif
     </div>
-
-    @livewireScripts
-</body>
-</html>

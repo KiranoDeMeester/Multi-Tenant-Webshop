@@ -17,10 +17,7 @@ beforeEach(function () {
     DB::reconnect('tenant');
 
     // Migrate landlord tables
-    $this->artisan('migrate', [
-        '--path' => 'database/migrations/landlord',
-        '--realpath' => true,
-    ]);
+    $this->migrateLandlord();
 
     // Create a real tenant record to satisfy TenantManager
     $tenant = \App\Models\Landlord\Tenant::create([
