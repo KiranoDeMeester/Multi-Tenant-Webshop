@@ -15,6 +15,8 @@ $centralDomains = [
 foreach ($centralDomains as $domain) {
     Route::domain($domain)->middleware(['central'])->group(function () {
         Route::view('/', 'welcome')->name('home');
+        Route::get('subscribe', [\App\Http\Controllers\LandlordCheckoutController::class, 'subscribe'])->name('landlord.subscribe');
+        Route::get('onboarding', \App\Livewire\Landlord\RegisterTenant::class)->name('landlord.onboarding');
 
         Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('dashboard', \App\Livewire\Admin\Dashboard::class)->name('dashboard');
