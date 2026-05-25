@@ -19,10 +19,10 @@ foreach ($centralDomains as $domain) {
         Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('dashboard', \App\Livewire\Admin\Dashboard::class)->name('dashboard');
             Route::get('admin/tenants', \App\Livewire\Admin\Tenants\Index::class)->name('admin.tenants');
-            
-            // Stripe Callback (must be on central domain)
-            Route::get('stripe/callback', [StripeConnectController::class, 'callback'])->name('stripe.callback');
         });
+
+        // Stripe Callback (must be on central domain and accessible to returning users)
+        Route::get('stripe/callback', [StripeConnectController::class, 'callback'])->name('stripe.callback');
 
         Route::post('stripe/webhook', [StripeWebhookController::class, 'handle'])->name('stripe.webhook');
 

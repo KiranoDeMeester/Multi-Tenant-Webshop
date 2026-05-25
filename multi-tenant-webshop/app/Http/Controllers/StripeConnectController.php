@@ -79,6 +79,10 @@ class StripeConnectController extends Controller
 
             // Build redirect URL back to tenant dashboard
             $domain = $tenant->domains()->first()?->domain;
+            $port = request()->getPort();
+            if ($port && !in_array($port, [80, 443])) {
+                $domain = "{$domain}:{$port}";
+            }
             $protocol = str_contains(config('app.url'), 'https') ? 'https' : 'http';
             
             return redirect("{$protocol}://{$domain}/dashboard/payments")->with('success', 'Stripe account succesvol verbonden!');
