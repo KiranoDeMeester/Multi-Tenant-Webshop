@@ -51,6 +51,16 @@ class Tenant extends Model
         return $this->hasMany(Domain::class);
     }
 
+    public function primaryDomain()
+    {
+        return $this->hasOne(Domain::class)->where('is_primary', true);
+    }
+
+    public function getPrimaryDomainAttribute()
+    {
+        return $this->domains->firstWhere('is_primary', true);
+    }
+
     /**
      * Get the tenant's slug (domain prefix).
      */

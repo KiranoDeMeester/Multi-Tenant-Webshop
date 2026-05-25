@@ -95,7 +95,16 @@
                                         <flux:menu.item icon="pencil-square" wire:click="editTenant('{{ $tenant->id }}')">Bewerken</flux:menu.item>
                                         
                                         @if($tenant->primary_domain)
-                                            <flux:menu.item icon="arrow-top-right-on-square" href="http://{{ $tenant->primary_domain->domain }}" target="_blank">Bezoek Shop</flux:menu.item>
+                                            @php
+                                                $port = request()->getPort();
+                                                $redirectDomain = $tenant->primary_domain->domain;
+                                                if ($port && !in_array($port, [80, 443])) {
+                                                    $redirectDomain = "{$redirectDomain}:{$port}";
+                                                }
+                                                $protocol = str_contains(config('app.url'), 'https') ? 'https' : 'http';
+                                                $url = "{$protocol}://{$redirectDomain}";
+                                            @endphp
+                                            <flux:menu.item icon="arrow-top-right-on-square" href="{{ $url }}" target="_blank">Bezoek Shop</flux:menu.item>
                                         @endif
                                         
                                         <flux:menu.item icon="{{ $tenant->is_active ? 'pause' : 'play' }}" wire:click="toggleActive('{{ $tenant->id }}')">

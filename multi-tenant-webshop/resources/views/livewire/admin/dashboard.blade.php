@@ -59,7 +59,20 @@
                                 <div class="text-[10px] text-neutral-500 font-bold uppercase tracking-widest">{{ $tenant->primary_domain?->domain }}</div>
                             </div>
                         </div>
-                        <flux:button variant="ghost" size="sm" icon="arrow-right" />
+                        @if($tenant->primary_domain)
+                            @php
+                                $port = request()->getPort();
+                                $redirectDomain = $tenant->primary_domain->domain;
+                                if ($port && !in_array($port, [80, 443])) {
+                                    $redirectDomain = "{$redirectDomain}:{$port}";
+                                }
+                                $protocol = str_contains(config('app.url'), 'https') ? 'https' : 'http';
+                                $url = "{$protocol}://{$redirectDomain}";
+                            @endphp
+                            <flux:button variant="ghost" size="sm" icon="arrow-right" href="{{ $url }}" target="_blank" />
+                        @else
+                            <flux:button variant="ghost" size="sm" icon="arrow-right" disabled />
+                        @endif
                     </div>
                 @endforeach
             </div>
