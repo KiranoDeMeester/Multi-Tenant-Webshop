@@ -11,6 +11,12 @@
             </flux:sidebar.header>
 
             <flux:sidebar.nav>
+                <flux:sidebar.item icon="globe-alt" :href="route('home')">
+                    {{ __('Terug naar website') }}
+                </flux:sidebar.item>
+
+                <flux:separator />
+
                 <flux:sidebar.group :heading="__('Platform')" class="grid">
                     <flux:sidebar.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>
                         {{ __('Dashboard') }}

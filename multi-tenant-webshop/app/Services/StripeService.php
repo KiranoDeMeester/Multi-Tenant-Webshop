@@ -78,4 +78,38 @@ class StripeService
             throw $e;
         }
     }
+
+    /**
+     * Create a Stripe Checkout session for a Landlord subscription.
+     */
+    public function createLandlordSubscriptionSession(string $successUrl, string $cancelUrl)
+    {
+        try {
+            Stripe::setApiKey(config('services.stripe.secret'));
+
+            return Session::create([
+                'payment_method_types' => ['card', 'ideal'],
+                'line_items' => [[
+                    'price_data' => [
+                        'currency' => 'eur',
+                        'product_data' => [
+                            'name' => 'SaaS Platform Webshop Abonnement (Maandelijks)',
+                            'description' => 'Toegang tot het creëren en beheren van jouw eigen multi-tenant webshop.',
+                        ],
+                        'unit_amount' => 2900, // €29.00
+                    ],
+                    'quantity' => 1,
+                ]],
+                'mode' => 'payment',
+                'success_url' => $successUrl,
+                'cancel_url' => $cancelUrl,
+                'metadata' => [
+                    'type' => 'landlord_subscription',
+                ]
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Stripe Landlord Session Creation Error: ' . $e->getMessage());
+            throw $e;
+        }
+    }
 }
