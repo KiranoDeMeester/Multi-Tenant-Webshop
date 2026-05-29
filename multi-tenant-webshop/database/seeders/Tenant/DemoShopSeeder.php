@@ -27,6 +27,15 @@ class DemoShopSeeder extends Seeder
             ]
         );
 
+        // 1.2 Create Test Customer
+        \App\Models\Tenant\Customer::updateOrCreate(
+            ['email' => 'customer@example.com'],
+            [
+                'name' => 'Jane Smith',
+                'password' => Hash::make('password'),
+            ]
+        );
+
         // 2. Set Theme Settings
         $settings = [
             'theme_primary_color' => '#18181b', // Zinc 900

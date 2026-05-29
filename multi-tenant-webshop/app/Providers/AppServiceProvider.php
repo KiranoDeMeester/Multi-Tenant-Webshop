@@ -26,6 +26,10 @@ class AppServiceProvider extends ServiceProvider
     {
         Schema::defaultStringLength(191);
         $this->configureDefaults();
+
+        if ($this->app->runningInConsole()) {
+            $this->loadMigrationsFrom(database_path('migrations/landlord'));
+        }
     }
 
     /**

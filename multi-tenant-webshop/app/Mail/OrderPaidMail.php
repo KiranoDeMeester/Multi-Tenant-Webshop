@@ -4,32 +4,56 @@ namespace App\Mail;
 
 use App\Models\Tenant\Order;
 use App\Services\Tenant\InvoiceService;
+use App\Services\TenantManager;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
-use Illuminate\Queue\SerializesModels;
 
 class OrderPaidMail extends Mailable implements ShouldQueue
 {
-    use Queueable, SerializesModels;
+    use Queueable; // Removed SerializesModels to prevent Queue database connection deserialization errors
+
+    public string $orderId;
+    public ?string $tenantId;
+
+    protected ?Order $orderInstance = null;
 
     /**
      * Create a new message instance.
      */
-    public function __construct(
-        public Order $order
-    ) {}
+    public function __construct(string $orderId, ?string $tenantId = null)
+    {
+        $this->orderId = $orderId;
+        $this->tenantId = $tenantId;
+    }
+
+    /**
+     * Get the order instance dynamically, switching database connection context if needed.
+     */
+    protected function getOrder(): Order
+    {
+        if (!$this->orderInstance) {
+            if ($this->tenantId) {
+                $tenant = \App\Models\Landlord\Tenant::findOrFail($this->tenantId);
+                app(TenantManager::class)->setTenant($tenant);
+            }
+            $this->orderInstance = Order::with('items')->findOrFail($this->orderId);
+        }
+
+        return $this->orderInstance;
+    }
 
     /**
      * Get the message envelope.
      */
     public function envelope(): Envelope
     {
+        $order = $this->getOrder();
         return new Envelope(
-            subject: 'Bestelling Bevestigd - ' . $this->order->order_number,
+            subject: 'Bestelling Bevestigd - ' . $order->order_number,
         );
     }
 
@@ -38,11 +62,12 @@ class OrderPaidMail extends Mailable implements ShouldQueue
      */
     public function content(): Content
     {
+        $order = $this->getOrder();
         return new Content(
             markdown: 'emails.orders.paid',
             with: [
-                'order' => $this->order,
-                'items' => $this->order->items,
+                'order' => $order,
+                'items' => $order->items,
             ],
         );
     }
@@ -54,12 +79,14 @@ class OrderPaidMail extends Mailable implements ShouldQueue
      */
     public function attachments(): array
     {
+        $order = $this->getOrder();
         $invoiceService = app(InvoiceService::class);
-        $pdfContent = $invoiceService->generate($this->order);
+        $pdfContent = $invoiceService->generate($order);
 
         return [
-            Attachment::fromData(fn () => $pdfContent, "Factuur-{$this->order->order_number}.pdf")
+            Attachment::fromData(fn () => $pdfContent, "Factuur-{$order->order_number}.pdf")
                 ->withMime('application/pdf'),
         ];
     }
 }
+

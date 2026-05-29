@@ -1,7 +1,32 @@
 <div class="p-6">
-    <div class="mb-8">
-        <h1 class="text-3xl font-extrabold tracking-tight text-neutral-900 dark:text-white">Webshop Dashboard</h1>
-        <p class="mt-2 text-lg text-neutral-600 dark:text-neutral-400">Welkom terug! Hier is een overzicht van je winkel.</p>
+    <div class="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+            <h1 class="text-3xl font-extrabold tracking-tight text-neutral-900 dark:text-white">Webshop Dashboard</h1>
+            <p class="mt-2 text-lg text-neutral-600 dark:text-neutral-400">Welkom terug! Hier is een overzicht van je winkel.</p>
+        </div>
+
+        <!-- Filters -->
+        <div class="flex items-center gap-3">
+            <div class="flex flex-col gap-1">
+                <label for="date-range" class="text-xs font-bold text-neutral-500 uppercase tracking-wider">Periode</label>
+                <select id="date-range" wire:model.live="dateRange" class="rounded-xl border border-neutral-200 bg-white px-4 py-2 text-sm font-semibold text-neutral-800 shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 dark:bg-neutral-800 dark:border-neutral-700 dark:text-white">
+                    <option value="7">Laatste 7 dagen</option>
+                    <option value="30">Laatste 30 dagen</option>
+                    <option value="90">Laatste 90 dagen</option>
+                    <option value="all">Volledige geschiedenis</option>
+                </select>
+            </div>
+
+            <div class="flex flex-col gap-1">
+                <label for="order-status" class="text-xs font-bold text-neutral-500 uppercase tracking-wider">Betaalstatus</label>
+                <select id="order-status" wire:model.live="status" class="rounded-xl border border-neutral-200 bg-white px-4 py-2 text-sm font-semibold text-neutral-800 shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 dark:bg-neutral-800 dark:border-neutral-700 dark:text-white">
+                    <option value="paid">Betaald</option>
+                    <option value="pending">In afwachting</option>
+                    <option value="cancelled">Geannuleerd</option>
+                    <option value="all">Alle bestellingen</option>
+                </select>
+            </div>
+        </div>
     </div>
 
     <!-- Stats Grid -->
@@ -66,13 +91,17 @@
             <div class="flex items-center justify-between mb-8">
                 <div>
                     <h2 class="text-xl font-black text-black dark:text-white">Omzet Volume</h2>
-                    <p class="text-sm text-neutral-500">Omzet per dag in de afgelopen 30 dagen.</p>
+                    <p class="text-sm text-neutral-500">Omzet per dag in de geselecteerde periode.</p>
                 </div>
                 <div class="bg-indigo-50 dark:bg-indigo-900/30 px-4 py-2 rounded-full text-indigo-700 dark:text-indigo-300 text-xs font-bold uppercase tracking-widest">
-                    Laatste 30 dagen
+                    @if($dateRange === 'all')
+                        Volledige geschiedenis
+                    @else
+                        Laatste {{ $dateRange }} dagen
+                    @endif
                 </div>
             </div>
-            <div class="h-[350px]" x-data="{
+            <div class="h-[350px]" wire:key="sales-chart-{{ $dateRange }}-{{ $status }}" x-data="{
                 init() {
                     new Chart(this.$refs.canvas, {
                         type: 'line',
@@ -128,7 +157,7 @@
             <!-- Top Products Chart -->
             <div class="rounded-2xl bg-white p-8 shadow-sm border border-neutral-200 dark:bg-neutral-800 dark:border-neutral-700">
                 <h2 class="text-xl font-black text-black dark:text-white mb-6">Populairste Producten</h2>
-                <div class="h-[300px]" x-data="{
+                <div class="h-[300px]" wire:key="top-products-chart-{{ $dateRange }}-{{ $status }}" x-data="{
                     init() {
                         new Chart(this.$refs.canvas, {
                             type: 'bar',
@@ -165,7 +194,7 @@
             <!-- Customer Growth Chart -->
             <div class="rounded-2xl bg-white p-8 shadow-sm border border-neutral-200 dark:bg-neutral-800 dark:border-neutral-700">
                 <h2 class="text-xl font-black text-black dark:text-white mb-6">Klantengroei</h2>
-                <div class="h-[300px]" x-data="{
+                <div class="h-[300px]" wire:key="customer-growth-chart-{{ $dateRange }}" x-data="{
                     init() {
                         new Chart(this.$refs.canvas, {
                             type: 'line',
@@ -218,7 +247,7 @@
                 </flux:button>
             </div>
         </div>
-        
+
         <div class="rounded-2xl bg-white p-6 shadow-sm border border-neutral-200 dark:bg-neutral-800 dark:border-neutral-700">
             <h2 class="text-xl font-bold mb-4">Winkel Status</h2>
             <div class="flex items-center gap-2">
@@ -229,3 +258,4 @@
         </div>
     </div>
 </div>
+

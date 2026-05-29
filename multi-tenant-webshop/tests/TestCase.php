@@ -30,7 +30,7 @@ abstract class TestCase extends BaseTestCase
 
         $this->artisan('migrate', [
             '--database' => 'landlord',
-            '--path' => 'database/migrations',
+            '--path' => 'database/migrations/landlord',
             '--realpath' => true,
         ]);
     }
