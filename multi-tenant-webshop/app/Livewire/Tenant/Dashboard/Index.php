@@ -13,6 +13,14 @@ use Carbon\Carbon;
 
 class Index extends Component
 {
+    public string $dateRange = '30';
+    public string $status = 'paid';
+
+    protected $queryString = [
+        'dateRange' => ['except' => '30'],
+        'status' => ['except' => 'paid'],
+    ];
+
     public function render()
     {
         $lowStockProducts = Product::doesntHave('variations')
@@ -22,11 +30,26 @@ class Index extends Component
         $lowStockVariations = \App\Models\Tenant\ProductVariation::where('stock', '<', 5)
             ->count();
 
-        $last30Days = Carbon::now()->subDays(30);
+        // Calculate days to look back
+        $days = match($this->dateRange) {
+            '7' => 7,
+            '30' => 30,
+            '90' => 90,
+            'all' => (int) Carbon::now()->diffInDays(Order::min('created_at') ?? Carbon::now()->subYear()),
+            default => 30,
+        };
+        // Clamp to a maximum of 365 to keep the charts readable and fast
+        $days = min($days, 365);
+        $dateFilter = Carbon::now()->subDays($days);
 
-        // 1. Sales Volume (Last 30 Days)
-        $salesData = Order::where('created_at', '>=', $last30Days)
-            ->where('status', 'paid')
+        // 1. Sales Volume (Filtered by Date Range and Status)
+        $salesData = Order::query()
+            ->when($this->dateRange !== 'all', function ($query) use ($dateFilter) {
+                $query->where('created_at', '>=', $dateFilter);
+            })
+            ->when($this->status !== 'all', function ($query) {
+                $query->where('status', $this->status);
+            })
             ->select(
                 DB::raw('DATE(created_at) as date'),
                 DB::raw('SUM(total_amount) as total')
@@ -39,21 +62,33 @@ class Index extends Component
         // Fill missing dates with 0
         $chartSalesLabels = [];
         $chartSalesData = [];
-        for ($i = 30; $i >= 0; $i--) {
+        for ($i = $days; $i >= 0; $i--) {
             $date = Carbon::now()->subDays($i)->format('Y-m-d');
             $chartSalesLabels[] = Carbon::parse($date)->format('d M');
             $chartSalesData[] = ($salesData[$date] ?? 0) / 100; // In euros
         }
 
-        // 2. Top Products (By Quantity Sold)
-        $topProducts = OrderItem::select('product_name', DB::raw('SUM(quantity) as total_quantity'))
+        // 2. Top Products (By Quantity Sold, Filtered by Date Range and Status)
+        $topProducts = OrderItem::query()
+            ->whereHas('order', function ($query) use ($dateFilter) {
+                $query->when($this->dateRange !== 'all', function ($q) use ($dateFilter) {
+                    $q->where('created_at', '>=', $dateFilter);
+                })
+                ->when($this->status !== 'all', function ($q) {
+                    $q->where('status', $this->status);
+                });
+            })
+            ->select('product_name', DB::raw('SUM(quantity) as total_quantity'))
             ->groupBy('product_name')
             ->orderByDesc('total_quantity')
             ->limit(5)
             ->get();
 
-        // 3. Customer Growth (Last 30 Days)
-        $customerData = Customer::where('created_at', '>=', $last30Days)
+        // 3. Customer Growth (Last X Days)
+        $customerData = Customer::query()
+            ->when($this->dateRange !== 'all', function ($query) use ($dateFilter) {
+                $query->where('created_at', '>=', $dateFilter);
+            })
             ->select(
                 DB::raw('DATE(created_at) as date'),
                 DB::raw('COUNT(*) as count')
@@ -65,17 +100,27 @@ class Index extends Component
 
         $chartCustomerLabels = [];
         $chartCustomerData = [];
-        for ($i = 30; $i >= 0; $i--) {
+        for ($i = $days; $i >= 0; $i--) {
             $date = Carbon::now()->subDays($i)->format('Y-m-d');
             $chartCustomerLabels[] = Carbon::parse($date)->format('d M');
             $chartCustomerData[] = $customerData[$date] ?? 0;
         }
 
+        // Filtered Total Revenue Card
+        $totalRevenue = Order::query()
+            ->when($this->dateRange !== 'all', function ($query) use ($dateFilter) {
+                $query->where('created_at', '>=', $dateFilter);
+            })
+            ->when($this->status !== 'all', function ($query) {
+                $query->where('status', $this->status);
+            })
+            ->sum('total_amount') / 100;
+
         return view('livewire.tenant.dashboard.index', [
             'productCount' => Product::count(),
             'categoryCount' => Category::count(),
             'stockWarningCount' => $lowStockProducts + $lowStockVariations,
-            'totalRevenue' => Order::where('status', 'paid')->sum('total_amount') / 100,
+            'totalRevenue' => $totalRevenue,
             
             // Chart Data
             'chartSales' => [
@@ -93,3 +138,4 @@ class Index extends Component
         ])->layout('layouts.tenant');
     }
 }
+

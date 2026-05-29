@@ -6,8 +6,10 @@ use App\Mail\OrderPaidMail;
 use App\Models\Tenant\Order;
 use App\Models\Tenant\Product;
 use App\Models\Tenant\ProductVariation;
+use App\Services\TenantManager;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 
 class FinalizeOrderAction
 {
@@ -16,42 +18,63 @@ class FinalizeOrderAction
      */
     public function execute(Order $order): void
     {
-        try {
-            Log::info('Finalizing order', ['order_id' => $order->id]);
+        $tenant = app(TenantManager::class)->getTenant();
+        $tenantId = $tenant?->id;
+        $userId = auth('tenant')->id() ?? auth('customer')->id() ?? auth()->id();
 
-            // 1. Update Stock
-            foreach ($order->items as $item) {
-                try {
+        $context = [
+            'order_id' => $order->id,
+            'tenant_id' => $tenantId,
+            'user_id' => $userId,
+        ];
+
+        try {
+            Log::info('Finalizing order', $context);
+
+            // 1. Update Stock atomically using Transactions and Locks
+            DB::transaction(function () use ($order) {
+                foreach ($order->items as $item) {
                     if ($item->product_variation_id) {
-                        $variation = ProductVariation::find($item->product_variation_id);
+                        $variation = ProductVariation::where('id', $item->product_variation_id)
+                            ->lockForUpdate()
+                            ->first();
+                        
                         if ($variation) {
                             $variation->decrementStock($item->quantity);
+                        } else {
+                            throw new \Exception("Productvariatie niet gevonden: {$item->product_variation_id}");
                         }
                     } elseif ($item->product_id) {
-                        $product = Product::find($item->product_id);
+                        $product = Product::where('id', $item->product_id)
+                            ->lockForUpdate()
+                            ->first();
+
                         if ($product) {
                             $product->decrementStock($item->quantity);
+                        } else {
+                            throw new \Exception("Product niet gevonden: {$item->product_id}");
                         }
                     }
-                } catch (\Exception $e) {
-                    Log::error("Stock decrement failed for order item {$item->id}: " . $e->getMessage());
-                    // We continue even if stock update fails for one item (best effort)
                 }
-            }
+            });
 
-            // 2. Send Confirmation Email
+            // 2. Send Confirmation Email (passing primitive IDs instead of Model to avoid Queue serialization issues)
             $customerEmail = $order->customer_details['email'] ?? $order->customer?->email;
 
             if ($customerEmail) {
-                Mail::to($customerEmail)->send(new OrderPaidMail($order->load('items')));
-                Log::info('Order confirmation email sent', ['order_id' => $order->id, 'email' => $customerEmail]);
+                Mail::to($customerEmail)->send(new OrderPaidMail($order->id, $tenantId));
+                Log::info('Order confirmation email queued', array_merge($context, ['email' => $customerEmail]));
             } else {
-                Log::warning('Could not send order confirmation: No email found', ['order_id' => $order->id]);
+                Log::warning('Could not send order confirmation: No email found', $context);
             }
 
-            Log::info('Order finalized successfully', ['order_id' => $order->id]);
+            Log::info('Order finalized successfully', $context);
         } catch (\Exception $e) {
-            Log::error('Failed to finalize order: ' . $e->getMessage(), ['order_id' => $order->id]);
+            Log::error('Failed to finalize order: ' . $e->getMessage(), array_merge($context, [
+                'exception' => $e
+            ]));
+            throw $e; // Rethrow to let calling payment action know it failed
         }
     }
 }
+
