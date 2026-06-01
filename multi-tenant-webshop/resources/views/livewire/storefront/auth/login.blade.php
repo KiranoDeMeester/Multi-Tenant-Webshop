@@ -19,20 +19,27 @@
 
         @if($showChoiceModal)
             <div class="p-8 space-y-6 text-center animate-fade-in">
-                <flux:heading size="lg">{{ __('Wat wil je vandaag doen?') }}</flux:heading>
-                <flux:text class="mb-8">{{ __('Je bent ingelogd als beheerder. Kies je bestemming:') }}</flux:text>
+                <flux:heading size="lg" class="!text-black">{{ __('Wat wil je vandaag doen?') }}</flux:heading>
+                <flux:text class="mb-8 !text-zinc-600">{{ __('Je bent ingelogd als beheerder. Kies je bestemming:') }}</flux:text>
                 
                 <div class="grid grid-cols-1 gap-4">
                     <flux:button wire:click="goToShop" variant="outline" icon="shopping-bag" class="h-16 text-lg justify-start px-6">
                         <div class="text-left">
-                            <div class="font-bold">{{ __('Ik wil shoppen') }}</div>
+                            <div class="font-bold !text-black">{{ __('Ik wil shoppen') }}</div>
                             <div class="text-xs text-neutral-500">{{ __('Ga naar de publieke webshop') }}</div>
+                        </div>
+                    </flux:button>
+
+                    <flux:button wire:click="goToAccount" variant="outline" icon="user" class="h-16 text-lg justify-start px-6">
+                        <div class="text-left">
+                            <div class="font-bold !text-black">{{ __('Naar mijn account') }}</div>
+                            <div class="text-xs text-neutral-500">{{ __('Bekijk je profiel en bestellingen') }}</div>
                         </div>
                     </flux:button>
 
                     <flux:button wire:click="goToDashboard" variant="primary" icon="squares-2x2" class="h-16 text-lg justify-start px-6 bg-primary hover:bg-primary/90 border-none">
                         <div class="text-left">
-                            <div class="font-bold">{{ __('Ik wil beheren') }}</div>
+                            <div class="font-bold text-white">{{ __('Ik wil beheren') }}</div>
                             <div class="text-xs text-white/80">{{ __('Ga naar het merchant dashboard') }}</div>
                         </div>
                     </flux:button>

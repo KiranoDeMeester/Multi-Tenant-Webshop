@@ -117,21 +117,34 @@
                         De beste producten, speciaal voor jou geselecteerd met oog voor kwaliteit en design. Ervaar de nieuwe standaard in online shoppen.
                     </p>
                 </div>
+                @php
+                    $hasContact = !empty($theme['contact_email']) || !empty($theme['contact_phone']) || !empty($theme['contact_address']);
+                    $instagram = $theme['social_instagram'] ?? null;
+                    $tiktok = $theme['social_tiktok'] ?? null;
+                @endphp
                 <div>
                     <h4 class="text-xs font-black uppercase tracking-[0.3em] mb-8 {{ $layoutType === 'minimal' ? 'text-neutral-400' : 'text-neutral-500' }}">{{ __('Support') }}</h4>
                     <ul class="space-y-4 text-sm font-bold">
-                        <li><a href="#" class="hover:text-primary transition-colors uppercase tracking-widest">{{ __('Contact') }}</a></li>
+                        @if($hasContact)
+                            <li><a href="{{ route('storefront.pages.contact') }}" wire:navigate class="hover:text-primary transition-colors uppercase tracking-widest">{{ __('Contact') }}</a></li>
+                        @endif
                         <li><a href="{{ route('storefront.pages.shipping') }}" wire:navigate class="hover:text-primary transition-colors uppercase tracking-widest">{{ __('Verzending') }}</a></li>
                         <li><a href="{{ route('storefront.pages.returns') }}" wire:navigate class="hover:text-primary transition-colors uppercase tracking-widest">{{ __('Retourneren') }}</a></li>
                     </ul>
                 </div>
+                @if($instagram || $tiktok)
                 <div>
                     <h4 class="text-xs font-black uppercase tracking-[0.3em] mb-8 {{ $layoutType === 'minimal' ? 'text-neutral-400' : 'text-neutral-500' }}">{{ __('Connect') }}</h4>
                     <div class="flex gap-6">
-                        <a href="#" class="{{ $layoutType === 'minimal' ? 'text-neutral-600 hover:text-primary' : 'text-white hover:text-primary' }} transition-colors font-black uppercase tracking-widest">{{ __('Instagram') }}</a>
-                        <a href="#" class="{{ $layoutType === 'minimal' ? 'text-neutral-600 hover:text-primary' : 'text-white hover:text-primary' }} transition-colors font-black uppercase tracking-widest">{{ __('Tiktok') }}</a>
+                        @if($instagram)
+                            <a href="{{ $instagram }}" target="_blank" rel="noopener noreferrer" class="{{ $layoutType === 'minimal' ? 'text-neutral-600 hover:text-primary' : 'text-white hover:text-primary' }} transition-colors font-black uppercase tracking-widest">{{ __('Instagram') }}</a>
+                        @endif
+                        @if($tiktok)
+                            <a href="{{ $tiktok }}" target="_blank" rel="noopener noreferrer" class="{{ $layoutType === 'minimal' ? 'text-neutral-600 hover:text-primary' : 'text-white hover:text-primary' }} transition-colors font-black uppercase tracking-widest">{{ __('Tiktok') }}</a>
+                        @endif
                     </div>
                 </div>
+                @endif
             </div>
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-20 pt-10 border-t {{ $layoutType === 'minimal' ? 'border-neutral-200' : 'border-neutral-900' }} flex flex-col md:flex-row justify-between items-center gap-6">
                 <div class="text-[10px] font-black uppercase tracking-[0.3em] {{ $layoutType === 'minimal' ? 'text-neutral-400' : 'text-neutral-600' }}">

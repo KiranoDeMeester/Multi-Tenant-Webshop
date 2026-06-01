@@ -99,21 +99,31 @@
                                 @endif
                                 
                                 <!-- Minimal Hover Add To Cart -->
-                                <div class="absolute inset-0 flex items-end justify-center p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-neutral-900/5">
-                                    @if($product->stock > 0)
-                                        <button wire:click.prevent="quickAddToCart('{{ $product->id }}')" 
-                                                class="w-full bg-white/95 text-neutral-900 py-2 rounded-lg font-bold text-xs shadow-md hover:bg-white transition-all active:scale-95 flex items-center justify-center gap-1.5 border border-neutral-100">
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5 text-primary">
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
-                                            </svg>
-                                            {{ __('In mandje') }}
-                                        </button>
-                                    @else
+                                <div class="absolute inset-0 flex items-center justify-center p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-neutral-900/10">
+                                    <div class="w-full flex flex-col gap-2">
                                         <a href="{{ route('storefront.products.show', ['slug' => $product->slug]) }}" 
                                            class="w-full bg-white/95 text-neutral-900 text-center py-2 rounded-lg font-bold text-xs shadow-md hover:bg-white transition-all active:scale-95 block border border-neutral-100">
                                             {{ __('Details') }}
                                         </a>
-                                    @endif
+
+                                        @if($product->stock > 0)
+                                            <button wire:click.prevent="quickAddToCart('{{ $product->id }}')" 
+                                                    class="w-full bg-secondary text-white py-2 rounded-lg font-bold text-xs shadow-md hover:bg-secondary/90 transition-all active:scale-95 flex items-center justify-center gap-1.5 border border-secondary">
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
+                                                </svg>
+                                                {{ __('In mandje') }}
+                                            </button>
+                                        @else
+                                            <button disabled 
+                                                    class="w-full bg-neutral-200 text-neutral-400 py-2 rounded-lg font-bold text-xs shadow-sm cursor-not-allowed flex items-center justify-center gap-1.5 border border-neutral-300">
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5 text-neutral-400">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
+                                                </svg>
+                                                {{ __('In mandje') }}
+                                            </button>
+                                        @endif
+                                    </div>
                                 </div>
                             </div>
 

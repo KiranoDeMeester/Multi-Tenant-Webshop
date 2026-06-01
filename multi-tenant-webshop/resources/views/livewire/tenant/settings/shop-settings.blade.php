@@ -39,6 +39,32 @@
                 <flux:text size="xs" class="mt-4 text-zinc-500">{{ __('Stel de drempel op 0 in om altijd verzendkosten te rekenen, of de verzendkosten op 0 voor altijd gratis verzending.') }}</flux:text>
             </flux:card>
 
+            <!-- Socials Section -->
+            <flux:card>
+                <flux:heading size="lg" class="mb-6">{{ __('Sociale Netwerken') }}</flux:heading>
+                <flux:text class="mb-6">{{ __('Voeg hier de links toe naar je sociale media kanalen. Indien leeg gelaten, worden deze niet weergegeven.') }}</flux:text>
+                
+                <div class="space-y-6">
+                    <flux:input wire:model="social_instagram" :label="__('Instagram URL')" :placeholder="__('https://instagram.com/jouwwinkel')" icon="globe-alt" />
+                    <flux:input wire:model="social_tiktok" :label="__('TikTok URL')" :placeholder="__('https://tiktok.com/@jouwwinkel')" icon="globe-alt" />
+                </div>
+            </flux:card>
+
+            <!-- Contact Section -->
+            <flux:card>
+                <flux:heading size="lg" class="mb-6">{{ __('Contactgegevens') }}</flux:heading>
+                <flux:text class="mb-6">{{ __('Deze contactgegevens worden getoond op de contactpagina en in de webshop footer.') }}</flux:text>
+                
+                <div class="space-y-6">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
+                        <flux:input wire:model="contact_email" type="email" :label="__('Contact E-mailadres')" icon="envelope" :placeholder="__('info@jouwwinkel.be')" />
+                        <flux:input wire:model="contact_phone" :label="__('Contact Telefoonnummer')" icon="phone" :placeholder="__('+32 470 12 34 56')" />
+                    </div>
+                    <flux:textarea wire:model="contact_address" :label="__('Fysiek Adres')" rows="3" :placeholder="__('Winkelstraat 123&#10;1000 Brussel&#10;België')" />
+                    <flux:textarea wire:model="contact_content" :label="__('Extra Contacttekst (Optioneel)')" rows="4" :placeholder="__('Heb je vragen? We zijn bereikbaar op werkdagen van 9:00 tot 17:00.')" />
+                </div>
+            </flux:card>
+
             <div class="flex items-center justify-end gap-4 pt-4">
                 <flux:button type="submit" variant="primary" class="px-10 h-12 text-lg">{{ __('Instellingen Opslaan') }}</flux:button>
             </div>

@@ -63,11 +63,31 @@ class OrderPaidMail extends Mailable implements ShouldQueue
     public function content(): Content
     {
         $order = $this->getOrder();
+        $trackingUrl = null;
+
+        if ($order->customer_id === null) {
+            $tenant = $this->tenantId
+                ? \App\Models\Landlord\Tenant::with('domains')->find($this->tenantId)
+                : app(TenantManager::class)->getTenant();
+
+            if ($tenant) {
+                $tenant->loadMissing('domains');
+                $subdomain = $tenant->slug;
+                if ($subdomain) {
+                    $trackingUrl = route('storefront.order.track', [
+                        'tenant' => $subdomain,
+                        'id' => $order->id,
+                    ]);
+                }
+            }
+        }
+
         return new Content(
             markdown: 'emails.orders.paid',
             with: [
                 'order' => $order,
                 'items' => $order->items,
+                'trackingUrl' => $trackingUrl,
             ],
         );
     }

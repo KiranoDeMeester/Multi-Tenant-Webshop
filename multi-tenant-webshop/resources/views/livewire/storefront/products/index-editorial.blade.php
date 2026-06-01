@@ -135,19 +135,27 @@
                                 @endif
 
                                 <!-- Floating Glass Add-to-cart button on hover -->
-                                <div class="absolute inset-x-0 bottom-0 p-6 translate-y-6 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 ease-out bg-gradient-to-t from-neutral-900/20 to-transparent flex justify-center z-30">
-                                    @if($product->stock > 0)
-                                        <button wire:click.prevent="quickAddToCart('{{ $product->id }}')" 
-                                                class="w-full backdrop-blur-md bg-white/80 hover:bg-neutral-950 hover:text-white text-neutral-900 py-3.5 rounded-2xl font-bold text-xs uppercase tracking-widest transition-all shadow-lg flex items-center justify-center gap-2 border border-white/20">
-                                            <flux:icon name="shopping-bag" size="xs" />
-                                            {{ __('In mandje') }}
-                                        </button>
-                                    @else
+                                <div class="absolute inset-0 p-6 translate-y-6 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 ease-out bg-neutral-900/10 flex items-center justify-center z-30">
+                                    <div class="w-full flex flex-col gap-3">
                                         <a href="{{ route('storefront.products.show', ['slug' => $product->slug]) }}" 
-                                           class="w-full backdrop-blur-md bg-white/80 hover:bg-neutral-950 hover:text-white text-neutral-900 text-center py-3.5 rounded-2xl font-bold text-xs uppercase tracking-widest transition-all shadow-lg block border border-white/20">
+                                           class="w-full backdrop-blur-md bg-white/90 hover:bg-neutral-950 hover:text-white text-neutral-900 text-center py-3 rounded-2xl font-bold text-xs uppercase tracking-widest transition-all shadow-lg block border border-white/20">
                                             {{ __('Details') }}
                                         </a>
-                                    @endif
+
+                                        @if($product->stock > 0)
+                                            <button wire:click.prevent="quickAddToCart('{{ $product->id }}')" 
+                                                    class="w-full backdrop-blur-md bg-white/90 hover:bg-neutral-950 hover:text-white text-neutral-900 py-3.5 rounded-2xl font-bold text-xs uppercase tracking-widest transition-all shadow-lg flex items-center justify-center gap-2 border border-white/20">
+                                                <flux:icon name="shopping-bag" size="xs" />
+                                                {{ __('In mandje') }}
+                                            </button>
+                                        @else
+                                            <button disabled 
+                                                    class="w-full backdrop-blur-md bg-neutral-300/80 text-neutral-500 py-3 rounded-2xl font-bold text-xs uppercase tracking-widest transition-all shadow-sm cursor-not-allowed flex items-center justify-center gap-2 border border-neutral-300">
+                                                <flux:icon name="shopping-bag" size="xs" class="text-neutral-500" />
+                                                {{ __('In mandje') }}
+                                            </button>
+                                        @endif
+                                    </div>
                                 </div>
                             </div>
 

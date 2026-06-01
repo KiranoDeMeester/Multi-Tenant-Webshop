@@ -97,18 +97,25 @@
                                 @endif
                                 
                                 <div class="absolute inset-0 flex items-center justify-center z-30 pointer-events-none">
-                                    <div class="opacity-0 group-hover:opacity-100 translate-y-8 group-hover:translate-y-0 transition-all duration-500 pointer-events-auto">
+                                    <div class="opacity-0 group-hover:opacity-100 translate-y-8 group-hover:translate-y-0 transition-all duration-500 pointer-events-auto flex flex-col gap-3 items-center w-48">
+                                        <a href="{{ route('storefront.products.show', ['slug' => $product->slug]) }}" class="w-full text-center bg-white text-black border-2 border-black px-8 py-3 rounded-2xl font-black uppercase tracking-widest text-[10px] hover:bg-black hover:text-white transition-all shadow-2xl active:scale-95 block">
+                                            {{ __('Bekijk details') }}
+                                        </a>
+                                        
                                         @if($product->stock > 0)
-                                            <button wire:click.prevent="quickAddToCart('{{ $product->id }}')" class="bg-primary text-white px-8 py-4 rounded-2xl font-black uppercase tracking-widest text-[10px] hover:opacity-95 transition-all shadow-2xl active:scale-95 flex items-center gap-2 high-contrast-dark">
+                                            <button wire:click.prevent="quickAddToCart('{{ $product->id }}')" class="w-full bg-primary text-white px-8 py-3.5 rounded-2xl font-black uppercase tracking-widest text-[10px] hover:opacity-95 transition-all shadow-2xl active:scale-95 flex items-center justify-center gap-2 high-contrast-dark">
                                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-4 h-4">
                                                     <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
                                                 </svg>
                                                 {{ __('In mandje') }}
                                             </button>
                                         @else
-                                            <a href="{{ route('storefront.products.show', ['slug' => $product->slug]) }}" class="bg-white text-black border-2 border-black px-8 py-4 rounded-2xl font-black uppercase tracking-widest text-[10px] hover:bg-black hover:text-white transition-all shadow-2xl block active:scale-95">
-                                                {{ __('Bekijk details') }}
-                                            </a>
+                                            <button disabled class="w-full bg-neutral-300 text-neutral-500 border border-neutral-400 px-8 py-3.5 rounded-2xl font-black uppercase tracking-widest text-[10px] cursor-not-allowed flex items-center justify-center gap-2">
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-4 h-4 text-neutral-400">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
+                                                </svg>
+                                                {{ __('In mandje') }}
+                                            </button>
                                         @endif
                                     </div>
                                 </div>

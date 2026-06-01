@@ -20,6 +20,11 @@ class Login extends Component
             return;
         }
 
+        if (auth('customer')->attempt(['email' => $this->email, 'password' => $this->password])) {
+            $this->dispatch('user-logged-in');
+            return redirect()->route('storefront.account');
+        }
+
         $this->addError('email', __('De inloggegevens zijn onjuist.'));
     }
 
@@ -31,6 +36,11 @@ class Login extends Component
     public function goToShop()
     {
         return redirect()->route('storefront.products.index');
+    }
+
+    public function goToAccount()
+    {
+        return redirect()->route('storefront.account');
     }
 
 

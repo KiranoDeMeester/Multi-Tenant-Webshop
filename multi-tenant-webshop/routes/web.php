@@ -53,6 +53,8 @@ Route::domain('{tenant}.' . config('app.central_domain', 'localhost'))->middlewa
     Route::get('/retourneren', \App\Livewire\Storefront\Pages\Returns::class)->name('storefront.pages.returns');
     Route::get('/privacy', \App\Livewire\Storefront\Pages\PrivacyPolicy::class)->name('storefront.pages.privacy');
     Route::get('/voorwaarden', \App\Livewire\Storefront\Pages\Terms::class)->name('storefront.pages.terms');
+    Route::get('/contact', \App\Livewire\Storefront\Pages\Contact::class)->name('storefront.pages.contact');
+    Route::get('/bestelling/volgen/{id}', \App\Livewire\Storefront\Pages\OrderTracking::class)->name('storefront.order.track');
 
     // Checkout flow
     Route::get('/checkout/success', \App\Livewire\Storefront\Checkout\Success::class)->name('storefront.checkout.success');

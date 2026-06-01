@@ -14,6 +14,14 @@ Je betaling voor bestelling **{{ $order->order_number }}** is succesvol ontvange
 
 Je ontvangt een nieuwe mail zodra je bestelling is verzonden.
 
+@if($trackingUrl)
+Omdat je als gast hebt afgerekend, kun je de status van je bestelling online volgen:
+
+<x-mail::button :url="$trackingUrl">
+Bestelling Volgen
+</x-mail::button>
+@endif
+
 Bedankt voor het vertrouwen,<br>
 {{ config('app.name') }} Team
 </x-mail::message>
