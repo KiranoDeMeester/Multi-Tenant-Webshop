@@ -6,6 +6,8 @@ use App\Models\Landlord\Tenant;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Artisan;
 
 class TenantManager
 {
@@ -50,6 +52,39 @@ class TenantManager
             'tenant_id' => $tenant->id,
             'db_path' => $dbPath,
         ]);
+
+        // 4. Auto-migrate and seed tenant DB if tables are missing (on-demand bootstrapping)
+        if ($tenant->db_name !== ':memory:' && !app()->runningInConsole()) {
+            try {
+                if (!Schema::connection('tenant')->hasTable('settings')) {
+                    Log::info('Bootstrapping empty tenant database: ' . $tenant->name);
+                    
+                    Artisan::call('migrate', [
+                        '--database' => 'tenant',
+                        '--path' => 'database/migrations/tenant',
+                        '--force' => true,
+                    ]);
+
+                    // Decide seeder based on name/db_name to keep demo store distinct
+                    $seeder = 'Database\\Seeders\\Tenant\\TenantDatabaseSeeder';
+                    if (str_contains($tenant->db_name, 'minimalist')) {
+                        $seeder = 'Database\\Seeders\\Tenant\\DemoShopSeeder';
+                    }
+                    
+                    Artisan::call('db:seed', [
+                        '--class' => $seeder,
+                        '--force' => true,
+                        '--database' => 'tenant',
+                    ]);
+                    
+                    Log::info('Successfully bootstrapped tenant database: ' . $tenant->name);
+                }
+            } catch (\Exception $e) {
+                Log::error('Dynamic tenant bootstrap failed: ' . $e->getMessage(), [
+                    'tenant_name' => $tenant->name,
+                ]);
+            }
+        }
     }
 
     /**
@@ -82,3 +117,4 @@ class TenantManager
         DB::purge('tenant');
     }
 }
+

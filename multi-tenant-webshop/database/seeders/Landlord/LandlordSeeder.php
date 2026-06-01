@@ -23,7 +23,7 @@ class LandlordSeeder extends Seeder
             ]
         );
 
-        // 2. Create Demo Tenant
+        // 2. Create Demo Tenant (Shop 1)
         $tenant = Tenant::updateOrCreate(
             ['db_name' => 'tenant_demo_shop'],
             [
@@ -35,6 +35,22 @@ class LandlordSeeder extends Seeder
             ['domain' => 'demo-shop.localhost'],
             [
                 'tenant_id' => $tenant->id,
+                'is_primary' => true,
+            ]
+        );
+
+        // 3. Create Vintage Antique Store (Shop 2)
+        $tenant3 = Tenant::updateOrCreate(
+            ['db_name' => 'tenant_vintage_shop'],
+            [
+                'name' => 'Vintage Antique Store',
+            ]
+        );
+
+        \App\Models\Landlord\Domain::updateOrCreate(
+            ['domain' => 'vintage.localhost'],
+            [
+                'tenant_id' => $tenant3->id,
                 'is_primary' => true,
             ]
         );
