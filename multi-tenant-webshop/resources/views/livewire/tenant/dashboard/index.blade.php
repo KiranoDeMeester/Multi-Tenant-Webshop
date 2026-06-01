@@ -29,6 +29,58 @@
         </div>
     </div>
 
+    <!-- Tenant Onboarding Tutorial -->
+    <div class="mb-8 overflow-hidden rounded-2xl bg-gradient-to-r from-indigo-900 to-indigo-950 p-8 text-white shadow-lg relative border border-indigo-950">
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,rgba(99,102,241,0.15),transparent)]"></div>
+        <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <div class="max-w-2xl">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/20 text-indigo-300 text-xs font-bold uppercase tracking-wider mb-4 border border-indigo-500/30">
+                    <flux:icon name="academic-cap" class="w-3.5 h-3.5" />
+                    <span>Onboarding Gids & Handleiding</span>
+                </div>
+                <h2 class="text-2xl font-extrabold tracking-tight text-white uppercase">{{ __('Volledige Winkel Setup Gids') }}</h2>
+                <p class="mt-2 text-indigo-200 text-sm leading-relaxed">
+                    Volg deze 4 essentiële stappen om jouw webshop volledig correct te configureren en verkoopklaar te maken:
+                </p>
+                <div class="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-6 text-xs text-indigo-100 font-medium">
+                    <div class="flex items-start gap-3">
+                        <div class="w-5 h-5 rounded-full bg-indigo-500 flex items-center justify-center text-white shrink-0 font-bold">1</div>
+                        <div>
+                            <strong class="text-white block text-sm mb-0.5">Stripe Connecten</strong>
+                            Stel je betaalprofiel in via <a href="{{ route('tenant.payments') }}" class="underline text-indigo-300 hover:text-white transition-colors">Betalingen & Stripe</a> om online betalingen te kunnen ontvangen.
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-3">
+                        <div class="w-5 h-5 rounded-full bg-indigo-500 flex items-center justify-center text-white shrink-0 font-bold">2</div>
+                        <div>
+                            <strong class="text-white block text-sm mb-0.5">Producten & Variaties</strong>
+                            Voeg categorieën toe en maak producten aan met prijzen (in centen) en voorraadniveaus onder <a href="{{ route('tenant.products.manage') }}" class="underline text-indigo-300 hover:text-white transition-colors">Producten</a>.
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-3">
+                        <div class="w-5 h-5 rounded-full bg-indigo-500 flex items-center justify-center text-white shrink-0 font-bold">3</div>
+                        <div>
+                            <strong class="text-white block text-sm mb-0.5">Styling & Thema's</strong>
+                            Kies je gewenste lay-out (Modern, Minimal of Editorial), merkkleuren en lettertypen in <a href="{{ route('tenant.settings') }}" class="underline text-indigo-300 hover:text-white transition-colors font-bold">Winkel Dashboard</a>.
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-3">
+                        <div class="w-5 h-5 rounded-full bg-indigo-500 flex items-center justify-center text-white shrink-0 font-bold">4</div>
+                        <div>
+                            <strong class="text-white block text-sm mb-0.5">Contact & SEO</strong>
+                            Vul contactgegevens en social media links in onder <a href="{{ route('tenant.settings.shop') }}" class="underline text-indigo-300 hover:text-white transition-colors">Winkelinstellingen</a>. Hiermee activeer je automatisch de contactpagina en de correcte links in de footer.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="shrink-0 flex items-center justify-center">
+                <div class="w-24 h-24 bg-white/5 rounded-3xl border border-white/10 flex items-center justify-center text-indigo-300">
+                    <flux:icon name="sparkles" class="w-12 h-12" />
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Stats Grid -->
     <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
         <!-- Products Stat -->
