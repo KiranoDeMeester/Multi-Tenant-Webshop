@@ -1,7 +1,7 @@
 <div class="space-y-6">
     <div class="flex items-center justify-between">
         <div class="flex items-center gap-4">
-            <flux:button icon="chevron-left" variant="ghost" href="{{ route('tenant.orders.index') }}" />
+            <flux:button icon="chevron-left" variant="ghost" href="{{ route('tenant.orders.index', ['tenant' => app(\App\Services\TenantManager::class)->getTenant()?->slug]) }}" />
             <flux:heading size="xl" level="1">{{ __('Bestelling') }} {{ $order->order_number }}</flux:heading>
         </div>
         <div class="flex items-center gap-2">
@@ -13,9 +13,11 @@
                     'cancelled' => 'red',
                     default => 'zinc'
                 };
+                $tSlug = app(\App\Services\TenantManager::class)->getTenant()?->slug;
             @endphp
             <flux:badge :color="$color">{{ ucfirst($order->status) }}</flux:badge>
-            <flux:button variant="primary" icon="pencil-square" href="{{ route('tenant.orders.edit', $order) }}">{{ __('Bewerken') }}</flux:button>
+            <flux:button variant="outline" icon="document-text" href="{{ route('tenant.orders.invoice', ['tenant' => $tSlug, 'order' => $order->id]) }}">{{ __('Factuur (PDF)') }}</flux:button>
+            <flux:button variant="primary" icon="pencil-square" href="{{ route('tenant.orders.edit', ['tenant' => $tSlug, 'order' => $order->id]) }}">{{ __('Bewerken') }}</flux:button>
         </div>
     </div>
 
@@ -69,13 +71,13 @@
                             <p class="text-xs font-black uppercase tracking-widest text-zinc-400 mb-2">{{ __('Email') }}</p>
                             <p class="font-bold">{{ $order->customer_details['email'] ?? 'N/A' }}</p>
                         </div>
-                        @if(isset($order->customer_details['address']))
+                        @if(isset($order->customer_details['shipping_address']))
                             <div class="col-span-2">
                                 <p class="text-xs font-black uppercase tracking-widest text-zinc-400 mb-2">{{ __('Adres') }}</p>
                                 <p class="font-bold">
-                                    {{ $order->customer_details['address']['line1'] ?? '' }}<br>
-                                    {{ $order->customer_details['address']['postal_code'] ?? '' }} {{ $order->customer_details['address']['city'] ?? '' }}<br>
-                                    {{ $order->customer_details['address']['country'] ?? '' }}
+                                    {{ $order->customer_details['shipping_address']['street'] ?? '' }} {{ $order->customer_details['shipping_address']['house_number'] ?? '' }}<br>
+                                    {{ $order->customer_details['shipping_address']['postal_code'] ?? '' }} {{ $order->customer_details['shipping_address']['city'] ?? '' }}<br>
+                                    {{ $order->customer_details['shipping_address']['country'] ?? '' }}
                                 </p>
                             </div>
                         @endif
@@ -106,7 +108,7 @@
                         </div>
                     @endif
 
-                    <flux:button variant="ghost" size="sm" class="w-full" href="{{ route('tenant.customers.index') }}">{{ __('Bekijk Klant') }}</flux:button>
+                    <flux:button variant="ghost" size="sm" class="w-full" href="{{ route('tenant.customers.index', ['tenant' => app(\App\Services\TenantManager::class)->getTenant()?->slug]) }}">{{ __('Bekijk Klant') }}</flux:button>
                 @else
                     <p class="text-sm text-zinc-500">{{ __('Gastbestelling') }}</p>
                     @if($order->notes)

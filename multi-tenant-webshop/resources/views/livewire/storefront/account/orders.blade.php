@@ -64,6 +64,11 @@
                             {{ strtoupper($statusLabel[$order->status] ?? $order->status) }}
                         </span>
 
+                        <a href="{{ route('storefront.account.orders.invoice', $order) }}" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-zinc-100 hover:bg-zinc-200 text-zinc-700 transition-colors">
+                            <flux:icon name="arrow-down-tray" size="xs" />
+                            {{ __('Factuur (PDF)') }}
+                        </a>
+
                         @if (in_array($order->status, ['pending', 'paid']))
                             <flux:button 
                                 wire:click="cancelOrder('{{ $order->id }}')" 

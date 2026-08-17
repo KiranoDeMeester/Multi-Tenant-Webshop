@@ -19,7 +19,8 @@ class Edit extends Component
 
     public function mount(Order $order)
     {
-        $this->authorize('update', $order);
+        $user = auth('tenant')->user() ?? auth('customer')->user() ?? auth()->user();
+        \Illuminate\Support\Facades\Gate::forUser($user)->authorize('update', $order);
         $this->order = $order;
         $this->status = $order->status;
         $this->order_number = $order->order_number;
@@ -27,7 +28,8 @@ class Edit extends Component
 
     public function save(StockService $stockService)
     {
-        $this->authorize('update', $this->order);
+        $user = auth('tenant')->user() ?? auth('customer')->user() ?? auth()->user();
+        \Illuminate\Support\Facades\Gate::forUser($user)->authorize('update', $this->order);
 
         $this->validate([
             'status' => 'required|in:pending,paid,shipped,cancelled',
@@ -37,11 +39,23 @@ class Edit extends Component
         $oldStatus = $this->order->status;
         $newStatus = $this->status;
 
+        $tenant = app(\App\Services\TenantManager::class)->getTenant();
+        $tenantId = $tenant?->id;
+
         if ($oldStatus !== $newStatus) {
+            $customerEmail = $this->order->customer_details['email'] ?? $this->order->customer?->email;
+
             if ($newStatus === 'cancelled') {
                 $stockService->restituteOrderStock($this->order);
+                if ($customerEmail) {
+                    \Illuminate\Support\Facades\Mail::to($customerEmail)->send(new \App\Mail\OrderCancelledMail($this->order->id, $tenantId));
+                }
             } elseif (in_array($newStatus, ['paid', 'shipped']) && $oldStatus === 'pending') {
                 $stockService->fulfillOrderStock($this->order);
+            }
+
+            if ($newStatus === 'shipped' && $customerEmail) {
+                \Illuminate\Support\Facades\Mail::to($customerEmail)->send(new \App\Mail\OrderShippedMail($this->order->id, $tenantId));
             }
         }
 
@@ -54,8 +68,6 @@ class Edit extends Component
             'type' => 'success',
             'message' => __('Bestelling succesvol bijgewerkt!')
         ]);
-
-        $tenant = app(\App\Services\TenantManager::class)->getTenant();
 
         return redirect()->route('tenant.orders.index', ['tenant' => $tenant->slug]);
     }

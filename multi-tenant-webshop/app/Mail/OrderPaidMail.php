@@ -3,7 +3,7 @@
 namespace App\Mail;
 
 use App\Models\Tenant\Order;
-use App\Services\Tenant\InvoiceService;
+use App\Services\InvoiceService;
 use App\Services\TenantManager;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;

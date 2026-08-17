@@ -35,6 +35,13 @@ class Orders extends Component
         if (in_array($order->status, ['pending', 'paid'])) {
             $stockService->restituteOrderStock($order);
             $order->update(['status' => 'cancelled']);
+
+            $tenant = app(\App\Services\TenantManager::class)->getTenant();
+            $customerEmail = $order->customer_details['email'] ?? $order->customer?->email ?? $user->email;
+            if ($customerEmail) {
+                \Illuminate\Support\Facades\Mail::to($customerEmail)->send(new \App\Mail\OrderCancelledMail($order->id, $tenant?->id));
+            }
+
             session()->flash('message', __('Uw bestelling is succesvol geannuleerd en de artikelen zijn hersteld in voorraad.'));
         } else {
             session()->flash('error', __('Deze bestelling kan niet meer geannuleerd worden.'));
