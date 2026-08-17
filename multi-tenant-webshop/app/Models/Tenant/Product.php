@@ -29,6 +29,14 @@ class Product extends Model implements HasMedia
     }
 
     /**
+     * Get the stock mutations for the product.
+     */
+    public function stockMutations(): HasMany
+    {
+        return $this->hasMany(StockMutation::class)->latest();
+    }
+
+    /**
      * Determine if the product has variations.
      */
     public function getHasVariationsAttribute(): bool

@@ -31,32 +31,8 @@ class FinalizeOrderAction
         try {
             Log::info('Finalizing order', $context);
 
-            // 1. Update Stock atomically using Transactions and Locks
-            DB::transaction(function () use ($order) {
-                foreach ($order->items as $item) {
-                    if ($item->product_variation_id) {
-                        $variation = ProductVariation::where('id', $item->product_variation_id)
-                            ->lockForUpdate()
-                            ->first();
-                        
-                        if ($variation) {
-                            $variation->decrementStock($item->quantity);
-                        } else {
-                            throw new \Exception("Productvariatie niet gevonden: {$item->product_variation_id}");
-                        }
-                    } elseif ($item->product_id) {
-                        $product = Product::where('id', $item->product_id)
-                            ->lockForUpdate()
-                            ->first();
-
-                        if ($product) {
-                            $product->decrementStock($item->quantity);
-                        } else {
-                            throw new \Exception("Product niet gevonden: {$item->product_id}");
-                        }
-                    }
-                }
-            });
+            // 1. Update Stock atomically and record stock mutation audit entries
+            app(\App\Services\StockService::class)->fulfillOrderStock($order);
 
             // 2. Send Confirmation Email (passing primitive IDs instead of Model to avoid Queue serialization issues)
             $customerEmail = $order->customer_details['email'] ?? $order->customer?->email;

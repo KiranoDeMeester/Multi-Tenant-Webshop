@@ -33,6 +33,14 @@ class ProductVariation extends Model
     }
 
     /**
+     * Get the stock mutations for the variation.
+     */
+    public function stockMutations(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(StockMutation::class, 'product_variation_id')->latest();
+    }
+
+    /**
      * Get the actual price of the variation.
      * Falls back to the product price if not set.
      */

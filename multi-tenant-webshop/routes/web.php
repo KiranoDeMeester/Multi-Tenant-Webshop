@@ -94,6 +94,7 @@ Route::domain('{tenant}.' . config('app.central_domain', 'localhost'))->middlewa
             // Management routes
             Route::get('/products', \App\Livewire\Tenant\Products\Index::class)->name('tenant.products.manage');
             Route::get('/products/create', \App\Livewire\Tenant\Products\Create::class)->name('tenant.products.create');
+            Route::get('/products/stock-history', \App\Livewire\Tenant\Products\StockHistory::class)->name('tenant.products.stock-history');
             Route::get('/products/{product}/edit', \App\Livewire\Tenant\Products\Edit::class)->name('tenant.products.edit');
             Route::get('/categories', \App\Livewire\Tenant\Categories\Index::class)->name('tenant.categories.index');
             Route::get('/categories/create', \App\Livewire\Tenant\Categories\Create::class)->name('tenant.categories.create');

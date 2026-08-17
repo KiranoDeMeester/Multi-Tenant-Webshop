@@ -3,6 +3,8 @@
 namespace App\Livewire\Storefront\Account;
 
 use App\Models\Tenant\Order;
+use App\Services\StockService;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -10,14 +12,14 @@ use Livewire\WithPagination;
 #[Layout('layouts.storefront')]
 class Orders extends Component
 {
-    use WithPagination;
+    use AuthorizesRequests, WithPagination;
 
-    public function cancelOrder($orderId)
+    public function cancelOrder($orderId, StockService $stockService)
     {
         $user = auth('customer')->user() ?? auth('tenant')->user();
         
         if (!$user) {
-            session()->flash('error', 'U moet ingelogd zijn om deze actie uit te voeren.');
+            session()->flash('error', __('U moet ingelogd zijn om deze actie uit te voeren.'));
             return;
         }
 
@@ -28,11 +30,14 @@ class Orders extends Component
             })
             ->firstOrFail();
 
+        $this->authorize('cancel', $order);
+
         if (in_array($order->status, ['pending', 'paid'])) {
+            $stockService->restituteOrderStock($order);
             $order->update(['status' => 'cancelled']);
-            session()->flash('message', 'Uw bestelling is succesvol geannuleerd.');
+            session()->flash('message', __('Uw bestelling is succesvol geannuleerd en de artikelen zijn hersteld in voorraad.'));
         } else {
-            session()->flash('error', 'Deze bestelling kan niet meer geannuleerd worden.');
+            session()->flash('error', __('Deze bestelling kan niet meer geannuleerd worden.'));
         }
     }
 
@@ -47,8 +52,9 @@ class Orders extends Component
                       ->orWhere('customer_details->email', $user->email);
                 });
             }, function ($query) {
-                $query->where('id', 0); // No orders if not logged in
+                $query->where('id', '0'); // No orders if not logged in
             })
+            ->with(['items.product', 'items.variation'])
             ->latest()
             ->paginate(10);
 

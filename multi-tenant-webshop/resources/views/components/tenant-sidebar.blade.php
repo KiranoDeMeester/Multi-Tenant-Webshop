@@ -21,8 +21,12 @@
                 {{ __('Dashboard') }}
             </flux:sidebar.item>
             
-            <flux:sidebar.item icon="archive-box" :href="route('tenant.products.manage')" :current="request()->routeIs('tenant.products.*')" wire:navigate>
+            <flux:sidebar.item icon="archive-box" :href="route('tenant.products.manage')" :current="request()->routeIs('tenant.products.manage') || request()->routeIs('tenant.products.create') || request()->routeIs('tenant.products.edit')" wire:navigate>
                 {{ __('Producten') }}
+            </flux:sidebar.item>
+
+            <flux:sidebar.item icon="clock" :href="route('tenant.products.stock-history')" :current="request()->routeIs('tenant.products.stock-history')" wire:navigate>
+                {{ __('Voorraadhistorie') }}
             </flux:sidebar.item>
 
             <flux:sidebar.item icon="tag" :href="route('tenant.categories.index')" :current="request()->routeIs('tenant.categories.*')" wire:navigate>
