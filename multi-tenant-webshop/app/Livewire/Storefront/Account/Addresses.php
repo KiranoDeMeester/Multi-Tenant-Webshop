@@ -50,7 +50,7 @@ class Addresses extends Component
 
     public function editAddress(string $id)
     {
-        $address = CustomerAddress::findOrFail($id);
+        $address = CustomerAddress::where('customer_id', $this->user->id)->findOrFail($id);
         $this->editingId = $id;
         $this->type = $address->type;
         $this->first_name = $address->first_name;
@@ -80,7 +80,9 @@ class Addresses extends Component
         ];
 
         if ($this->editingId) {
-            CustomerAddress::where('id', $this->editingId)->update($data);
+            CustomerAddress::where('customer_id', $this->user->id)
+                ->where('id', $this->editingId)
+                ->update($data);
         } else {
             CustomerAddress::create($data);
         }
@@ -92,7 +94,10 @@ class Addresses extends Component
 
     public function deleteAddress(string $id)
     {
-        CustomerAddress::where('id', $id)->delete();
+        CustomerAddress::where('customer_id', $this->user->id)
+            ->where('id', $id)
+            ->delete();
+            
         session()->flash('message', __('Adres verwijderd.'));
     }
 

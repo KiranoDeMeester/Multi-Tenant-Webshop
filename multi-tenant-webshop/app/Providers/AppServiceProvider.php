@@ -30,6 +30,12 @@ class AppServiceProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
             $this->loadMigrationsFrom(database_path('migrations/landlord'));
         }
+
+        \Illuminate\Support\Facades\Gate::policy(\App\Models\Tenant\Product::class, \App\Policies\ProductPolicy::class);
+        \Illuminate\Support\Facades\Gate::policy(\App\Models\Tenant\Order::class, \App\Policies\OrderPolicy::class);
+        \Illuminate\Support\Facades\Gate::policy(\App\Models\Tenant\Customer::class, \App\Policies\CustomerPolicy::class);
+        \Illuminate\Support\Facades\Gate::policy(\App\Models\Tenant\CustomerAddress::class, \App\Policies\CustomerAddressPolicy::class);
+        \Illuminate\Support\Facades\Gate::policy(\App\Models\Landlord\Tenant::class, \App\Policies\TenantPolicy::class);
     }
 
     /**
