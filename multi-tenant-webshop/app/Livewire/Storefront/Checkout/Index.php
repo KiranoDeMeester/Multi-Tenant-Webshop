@@ -5,6 +5,7 @@ namespace App\Livewire\Storefront\Checkout;
 use App\Actions\Tenant\PrepareCheckoutAction;
 use App\Models\Tenant\Customer;
 use App\Models\Tenant\CustomerAddress;
+use App\Models\Tenant\Setting;
 use App\Services\CartService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -18,29 +19,44 @@ class Index extends Component
 {
     // Contact details
     public string $email = '';
+
     public string $first_name = '';
+
     public string $last_name = '';
+
     public string $phone = '';
 
     // Guest account creation
     public bool $create_account = false;
+
     public string $password = '';
 
     // Shipping Address
     public ?string $selected_address_id = null;
+
     public string $shipping_street = '';
+
     public string $shipping_house_number = '';
+
     public string $shipping_postal_code = '';
+
     public string $shipping_city = '';
+
     public string $shipping_country = 'België';
+
     public bool $save_to_address_book = true;
 
     // Billing Address
     public bool $same_as_shipping = true;
+
     public string $billing_street = '';
+
     public string $billing_house_number = '';
+
     public string $billing_postal_code = '';
+
     public string $billing_city = '';
+
     public string $billing_country = 'België';
 
     // Order notes
@@ -51,6 +67,7 @@ class Index extends Component
         $cartService = app(CartService::class);
         if (empty($cartService->getItems())) {
             session()->flash('error', __('Uw winkelwagen is leeg. Voeg eerst producten toe.'));
+
             return redirect()->route('storefront.products.index');
         }
 
@@ -80,6 +97,7 @@ class Index extends Component
             $this->shipping_postal_code = '';
             $this->shipping_city = '';
             $this->shipping_country = 'België';
+
             return;
         }
 
@@ -117,7 +135,7 @@ class Index extends Component
             'shipping_country' => 'required|string|in:België,Nederland,Duitsland,Frankrijk,Luxemburg',
         ];
 
-        if (!$this->same_as_shipping) {
+        if (! $this->same_as_shipping) {
             $rules['billing_street'] = 'required|string|min:2|max:150';
             $rules['billing_house_number'] = 'required|string|max:20';
             $rules['billing_postal_code'] = 'required|string|min:3|max:20';
@@ -125,7 +143,7 @@ class Index extends Component
             $rules['billing_country'] = 'required|string|in:België,Nederland,Duitsland,Frankrijk,Luxemburg';
         }
 
-        if (!Auth::guard('customer')->check() && $this->create_account) {
+        if (! Auth::guard('customer')->check() && $this->create_account) {
             $rules['password'] = 'required|string|min:8';
             $rules['email'] = 'required|email|max:255|unique:customers,email';
         }
@@ -140,9 +158,9 @@ class Index extends Component
         $customer = Auth::guard('customer')->user();
 
         // 1. Create account if guest requested
-        if (!$customer && $this->create_account) {
+        if (! $customer && $this->create_account) {
             $customer = Customer::create([
-                'name' => trim($this->first_name . ' ' . $this->last_name),
+                'name' => trim($this->first_name.' '.$this->last_name),
                 'email' => $this->email,
                 'phone' => $this->phone ?: null,
                 'password' => Hash::make($this->password),
@@ -170,7 +188,7 @@ class Index extends Component
 
         // 3. Assemble snapshot details
         $customerDetails = [
-            'name' => trim($this->first_name . ' ' . $this->last_name),
+            'name' => trim($this->first_name.' '.$this->last_name),
             'email' => $this->email,
             'phone' => $this->phone,
             'shipping_address' => [
@@ -203,11 +221,12 @@ class Index extends Component
 
         try {
             $checkoutUrl = $prepareCheckout->execute($this->notes, $customerDetails);
+
             return redirect($checkoutUrl);
         } catch (\Exception $e) {
             $this->dispatch('toast', [
                 'type' => 'error',
-                'message' => $e->getMessage()
+                'message' => $e->getMessage(),
             ]);
         }
     }
@@ -222,7 +241,7 @@ class Index extends Component
         $shippingFee = $cartService->getShippingFee();
         $grandTotal = $cartService->getGrandTotal();
 
-        $vatPercentage = (float) (\App\Models\Tenant\Setting::where('key', 'invoice_vat_percentage')->first()?->value ?? 21);
+        $vatPercentage = (float) (Setting::where('key', 'invoice_vat_percentage')->first()?->value ?? 21);
         $taxAmount = $subtotal - ($subtotal / (1 + ($vatPercentage / 100)));
 
         return view('livewire.storefront.checkout.index', [

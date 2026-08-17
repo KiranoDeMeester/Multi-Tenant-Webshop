@@ -1,7 +1,7 @@
 <?php
 
-use Laravel\Fortify\Features;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Laravel\Fortify\Features;
 
 uses(DatabaseMigrations::class);
 

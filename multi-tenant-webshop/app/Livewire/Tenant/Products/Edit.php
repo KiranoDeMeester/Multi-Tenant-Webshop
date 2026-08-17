@@ -7,6 +7,7 @@ use App\Models\Tenant\AttributeValue;
 use App\Models\Tenant\Category;
 use App\Models\Tenant\Product;
 use App\Models\Tenant\ProductVariation;
+use App\Services\TenantManager;
 use Illuminate\Support\Str;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
@@ -18,26 +19,35 @@ class Edit extends Component
     use WithFileUploads;
 
     public Product $product;
-    
+
     public string $name = '';
+
     public string $sku = '';
+
     public string $description = '';
+
     public float $price = 0;
+
     public int $stock = 0;
+
     public ?string $category_id = null;
+
     public string $meta_title = '';
+
     public string $meta_description = '';
+
     public $newImage;
 
     // Variations
     public bool $has_variations = false;
+
     public array $variations = [];
 
     protected function rules(): array
     {
         $rules = [
             'name' => 'required|string|max:255',
-            'sku' => 'required|string|max:50|unique:products,sku,' . $this->product->id,
+            'sku' => 'required|string|max:50|unique:products,sku,'.$this->product->id,
             'price' => 'required|numeric|min:0',
             'stock' => 'required|integer|min:0',
             'category_id' => 'nullable|exists:categories,id',
@@ -74,6 +84,7 @@ class Edit extends Component
             $this->has_variations = true;
             $this->variations = $product->variations->map(function ($variation) {
                 $attrValue = $variation->attributeValues->first();
+
                 return [
                     'id' => $variation->id,
                     'attribute_name' => $attrValue?->attribute?->name ?? 'Maat',
@@ -88,7 +99,7 @@ class Edit extends Component
 
     public function toggleVariations()
     {
-        $this->has_variations = !$this->has_variations;
+        $this->has_variations = ! $this->has_variations;
         if ($this->has_variations && empty($this->variations)) {
             $this->addVariation();
         }
@@ -97,12 +108,12 @@ class Edit extends Component
     public function addVariation()
     {
         $count = count($this->variations) + 1;
-        $baseSku = $this->sku ?: 'SKU-' . strtoupper(Str::random(4));
+        $baseSku = $this->sku ?: 'SKU-'.strtoupper(Str::random(4));
         $this->variations[] = [
             'id' => null,
             'attribute_name' => 'Maat',
             'attribute_value' => '',
-            'sku' => $baseSku . '-V' . $count,
+            'sku' => $baseSku.'-V'.$count,
             'price' => $this->price > 0 ? $this->price : null,
             'stock' => 5,
         ];
@@ -141,12 +152,12 @@ class Edit extends Component
                     'value' => trim($varData['attribute_value']),
                 ]);
 
-                if (!empty($varData['id'])) {
+                if (! empty($varData['id'])) {
                     $variation = ProductVariation::where('product_id', $this->product->id)->find($varData['id']);
                     if ($variation) {
                         $variation->update([
                             'sku' => $varData['sku'],
-                            'price' => !empty($varData['price']) ? (float) $varData['price'] : null,
+                            'price' => ! empty($varData['price']) ? (float) $varData['price'] : null,
                             'stock' => (int) $varData['stock'],
                         ]);
                     }
@@ -154,7 +165,7 @@ class Edit extends Component
                     $variation = ProductVariation::create([
                         'product_id' => $this->product->id,
                         'sku' => $varData['sku'],
-                        'price' => !empty($varData['price']) ? (float) $varData['price'] : null,
+                        'price' => ! empty($varData['price']) ? (float) $varData['price'] : null,
                         'stock' => (int) $varData['stock'],
                     ]);
                 }
@@ -182,7 +193,7 @@ class Edit extends Component
 
         session()->flash('message', __('Product succesvol bijgewerkt!'));
 
-        $tenant = app(\App\Services\TenantManager::class)->getTenant();
+        $tenant = app(TenantManager::class)->getTenant();
 
         return redirect()->route('tenant.products.manage', ['tenant' => $tenant->slug]);
     }

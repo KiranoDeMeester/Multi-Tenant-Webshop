@@ -4,8 +4,8 @@ namespace App\Livewire\Storefront\Checkout;
 
 use App\Models\Tenant\Order;
 use App\Services\CartService;
-use Livewire\Component;
 use Livewire\Attributes\Title;
+use Livewire\Component;
 
 #[Title('Bestelling geslaagd')]
 class Success extends Component
@@ -18,7 +18,7 @@ class Success extends Component
 
         if ($sessionId) {
             $this->order = Order::where('stripe_session_id', $sessionId)->first();
-            
+
             if ($this->order) {
                 // Clear the cart on success
                 app(CartService::class)->clear();

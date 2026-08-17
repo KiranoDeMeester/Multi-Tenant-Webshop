@@ -2,9 +2,14 @@
 
 namespace App\Livewire\Tenant\Orders;
 
+use App\Mail\OrderCancelledMail;
+use App\Mail\OrderShippedMail;
 use App\Models\Tenant\Order;
 use App\Services\StockService;
+use App\Services\TenantManager;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Mail;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
@@ -14,13 +19,15 @@ class Edit extends Component
     use AuthorizesRequests;
 
     public Order $order;
+
     public string $status = '';
+
     public string $order_number = '';
 
     public function mount(Order $order)
     {
         $user = auth('tenant')->user() ?? auth('customer')->user() ?? auth()->user();
-        \Illuminate\Support\Facades\Gate::forUser($user)->authorize('update', $order);
+        Gate::forUser($user)->authorize('update', $order);
         $this->order = $order;
         $this->status = $order->status;
         $this->order_number = $order->order_number;
@@ -29,17 +36,17 @@ class Edit extends Component
     public function save(StockService $stockService)
     {
         $user = auth('tenant')->user() ?? auth('customer')->user() ?? auth()->user();
-        \Illuminate\Support\Facades\Gate::forUser($user)->authorize('update', $this->order);
+        Gate::forUser($user)->authorize('update', $this->order);
 
         $this->validate([
             'status' => 'required|in:pending,paid,shipped,cancelled',
-            'order_number' => 'required|string|max:255|unique:orders,order_number,' . $this->order->id,
+            'order_number' => 'required|string|max:255|unique:orders,order_number,'.$this->order->id,
         ]);
 
         $oldStatus = $this->order->status;
         $newStatus = $this->status;
 
-        $tenant = app(\App\Services\TenantManager::class)->getTenant();
+        $tenant = app(TenantManager::class)->getTenant();
         $tenantId = $tenant?->id;
 
         if ($oldStatus !== $newStatus) {
@@ -48,14 +55,14 @@ class Edit extends Component
             if ($newStatus === 'cancelled') {
                 $stockService->restituteOrderStock($this->order);
                 if ($customerEmail) {
-                    \Illuminate\Support\Facades\Mail::to($customerEmail)->send(new \App\Mail\OrderCancelledMail($this->order->id, $tenantId));
+                    Mail::to($customerEmail)->send(new OrderCancelledMail($this->order->id, $tenantId));
                 }
             } elseif (in_array($newStatus, ['paid', 'shipped']) && $oldStatus === 'pending') {
                 $stockService->fulfillOrderStock($this->order);
             }
 
             if ($newStatus === 'shipped' && $customerEmail) {
-                \Illuminate\Support\Facades\Mail::to($customerEmail)->send(new \App\Mail\OrderShippedMail($this->order->id, $tenantId));
+                Mail::to($customerEmail)->send(new OrderShippedMail($this->order->id, $tenantId));
             }
         }
 
@@ -66,7 +73,7 @@ class Edit extends Component
 
         $this->dispatch('toast', [
             'type' => 'success',
-            'message' => __('Bestelling succesvol bijgewerkt!')
+            'message' => __('Bestelling succesvol bijgewerkt!'),
         ]);
 
         return redirect()->route('tenant.orders.index', ['tenant' => $tenant->slug]);

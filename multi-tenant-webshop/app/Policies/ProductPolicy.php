@@ -3,6 +3,7 @@
 namespace App\Policies;
 
 use App\Models\Tenant\Product;
+use App\Models\Tenant\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 
 class ProductPolicy
@@ -28,7 +29,7 @@ class ProductPolicy
      */
     public function create(?Authenticatable $user): bool
     {
-        return $user instanceof \App\Models\Tenant\User;
+        return $user instanceof User;
     }
 
     /**
@@ -36,7 +37,7 @@ class ProductPolicy
      */
     public function update(?Authenticatable $user, Product $product): bool
     {
-        return $user instanceof \App\Models\Tenant\User;
+        return $user instanceof User;
     }
 
     /**
@@ -44,6 +45,6 @@ class ProductPolicy
      */
     public function delete(?Authenticatable $user, Product $product): bool
     {
-        return $user instanceof \App\Models\Tenant\User;
+        return $user instanceof User;
     }
 }

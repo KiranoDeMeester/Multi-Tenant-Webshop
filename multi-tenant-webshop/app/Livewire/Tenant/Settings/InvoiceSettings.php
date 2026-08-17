@@ -3,9 +3,9 @@
 namespace App\Livewire\Tenant\Settings;
 
 use App\Models\Tenant\Setting;
+use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Livewire\WithFileUploads;
-use Livewire\Attributes\Layout;
 
 #[Layout('layouts.tenant')]
 class InvoiceSettings extends Component
@@ -13,11 +13,17 @@ class InvoiceSettings extends Component
     use WithFileUploads;
 
     public string $company_name = '';
+
     public string $address = '';
+
     public string $vat_number = '';
+
     public string $email = '';
+
     public string $footer_text = '';
+
     public $logo;
+
     public ?string $current_logo = null;
 
     public function mount()

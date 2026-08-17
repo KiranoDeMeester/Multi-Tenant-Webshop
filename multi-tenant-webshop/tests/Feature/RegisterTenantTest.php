@@ -1,8 +1,8 @@
 <?php
 
 use App\Livewire\Landlord\RegisterTenant;
-use App\Models\Landlord\Tenant;
 use App\Models\Landlord\Domain;
+use App\Models\Landlord\Tenant;
 use Livewire\Livewire;
 
 beforeEach(function () {
@@ -19,7 +19,7 @@ test('onboarding screen allows registering tenant', function () {
     // Simulate paid state
     $component = Livewire::test(RegisterTenant::class);
     $component->set('isPaid', true);
-    
+
     $component->set('shop_name', 'Test Boutique')
         ->set('subdomain', 'testboutique')
         ->set('admin_name', 'Admin User')
@@ -31,7 +31,7 @@ test('onboarding screen allows registering tenant', function () {
     // Verify Tenant and Domain created in landlord database
     expect(Tenant::count())->toBe(1);
     expect(Domain::count())->toBe(1);
-    
+
     $tenant = Tenant::first();
     expect($tenant->name)->toBe('Test Boutique');
     expect(Domain::first()->domain)->toBe('testboutique.localhost');

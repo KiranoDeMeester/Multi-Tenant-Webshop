@@ -2,23 +2,26 @@
 
 namespace App\Livewire\Admin\Tenants;
 
-use App\Models\Landlord\Tenant;
 use App\Models\Landlord\Domain;
+use App\Models\Landlord\Tenant;
+use App\Services\TenantManager;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Str;
 use Livewire\Component;
 use Livewire\WithPagination;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Artisan;
-use App\Services\TenantManager;
 
 class Index extends Component
 {
     use WithPagination;
 
     public bool $isCreating = false;
+
     public bool $isEditing = false;
 
     public string $tenant_id = '';
+
     public string $name = '';
+
     public string $domain = '';
 
     public function createTenant()
@@ -43,11 +46,11 @@ class Index extends Component
     {
         $this->validate([
             'name' => 'required|string|max:255',
-            'domain' => 'required|string|max:255|unique:landlord.domains,domain' . ($this->isEditing ? ',' . Domain::where('domain', $this->domain)->first()?->id : ''),
+            'domain' => 'required|string|max:255|unique:landlord.domains,domain'.($this->isEditing ? ','.Domain::where('domain', $this->domain)->first()?->id : ''),
         ]);
 
         if ($this->isCreating) {
-            $dbName = 'tenant_' . Str::slug($this->name) . '_' . Str::random(5);
+            $dbName = 'tenant_'.Str::slug($this->name).'_'.Str::random(5);
             $tenant = Tenant::create([
                 'name' => $this->name,
                 'db_name' => $dbName,
@@ -94,7 +97,7 @@ class Index extends Component
     public function toggleActive($tenantId)
     {
         $tenant = Tenant::withTrashed()->findOrFail($tenantId);
-        $tenant->update(['is_active' => !$tenant->is_active]);
+        $tenant->update(['is_active' => ! $tenant->is_active]);
         session()->flash('message', $tenant->is_active ? 'Webshop geactiveerd.' : 'Webshop gedeactiveerd.');
     }
 
@@ -115,10 +118,10 @@ class Index extends Component
     public function hardDelete($tenantId)
     {
         $tenant = Tenant::withTrashed()->findOrFail($tenantId);
-        
+
         // Optionally delete the SQLite file
         if ($tenant->db_name) {
-            $dbPath = database_path('tenants/' . $tenant->db_name . '.sqlite');
+            $dbPath = database_path('tenants/'.$tenant->db_name.'.sqlite');
             if (file_exists($dbPath)) {
                 @unlink($dbPath);
             }

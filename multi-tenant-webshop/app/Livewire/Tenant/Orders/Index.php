@@ -3,9 +3,9 @@
 namespace App\Livewire\Tenant\Orders;
 
 use App\Models\Tenant\Order;
+use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Livewire\WithPagination;
-use Livewire\Attributes\Layout;
 
 #[Layout('layouts.tenant')]
 class Index extends Component
@@ -13,6 +13,7 @@ class Index extends Component
     use WithPagination;
 
     public $search = '';
+
     public $status = '';
 
     public function updatedSearch()
@@ -32,17 +33,17 @@ class Index extends Component
 
         $this->dispatch('toast', [
             'type' => 'success',
-            'message' => 'Bestelling succesvol verplaatst naar prullenbak.'
+            'message' => 'Bestelling succesvol verplaatst naar prullenbak.',
         ]);
     }
 
     public function render()
     {
         $query = Order::query()
-            ->when($this->search, function($q) {
-                $q->where('order_number', 'like', '%' . $this->search . '%');
+            ->when($this->search, function ($q) {
+                $q->where('order_number', 'like', '%'.$this->search.'%');
             })
-            ->when($this->status, function($q) {
+            ->when($this->status, function ($q) {
                 $q->where('status', $this->status);
             })
             ->latest();

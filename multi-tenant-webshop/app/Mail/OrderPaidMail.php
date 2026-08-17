@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Models\Landlord\Tenant;
 use App\Models\Tenant\Order;
 use App\Services\InvoiceService;
 use App\Services\TenantManager;
@@ -17,6 +18,7 @@ class OrderPaidMail extends Mailable implements ShouldQueue
     use Queueable; // Removed SerializesModels to prevent Queue database connection deserialization errors
 
     public string $orderId;
+
     public ?string $tenantId;
 
     protected ?Order $orderInstance = null;
@@ -35,9 +37,9 @@ class OrderPaidMail extends Mailable implements ShouldQueue
      */
     protected function getOrder(): Order
     {
-        if (!$this->orderInstance) {
+        if (! $this->orderInstance) {
             if ($this->tenantId) {
-                $tenant = \App\Models\Landlord\Tenant::findOrFail($this->tenantId);
+                $tenant = Tenant::findOrFail($this->tenantId);
                 app(TenantManager::class)->setTenant($tenant);
             }
             $this->orderInstance = Order::with('items')->findOrFail($this->orderId);
@@ -52,8 +54,9 @@ class OrderPaidMail extends Mailable implements ShouldQueue
     public function envelope(): Envelope
     {
         $order = $this->getOrder();
+
         return new Envelope(
-            subject: 'Bestelling Bevestigd - ' . $order->order_number,
+            subject: 'Bestelling Bevestigd - '.$order->order_number,
         );
     }
 
@@ -67,7 +70,7 @@ class OrderPaidMail extends Mailable implements ShouldQueue
 
         if ($order->customer_id === null) {
             $tenant = $this->tenantId
-                ? \App\Models\Landlord\Tenant::with('domains')->find($this->tenantId)
+                ? Tenant::with('domains')->find($this->tenantId)
                 : app(TenantManager::class)->getTenant();
 
             if ($tenant) {
@@ -95,7 +98,7 @@ class OrderPaidMail extends Mailable implements ShouldQueue
     /**
      * Get the attachments for the message.
      *
-     * @return array<int, \Illuminate\Mail\Mailables\Attachment>
+     * @return array<int, Attachment>
      */
     public function attachments(): array
     {
@@ -109,4 +112,3 @@ class OrderPaidMail extends Mailable implements ShouldQueue
         ];
     }
 }
-

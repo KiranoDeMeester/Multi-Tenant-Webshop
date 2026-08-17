@@ -9,14 +9,13 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class Product extends Model implements HasMedia
 {
-    use HasFactory, HasTenantConnection, HasUuid, SoftDeletes, InteractsWithMedia;
+    use HasFactory, HasTenantConnection, HasUuid, InteractsWithMedia, SoftDeletes;
 
     protected $guarded = [];
 
@@ -73,7 +72,7 @@ class Product extends Model implements HasMedia
     public function decrementStock(int $quantity = 1): void
     {
         if ($this->has_variations) {
-            throw new \Exception("Dit product heeft variaties. Verlaag de voorraad via de specifieke variatie.");
+            throw new \Exception('Dit product heeft variaties. Verlaag de voorraad via de specifieke variatie.');
         }
 
         if ($this->stock < $quantity) {
@@ -89,7 +88,7 @@ class Product extends Model implements HasMedia
     public function incrementStock(int $quantity = 1): void
     {
         if ($this->has_variations) {
-            throw new \Exception("Dit product heeft variaties. Verhoog de voorraad via de specifieke variatie.");
+            throw new \Exception('Dit product heeft variaties. Verhoog de voorraad via de specifieke variatie.');
         }
 
         $this->increment('stock', $quantity);

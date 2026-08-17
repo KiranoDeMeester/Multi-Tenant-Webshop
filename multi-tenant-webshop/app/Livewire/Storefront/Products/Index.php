@@ -4,6 +4,8 @@ namespace App\Livewire\Storefront\Products;
 
 use App\Models\Tenant\Category;
 use App\Models\Tenant\Product;
+use App\Services\CartService;
+use App\Services\TenantManager;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Url;
 use Livewire\Component;
@@ -26,11 +28,11 @@ class Index extends Component
 
     public function mount(?string $categorySlug = null)
     {
-        $this->themeSettings = app(\App\Services\TenantManager::class)->getThemeSettings();
+        $this->themeSettings = app(TenantManager::class)->getThemeSettings();
 
         if ($categorySlug) {
             $categoryExists = Category::where('slug', $categorySlug)->exists();
-            if (!$categoryExists) {
+            if (! $categoryExists) {
                 abort(404);
             }
             $this->category = $categorySlug;
@@ -57,11 +59,12 @@ class Index extends Component
 
         if ($product->stock <= 0) {
             session()->flash('error', __('Dit product is uitverkocht.'));
+
             return;
         }
 
         try {
-            app(\App\Services\CartService::class)->add($product, 1);
+            app(CartService::class)->add($product, 1);
             $this->dispatch('product-added-to-cart');
             $this->dispatch('open-cart');
         } catch (\Exception $e) {
@@ -73,8 +76,8 @@ class Index extends Component
     {
         $products = Product::query()
             ->when($this->search, function ($query) {
-                $query->where('name', 'like', '%' . $this->search . '%')
-                    ->orWhere('sku', 'like', '%' . $this->search . '%');
+                $query->where('name', 'like', '%'.$this->search.'%')
+                    ->orWhere('sku', 'like', '%'.$this->search.'%');
             })
             ->when($this->category, function ($query) {
                 $query->whereHas('category', function ($q) {

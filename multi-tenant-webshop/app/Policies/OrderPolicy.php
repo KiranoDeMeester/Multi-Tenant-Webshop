@@ -54,7 +54,7 @@ class OrderPolicy
         }
 
         if ($user instanceof Customer) {
-            $isOwner = $order->customer_id === $user->id || 
+            $isOwner = $order->customer_id === $user->id ||
                 (isset($order->customer_details['email']) && strtolower($order->customer_details['email']) === strtolower($user->email));
 
             return $isOwner && in_array($order->status, ['pending', 'paid']);

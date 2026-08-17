@@ -12,7 +12,9 @@ use Illuminate\Support\Facades\Schema;
 class TestTenantModel extends Model
 {
     use BelongsToTenant;
+
     protected $table = 'test_tenant_models';
+
     protected $fillable = ['name', 'tenant_id'];
 }
 
@@ -20,7 +22,7 @@ class TestTenantModel extends Model
 
 beforeEach(function () {
     $this->migrateLandlord();
-    
+
     Schema::create('test_tenant_models', function (Blueprint $table) {
         $table->id();
         $table->string('name');
@@ -55,7 +57,7 @@ test('it filters models by active tenant', function () {
 
 test('it automatically sets tenant_id on creation', function () {
     $tenant = Tenant::factory()->create(['id' => '33333333-3333-3333-3333-333333333333']);
-    
+
     // Mock TenantManager to return the tenant
     $this->mock(TenantManager::class, function ($mock) use ($tenant) {
         $mock->shouldReceive('getTenant')->andReturn($tenant);

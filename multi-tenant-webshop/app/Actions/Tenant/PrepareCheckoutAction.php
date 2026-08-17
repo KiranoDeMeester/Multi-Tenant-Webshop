@@ -4,12 +4,13 @@ namespace App\Actions\Tenant;
 
 use App\Models\Tenant\Order;
 use App\Models\Tenant\OrderItem;
+use App\Models\Tenant\Setting;
 use App\Services\CartService;
 use App\Services\StripeService;
 use App\Services\TenantManager;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class PrepareCheckoutAction
 {
@@ -21,16 +22,17 @@ class PrepareCheckoutAction
 
     /**
      * Prepare the checkout by creating a local order and a Stripe session.
-     * 
+     *
      * @return string The Stripe Checkout URL
+     *
      * @throws \Exception
      */
     public function execute(string $notes = '', ?array $customerDetails = null): string
     {
         $tenant = $this->tenantManager->getTenant();
-        
-        if (!$tenant || !$tenant->stripe_account_id) {
-             throw new \Exception('Deze winkel kan momenteel geen betalingen accepteren (Stripe niet geconfigureerd).');
+
+        if (! $tenant || ! $tenant->stripe_account_id) {
+            throw new \Exception('Deze winkel kan momenteel geen betalingen accepteren (Stripe niet geconfigureerd).');
         }
 
         $items = $this->cartService->getItems();
@@ -45,12 +47,12 @@ class PrepareCheckoutAction
                 $total = $subtotal + $shipping;
 
                 // Calculate VAT amount (default 21% inclusive if not set)
-                $vatPercentage = (float) (\App\Models\Tenant\Setting::where('key', 'invoice_vat_percentage')->first()?->value ?? 21);
+                $vatPercentage = (float) (Setting::where('key', 'invoice_vat_percentage')->first()?->value ?? 21);
                 $taxAmount = (int) round($subtotal - ($subtotal / (1 + ($vatPercentage / 100))));
 
                 // 1. Create Order
                 $order = Order::create([
-                    'order_number' => 'ORD-' . strtoupper(Str::random(8)),
+                    'order_number' => 'ORD-'.strtoupper(Str::random(8)),
                     'total_amount' => $total,
                     'tax_amount' => $taxAmount,
                     'shipping_amount' => $shipping,
@@ -66,11 +68,11 @@ class PrepareCheckoutAction
                         'order_id' => $order->id,
                         'product_id' => $item['id'],
                         'product_variation_id' => $item['variation_id'] ?? null,
-                        'product_name' => $item['name'] . (!empty($item['variation_name']) ? ' (' . $item['variation_name'] . ')' : ''),
+                        'product_name' => $item['name'].(! empty($item['variation_name']) ? ' ('.$item['variation_name'].')' : ''),
                         'sku' => $item['sku'] ?? null,
                         'price' => (int) round($item['price'] * 100),
                         'quantity' => $item['quantity'],
-                        'options' => $item['options'] ?? (!empty($item['variation_name']) ? ['variant' => $item['variation_name']] : null),
+                        'options' => $item['options'] ?? (! empty($item['variation_name']) ? ['variant' => $item['variation_name']] : null),
                     ]);
                 }
 
@@ -85,15 +87,15 @@ class PrepareCheckoutAction
                 Log::info('Checkout session prepared', [
                     'order_id' => $order->id,
                     'stripe_session_id' => $session->id,
-                    'tenant_id' => $tenant->id
+                    'tenant_id' => $tenant->id,
                 ]);
 
                 return $session->url;
             });
         } catch (\Exception $e) {
-            Log::error('PrepareCheckoutAction failed: ' . $e->getMessage(), [
+            Log::error('PrepareCheckoutAction failed: '.$e->getMessage(), [
                 'tenant_id' => $tenant->id,
-                'user_id' => auth()->id()
+                'user_id' => auth()->id(),
             ]);
             throw $e;
         }

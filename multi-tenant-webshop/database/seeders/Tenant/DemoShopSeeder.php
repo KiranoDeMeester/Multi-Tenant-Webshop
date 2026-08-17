@@ -5,13 +5,13 @@ namespace Database\Seeders\Tenant;
 use App\Models\Tenant\Attribute;
 use App\Models\Tenant\AttributeValue;
 use App\Models\Tenant\Category;
+use App\Models\Tenant\Customer;
 use App\Models\Tenant\Product;
 use App\Models\Tenant\ProductVariation;
-use App\Models\Tenant\User;
 use App\Models\Tenant\Setting;
+use App\Models\Tenant\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 
 class DemoShopSeeder extends Seeder
 {
@@ -28,7 +28,7 @@ class DemoShopSeeder extends Seeder
         );
 
         // 1.2 Create Test Customer
-        \App\Models\Tenant\Customer::updateOrCreate(
+        Customer::updateOrCreate(
             ['email' => 'customer@example.com'],
             [
                 'name' => 'Jane Smith',
@@ -87,7 +87,7 @@ class DemoShopSeeder extends Seeder
         $accessoires = Category::where('slug', 'accessoires')->first();
 
         // 4. Create Products
-        
+
         // Product 1: Designer Chair (Variations)
         $chair = Product::create([
             'category_id' => $meubels->id,

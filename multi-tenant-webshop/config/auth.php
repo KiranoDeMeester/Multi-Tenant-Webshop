@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Tenant\Customer;
 use App\Models\User;
 
 return [
@@ -79,12 +80,12 @@ return [
 
         'customers' => [
             'driver' => 'eloquent',
-            'model' => \App\Models\Tenant\Customer::class,
+            'model' => Customer::class,
         ],
 
         'tenant_users' => [
             'driver' => 'eloquent',
-            'model' => \App\Models\Tenant\User::class,
+            'model' => App\Models\Tenant\User::class,
         ],
 
         // 'users' => [

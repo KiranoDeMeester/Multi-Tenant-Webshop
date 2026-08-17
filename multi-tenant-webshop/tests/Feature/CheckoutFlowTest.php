@@ -3,17 +3,16 @@
 use App\Actions\Tenant\PrepareCheckoutAction;
 use App\Models\Landlord\Tenant;
 use App\Models\Tenant\Category;
+use App\Models\Tenant\Order;
 use App\Models\Tenant\Product;
 use App\Services\CartService;
 use App\Services\StripeService;
 use App\Services\TenantManager;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\DB;
 use Stripe\Checkout\Session;
 
 beforeEach(function () {
     $this->migrateLandlord();
-    
+
     // 1. Create the tenant record first
     $this->tenant = Tenant::create([
         'name' => 'Test Shop',
@@ -23,10 +22,10 @@ beforeEach(function () {
 
     // 2. Set the tenant (this switches connection to :memory:)
     app(TenantManager::class)->setTenant($this->tenant);
-    
+
     // 3. Migrate the tenant database (now that we are connected to the right :memory:)
     $this->migrateTenant();
-    
+
     // 4. Create data
     $this->category = Category::create(['name' => 'Electronics', 'slug' => 'electronics']);
     $this->product = Product::create([
@@ -47,17 +46,17 @@ test('successful checkout initiation creates order and redirects to stripe', fun
             'name' => 'iPhone',
             'price' => 999.00,
             'quantity' => 1,
-            'sku' => 'IPHONE-001'
-        ]
+            'sku' => 'IPHONE-001',
+        ],
     ]);
     $cartService->shouldReceive('getTotal')->andReturn(999.00);
     $cartService->shouldReceive('getShippingFee')->andReturn(0.00);
     $this->app->instance(CartService::class, $cartService);
 
     // 2. Mock Stripe Session
-    $stripeSession = (object)[
+    $stripeSession = (object) [
         'id' => 'cs_test_123',
-        'url' => 'https://checkout.stripe.com/test'
+        'url' => 'https://checkout.stripe.com/test',
     ];
 
     $stripeService = mock(StripeService::class);
@@ -72,8 +71,8 @@ test('successful checkout initiation creates order and redirects to stripe', fun
 
     // 4. Assertions
     expect($url)->toBe('https://checkout.stripe.com/test');
-    
-    $order = \App\Models\Tenant\Order::first();
+
+    $order = Order::first();
     expect($order)->not->toBeNull();
     expect($order->total_amount)->toBe(99900); // Stored in cents
     expect($order->stripe_session_id)->toBe('cs_test_123');
@@ -87,14 +86,14 @@ test('checkout fails if cart is empty', function () {
     $this->app->instance(CartService::class, $cartService);
 
     $action = app(PrepareCheckoutAction::class);
-    
-    expect(fn() => $action->execute())->toThrow(\Exception::class, 'Winkelwagen is leeg.');
+
+    expect(fn () => $action->execute())->toThrow(Exception::class, 'Winkelwagen is leeg.');
 });
 
 test('checkout fails if stripe is not configured', function () {
     $this->tenant->update(['stripe_account_id' => null]);
-    
+
     $action = app(PrepareCheckoutAction::class);
-    
-    expect(fn() => $action->execute())->toThrow(\Exception::class, 'Deze winkel kan momenteel geen betalingen accepteren');
+
+    expect(fn () => $action->execute())->toThrow(Exception::class, 'Deze winkel kan momenteel geen betalingen accepteren');
 });

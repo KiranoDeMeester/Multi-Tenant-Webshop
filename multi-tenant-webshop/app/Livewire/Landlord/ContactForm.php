@@ -8,8 +8,11 @@ use Livewire\Component;
 class ContactForm extends Component
 {
     public string $name = '';
+
     public string $email = '';
+
     public string $message = '';
+
     public bool $success = false;
 
     protected array $rules = [

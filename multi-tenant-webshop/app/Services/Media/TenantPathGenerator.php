@@ -36,7 +36,7 @@ class TenantPathGenerator implements PathGenerator
      */
     protected function getBasePath(Media $media): string
     {
-        // Get the tenant ID. 
+        // Get the tenant ID.
         // Note: The media record itself belongs to a model that is on a tenant connection.
         // We can try to get the tenant from the context.
         $tenantId = tenant()?->id ?? 'default';

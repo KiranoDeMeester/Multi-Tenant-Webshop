@@ -2,9 +2,14 @@
 
 namespace App\Livewire\Tenant\Orders;
 
+use App\Mail\OrderCancelledMail;
+use App\Mail\OrderShippedMail;
 use App\Models\Tenant\Order;
 use App\Services\StockService;
+use App\Services\TenantManager;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Mail;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
@@ -18,19 +23,19 @@ class Show extends Component
     public function mount(Order $order)
     {
         $user = auth('tenant')->user() ?? auth('customer')->user() ?? auth()->user();
-        \Illuminate\Support\Facades\Gate::forUser($user)->authorize('view', $order);
+        Gate::forUser($user)->authorize('view', $order);
         $this->order = $order->load(['items', 'customer']);
     }
 
     public function updateStatus($status, StockService $stockService)
     {
         $user = auth('tenant')->user() ?? auth('customer')->user() ?? auth()->user();
-        \Illuminate\Support\Facades\Gate::forUser($user)->authorize('update', $this->order);
+        Gate::forUser($user)->authorize('update', $this->order);
 
         $oldStatus = $this->order->status;
         $newStatus = $status;
 
-        $tenant = app(\App\Services\TenantManager::class)->getTenant();
+        $tenant = app(TenantManager::class)->getTenant();
         $tenantId = $tenant?->id;
 
         if ($oldStatus !== $newStatus) {
@@ -39,14 +44,14 @@ class Show extends Component
             if ($newStatus === 'cancelled') {
                 $stockService->restituteOrderStock($this->order);
                 if ($customerEmail) {
-                    \Illuminate\Support\Facades\Mail::to($customerEmail)->send(new \App\Mail\OrderCancelledMail($this->order->id, $tenantId));
+                    Mail::to($customerEmail)->send(new OrderCancelledMail($this->order->id, $tenantId));
                 }
             } elseif (in_array($newStatus, ['paid', 'shipped']) && $oldStatus === 'pending') {
                 $stockService->fulfillOrderStock($this->order);
             }
 
             if ($newStatus === 'shipped' && $customerEmail) {
-                \Illuminate\Support\Facades\Mail::to($customerEmail)->send(new \App\Mail\OrderShippedMail($this->order->id, $tenantId));
+                Mail::to($customerEmail)->send(new OrderShippedMail($this->order->id, $tenantId));
             }
         }
 
@@ -54,7 +59,7 @@ class Show extends Component
 
         $this->dispatch('toast', [
             'type' => 'success',
-            'message' => __('Bestellingsstatus bijgewerkt naar :status', ['status' => $newStatus])
+            'message' => __('Bestellingsstatus bijgewerkt naar :status', ['status' => $newStatus]),
         ]);
     }
 

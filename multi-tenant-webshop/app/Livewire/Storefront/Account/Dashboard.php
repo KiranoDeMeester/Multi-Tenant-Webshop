@@ -13,8 +13,8 @@ class Dashboard extends Component
     public function mount()
     {
         $this->user = auth('customer')->user() ?? auth('tenant')->user();
-        
-        if (!$this->user) {
+
+        if (! $this->user) {
             return redirect()->route('storefront.login');
         }
     }

@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Storefront\Navigation;
 
+use App\Services\TenantManager;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\On;
 use Livewire\Component;
@@ -15,7 +16,7 @@ class UserDropdown extends Component
     public function logout()
     {
         $wasTenant = Auth::guard('tenant')->check();
-        $tenant = app(\App\Services\TenantManager::class)->getTenant();
+        $tenant = app(TenantManager::class)->getTenant();
 
         Auth::guard('tenant')->logout();
         Auth::guard('web')->logout();

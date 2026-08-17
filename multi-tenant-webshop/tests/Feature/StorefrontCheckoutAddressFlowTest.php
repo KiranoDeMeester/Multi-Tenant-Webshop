@@ -1,7 +1,9 @@
 <?php
 
+use App\Livewire\Storefront\Checkout\Index;
 use App\Models\Landlord\Domain;
 use App\Models\Landlord\Tenant;
+use App\Models\Tenant\Category;
 use App\Models\Tenant\Customer;
 use App\Models\Tenant\CustomerAddress;
 use App\Models\Tenant\Order;
@@ -37,7 +39,7 @@ beforeEach(function () {
     Config::set('database.connections.tenant.database', ':memory:');
     $this->migrateTenant();
 
-    $this->category = \App\Models\Tenant\Category::create([
+    $this->category = Category::create([
         'name' => 'Electronics',
         'slug' => 'electronics',
     ]);
@@ -63,12 +65,12 @@ test('guest can fill in address and proceed through checkout', function () {
     $stripeMock->shouldReceive('createCheckoutSession')->once()->andReturn($dummySession);
     app()->instance(StripeService::class, $stripeMock);
 
-    Livewire::test(\App\Livewire\Storefront\Checkout\Index::class)
+    Livewire::test(Index::class)
         ->set('first_name', 'Emma')
         ->set('last_name', 'Watson')
         ->set('email', 'emma@example.com')
         ->set('phone', '+32 470 12 34 56')
-        ->set('shipping_street' , 'Antwerpsesteenweg')
+        ->set('shipping_street', 'Antwerpsesteenweg')
         ->set('shipping_house_number', '45')
         ->set('shipping_postal_code', '9000')
         ->set('shipping_city', 'Gent')
@@ -117,7 +119,7 @@ test('logged in customer can select saved address during checkout', function () 
     $stripeMock->shouldReceive('createCheckoutSession')->once()->andReturn($dummySession);
     app()->instance(StripeService::class, $stripeMock);
 
-    Livewire::test(\App\Livewire\Storefront\Checkout\Index::class)
+    Livewire::test(Index::class)
         ->assertSet('selected_address_id', $savedAddress->id)
         ->assertSet('shipping_street', 'Wayne Manor Way')
         ->call('processCheckout')

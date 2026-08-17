@@ -1,10 +1,12 @@
 <?php
 
+use App\Models\Landlord\Tenant;
 use App\Models\Tenant\Attribute;
 use App\Models\Tenant\AttributeValue;
 use App\Models\Tenant\Category;
 use App\Models\Tenant\Product;
 use App\Models\Tenant\ProductVariation;
+use App\Services\TenantManager;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
@@ -22,11 +24,11 @@ beforeEach(function () {
     $this->migrateLandlord();
 
     // Create a real tenant record to satisfy TenantManager
-    $tenant = \App\Models\Landlord\Tenant::create([
+    $tenant = Tenant::create([
         'name' => 'Test Shop',
         'db_name' => ':memory:',
     ]);
-    app(\App\Services\TenantManager::class)->setTenant($tenant);
+    app(TenantManager::class)->setTenant($tenant);
 
     // Migrate tenant tables
     $this->artisan('migrate', [
@@ -48,7 +50,7 @@ test('can create product variations with attributes', function () {
 
     $colorAttr = Attribute::create(['name' => 'Color']);
     $redValue = AttributeValue::create(['attribute_id' => $colorAttr->id, 'value' => 'Red']);
-    
+
     $sizeAttr = Attribute::create(['name' => 'Size']);
     $xlValue = AttributeValue::create(['attribute_id' => $sizeAttr->id, 'value' => 'XL']);
 

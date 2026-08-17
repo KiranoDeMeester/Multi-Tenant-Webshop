@@ -32,6 +32,7 @@ class TenantsMigrateCommand extends Command
 
         if ($tenants->isEmpty()) {
             $this->info('No tenants found to migrate.');
+
             return;
         }
 

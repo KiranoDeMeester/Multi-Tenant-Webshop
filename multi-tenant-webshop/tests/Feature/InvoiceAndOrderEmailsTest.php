@@ -1,5 +1,6 @@
 <?php
 
+use App\Livewire\Tenant\Orders\Show;
 use App\Mail\OrderCancelledMail;
 use App\Mail\OrderShippedMail;
 use App\Models\Landlord\Domain;
@@ -16,7 +17,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\URL;
-use Livewire\Livewire;
 
 beforeEach(function () {
     $this->migrateLandlord();
@@ -75,8 +75,8 @@ test('invoice service generates valid html and pdf output with correct vat break
                 'postal_code' => '1000',
                 'city' => 'Brussel',
                 'country' => 'België',
-            ]
-        ]
+            ],
+        ],
     ]);
 
     OrderItem::create([
@@ -109,11 +109,11 @@ test('status emails are queued when order is marked shipped or cancelled', funct
         'customer_details' => [
             'name' => 'Clara Oswald',
             'email' => 'clara@tardis.org',
-        ]
+        ],
     ]);
 
     $stockService = app(StockService::class);
-    $showComponent = new \App\Livewire\Tenant\Orders\Show();
+    $showComponent = new Show;
     $showComponent->order = $order;
 
     // Transition to shipped

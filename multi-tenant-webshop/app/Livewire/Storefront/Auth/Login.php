@@ -9,7 +9,9 @@ use Livewire\Component;
 class Login extends Component
 {
     public string $email = '';
+
     public string $password = '';
+
     public bool $showChoiceModal = false;
 
     public function login()
@@ -17,11 +19,13 @@ class Login extends Component
         if (auth('tenant')->attempt(['email' => $this->email, 'password' => $this->password])) {
             $this->dispatch('user-logged-in');
             $this->showChoiceModal = true;
+
             return;
         }
 
         if (auth('customer')->attempt(['email' => $this->email, 'password' => $this->password])) {
             $this->dispatch('user-logged-in');
+
             return redirect()->route('storefront.account');
         }
 
@@ -42,7 +46,6 @@ class Login extends Component
     {
         return redirect()->route('storefront.account');
     }
-
 
     public function render()
     {

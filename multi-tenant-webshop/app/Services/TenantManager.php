@@ -3,11 +3,12 @@
 namespace App\Services;
 
 use App\Models\Landlord\Tenant;
+use App\Models\Tenant\Setting;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\Facades\Artisan;
 
 class TenantManager
 {
@@ -25,16 +26,16 @@ class TenantManager
             $dbPath = ':memory:';
         } else {
             // Determine the path to the SQLite database file
-            $dbPath = database_path('tenants/' . $tenant->db_name . '.sqlite');
+            $dbPath = database_path('tenants/'.$tenant->db_name.'.sqlite');
             $dbDir = dirname($dbPath);
 
             // Ensure the directory exists
-            if (!file_exists($dbDir)) {
+            if (! file_exists($dbDir)) {
                 mkdir($dbDir, 0755, true);
             }
 
             // Ensure the SQLite file exists
-            if (!file_exists($dbPath)) {
+            if (! file_exists($dbPath)) {
                 touch($dbPath);
             }
         }
@@ -48,17 +49,17 @@ class TenantManager
         // 3. Set the default connection to 'tenant' for this request
         Config::set('database.default', 'tenant');
 
-        Log::info('Database connection switched to SQLite tenant: ' . $tenant->name, [
+        Log::info('Database connection switched to SQLite tenant: '.$tenant->name, [
             'tenant_id' => $tenant->id,
             'db_path' => $dbPath,
         ]);
 
         // 4. Auto-migrate and seed tenant DB if tables are missing (on-demand bootstrapping)
-        if ($tenant->db_name !== ':memory:' && !app()->runningInConsole()) {
+        if ($tenant->db_name !== ':memory:' && ! app()->runningInConsole()) {
             try {
-                if (!Schema::connection('tenant')->hasTable('settings')) {
-                    Log::info('Bootstrapping empty tenant database: ' . $tenant->name);
-                    
+                if (! Schema::connection('tenant')->hasTable('settings')) {
+                    Log::info('Bootstrapping empty tenant database: '.$tenant->name);
+
                     Artisan::call('migrate', [
                         '--database' => 'tenant',
                         '--path' => 'database/migrations/tenant',
@@ -70,17 +71,17 @@ class TenantManager
                     if (str_contains($tenant->db_name, 'minimalist')) {
                         $seeder = 'Database\\Seeders\\Tenant\\DemoShopSeeder';
                     }
-                    
+
                     Artisan::call('db:seed', [
                         '--class' => $seeder,
                         '--force' => true,
                         '--database' => 'tenant',
                     ]);
-                    
-                    Log::info('Successfully bootstrapped tenant database: ' . $tenant->name);
+
+                    Log::info('Successfully bootstrapped tenant database: '.$tenant->name);
                 }
             } catch (\Exception $e) {
-                Log::error('Dynamic tenant bootstrap failed: ' . $e->getMessage(), [
+                Log::error('Dynamic tenant bootstrap failed: '.$e->getMessage(), [
                     'tenant_name' => $tenant->name,
                 ]);
             }
@@ -100,11 +101,11 @@ class TenantManager
      */
     public function getThemeSettings(): array
     {
-        if (!$this->currentTenant) {
+        if (! $this->currentTenant) {
             return [];
         }
 
-        return \App\Models\Tenant\Setting::pluck('value', 'key')->toArray();
+        return Setting::pluck('value', 'key')->toArray();
     }
 
     /**
@@ -117,4 +118,3 @@ class TenantManager
         DB::purge('tenant');
     }
 }
-

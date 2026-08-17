@@ -1,5 +1,6 @@
 <?php
 
+use App\Livewire\Storefront\Auth\Register;
 use App\Models\Landlord\Domain;
 use App\Models\Landlord\Tenant;
 use App\Models\Tenant\Customer;
@@ -33,7 +34,7 @@ beforeEach(function () {
 });
 
 test('customer can register via storefront registration component', function () {
-    Livewire::test(\App\Livewire\Storefront\Auth\Register::class)
+    Livewire::test(Register::class)
         ->set('name', 'Sarah Connor')
         ->set('email', 'sarah@resistance.org')
         ->set('phone', '+32 499 11 22 33')
@@ -54,7 +55,7 @@ test('customer registration validates duplicate email and password length', func
         'password' => bcrypt('password'),
     ]);
 
-    Livewire::test(\App\Livewire\Storefront\Auth\Register::class)
+    Livewire::test(Register::class)
         ->set('name', 'New Customer')
         ->set('email', 'existing@example.com')
         ->set('password', 'short')

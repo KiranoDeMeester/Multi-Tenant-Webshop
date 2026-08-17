@@ -16,6 +16,7 @@ class HandlePaymentAction
 
         if ($order->status === 'paid') {
             Log::info('Order already marked as paid', ['order_id' => $orderId]);
+
             return;
         }
 
@@ -27,7 +28,7 @@ class HandlePaymentAction
 
         Log::info('Order marked as paid via webhook', [
             'order_id' => $orderId,
-            'payment_intent_id' => $paymentIntentId
+            'payment_intent_id' => $paymentIntentId,
         ]);
 
         // Finalize order logic (Stock decrement, Email)

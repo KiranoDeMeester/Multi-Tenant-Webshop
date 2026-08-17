@@ -15,7 +15,7 @@ class InvoiceService
     public function generate(Order $order)
     {
         $settings = $this->getInvoiceSettings();
-        
+
         $pdf = Pdf::loadView('emails.orders.invoice', [
             'order' => $order->load('items.product'),
             'settings' => $settings,

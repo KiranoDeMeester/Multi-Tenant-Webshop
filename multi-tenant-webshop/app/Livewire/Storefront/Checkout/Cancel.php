@@ -2,8 +2,8 @@
 
 namespace App\Livewire\Storefront\Checkout;
 
-use Livewire\Component;
 use Livewire\Attributes\Title;
+use Livewire\Component;
 
 #[Title('Betaling geannuleerd')]
 class Cancel extends Component

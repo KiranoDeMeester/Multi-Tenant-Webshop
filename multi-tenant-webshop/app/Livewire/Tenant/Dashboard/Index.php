@@ -2,18 +2,20 @@
 
 namespace App\Livewire\Tenant\Dashboard;
 
-use App\Models\Tenant\Product;
 use App\Models\Tenant\Category;
+use App\Models\Tenant\Customer;
 use App\Models\Tenant\Order;
 use App\Models\Tenant\OrderItem;
-use App\Models\Tenant\Customer;
-use Livewire\Component;
-use Illuminate\Support\Facades\DB;
+use App\Models\Tenant\Product;
+use App\Models\Tenant\ProductVariation;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
+use Livewire\Component;
 
 class Index extends Component
 {
     public string $dateRange = '30';
+
     public string $status = 'paid';
 
     protected $queryString = [
@@ -26,12 +28,12 @@ class Index extends Component
         $lowStockProducts = Product::doesntHave('variations')
             ->where('stock', '<', 5)
             ->count();
-            
-        $lowStockVariations = \App\Models\Tenant\ProductVariation::where('stock', '<', 5)
+
+        $lowStockVariations = ProductVariation::where('stock', '<', 5)
             ->count();
 
         // Calculate days to look back
-        $days = match($this->dateRange) {
+        $days = match ($this->dateRange) {
             '7' => 7,
             '30' => 30,
             '90' => 90,
@@ -74,9 +76,9 @@ class Index extends Component
                 $query->when($this->dateRange !== 'all', function ($q) use ($dateFilter) {
                     $q->where('created_at', '>=', $dateFilter);
                 })
-                ->when($this->status !== 'all', function ($q) {
-                    $q->where('status', $this->status);
-                });
+                    ->when($this->status !== 'all', function ($q) {
+                        $q->where('status', $this->status);
+                    });
             })
             ->select('product_name', DB::raw('SUM(quantity) as total_quantity'))
             ->groupBy('product_name')
@@ -121,7 +123,7 @@ class Index extends Component
             'categoryCount' => Category::count(),
             'stockWarningCount' => $lowStockProducts + $lowStockVariations,
             'totalRevenue' => $totalRevenue,
-            
+
             // Chart Data
             'chartSales' => [
                 'labels' => $chartSalesLabels,
@@ -138,4 +140,3 @@ class Index extends Component
         ])->layout('layouts.tenant');
     }
 }
-

@@ -7,12 +7,12 @@
     </div>
 
     <!-- Stats Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         <div class="bg-black text-white p-6 rounded-3xl shadow-xl high-contrast-dark relative overflow-hidden group">
             <div class="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-3xl -mr-16 -mt-16 transition-transform group-hover:scale-150 duration-700"></div>
             <div class="relative z-10">
-                <div class="text-xs font-black uppercase tracking-[0.2em] text-neutral-400 mb-1">Actieve Shops</div>
-                <div class="text-4xl font-black mb-2">{{ $totalTenants }}</div>
+                <div class="text-xs font-black uppercase tracking-[0.2em] text-neutral-400 mb-1">Actieve Webshops</div>
+                <div class="text-4xl font-black mb-2">{{ $activeTenants }} / {{ $totalTenants }}</div>
                 <flux:button href="{{ route('admin.tenants') }}" variant="ghost" size="sm" class="!text-white !p-0 hover:!bg-transparent group/link">
                     Beheer shops 
                     <flux:icon name="arrow-right" size="sm" class="ml-1 transition-transform group-hover/link:translate-x-1" />
@@ -20,17 +20,23 @@
             </div>
         </div>
 
-        <div class="bg-white dark:bg-neutral-800 p-6 rounded-3xl border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
+        <div class="bg-white dark:bg-neutral-800 p-6 rounded-3xl border-2 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
             <div class="text-xs font-black uppercase tracking-[0.2em] text-neutral-500 mb-1">Gekoppelde Domeinen</div>
             <div class="text-4xl font-black mb-2">{{ $totalDomains }}</div>
             <div class="text-xs font-bold text-neutral-400 uppercase tracking-widest">Alle subdomeinen actief</div>
+        </div>
+
+        <div class="bg-white dark:bg-neutral-800 p-6 rounded-3xl border-2 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
+            <div class="text-xs font-black uppercase tracking-[0.2em] text-neutral-500 mb-1">Contactberichten</div>
+            <div class="text-4xl font-black mb-2">{{ $totalMessages }}</div>
+            <div class="text-xs font-bold text-neutral-400 uppercase tracking-widest">Platform inbox</div>
         </div>
 
         <div class="bg-indigo-600 text-white p-6 rounded-3xl shadow-xl relative overflow-hidden group">
             <div class="absolute bottom-0 left-0 w-24 h-24 bg-white/10 rounded-full blur-2xl -ml-12 -mb-12"></div>
             <div class="relative z-10">
                 <div class="text-xs font-black uppercase tracking-[0.2em] text-indigo-200 mb-1">Platform Status</div>
-                <div class="text-2xl font-black mb-2 uppercase italic tracking-tighter italic">Operational</div>
+                <div class="text-2xl font-black mb-2 uppercase italic tracking-tighter">Operational</div>
                 <div class="flex items-center gap-2">
                     <div class="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
                     <span class="text-[10px] font-black uppercase tracking-widest">All systems normal</span>

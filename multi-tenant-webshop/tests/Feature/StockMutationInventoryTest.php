@@ -1,12 +1,13 @@
 <?php
 
+use App\Livewire\Tenant\Products\StockHistory;
 use App\Models\Landlord\Domain;
 use App\Models\Landlord\Tenant;
+use App\Models\Tenant\Category;
 use App\Models\Tenant\Customer;
 use App\Models\Tenant\Order;
 use App\Models\Tenant\OrderItem;
 use App\Models\Tenant\Product;
-use App\Models\Tenant\ProductVariation;
 use App\Models\Tenant\StockMutation;
 use App\Models\Tenant\User as TenantUser;
 use App\Services\StockService;
@@ -44,7 +45,7 @@ beforeEach(function () {
         'password' => bcrypt('password'),
     ]);
 
-    $this->category = \App\Models\Tenant\Category::create([
+    $this->category = Category::create([
         'name' => 'Gadgets',
         'slug' => 'gadgets',
     ]);
@@ -134,7 +135,7 @@ test('merchant can view stock history and perform manual adjustment via livewire
         'category_id' => $this->category->id,
     ]);
 
-    Livewire::test(\App\Livewire\Tenant\Products\StockHistory::class)
+    Livewire::test(StockHistory::class)
         ->assertSee('Drone Quadcopter')
         ->set('adjustProductId', $product->id)
         ->set('adjustDelta', 10)

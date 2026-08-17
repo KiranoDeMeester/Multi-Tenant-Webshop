@@ -1,8 +1,8 @@
 <?php
 
 use App\Models\User;
-use Livewire\Livewire;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Livewire\Livewire;
 
 uses(DatabaseMigrations::class);
 

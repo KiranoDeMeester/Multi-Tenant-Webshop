@@ -4,12 +4,10 @@ namespace App\Actions\Tenant;
 
 use App\Mail\OrderPaidMail;
 use App\Models\Tenant\Order;
-use App\Models\Tenant\Product;
-use App\Models\Tenant\ProductVariation;
+use App\Services\StockService;
 use App\Services\TenantManager;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 class FinalizeOrderAction
 {
@@ -32,7 +30,7 @@ class FinalizeOrderAction
             Log::info('Finalizing order', $context);
 
             // 1. Update Stock atomically and record stock mutation audit entries
-            app(\App\Services\StockService::class)->fulfillOrderStock($order);
+            app(StockService::class)->fulfillOrderStock($order);
 
             // 2. Send Confirmation Email (passing primitive IDs instead of Model to avoid Queue serialization issues)
             $customerEmail = $order->customer_details['email'] ?? $order->customer?->email;
@@ -46,11 +44,10 @@ class FinalizeOrderAction
 
             Log::info('Order finalized successfully', $context);
         } catch (\Exception $e) {
-            Log::error('Failed to finalize order: ' . $e->getMessage(), array_merge($context, [
-                'exception' => $e
+            Log::error('Failed to finalize order: '.$e->getMessage(), array_merge($context, [
+                'exception' => $e,
             ]));
             throw $e; // Rethrow to let calling payment action know it failed
         }
     }
 }
-

@@ -2,6 +2,7 @@
 
 namespace Database\Seeders\Landlord;
 
+use App\Models\Landlord\Domain;
 use App\Models\Landlord\Tenant;
 use App\Models\User;
 use Illuminate\Database\Seeder;
@@ -31,7 +32,7 @@ class LandlordSeeder extends Seeder
             ]
         );
 
-        \App\Models\Landlord\Domain::updateOrCreate(
+        Domain::updateOrCreate(
             ['domain' => 'demo-shop.localhost'],
             [
                 'tenant_id' => $tenant->id,
@@ -47,7 +48,7 @@ class LandlordSeeder extends Seeder
             ]
         );
 
-        \App\Models\Landlord\Domain::updateOrCreate(
+        Domain::updateOrCreate(
             ['domain' => 'vintage.localhost'],
             [
                 'tenant_id' => $tenant3->id,

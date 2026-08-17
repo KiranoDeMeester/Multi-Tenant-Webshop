@@ -3,10 +3,9 @@
 namespace App\Livewire\Tenant\Categories;
 
 use App\Models\Tenant\Category;
+use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Livewire\WithFileUploads;
-use Livewire\Attributes\Layout;
-use Illuminate\Support\Str;
 
 #[Layout('layouts.tenant')]
 class Edit extends Component
@@ -14,12 +13,19 @@ class Edit extends Component
     use WithFileUploads;
 
     public Category $category;
+
     public string $name = '';
+
     public string $description = '';
+
     public string $meta_title = '';
+
     public string $meta_description = '';
+
     public $image;
+
     public string $image_url = '';
+
     public bool $has_uploaded_image = false;
 
     protected $rules = [
@@ -57,7 +63,7 @@ class Edit extends Component
             $this->category->addMedia($this->image->getRealPath())
                 ->usingFileName($this->image->getClientOriginalName())
                 ->toMediaCollection('categories');
-            
+
             $this->image_url = $this->category->getFirstMediaUrl('categories');
             $this->has_uploaded_image = true;
             $this->image = null;

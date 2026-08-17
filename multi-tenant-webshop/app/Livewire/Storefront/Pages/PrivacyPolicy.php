@@ -3,8 +3,8 @@
 namespace App\Livewire\Storefront\Pages;
 
 use App\Models\Tenant\Setting;
-use Livewire\Component;
 use Livewire\Attributes\Layout;
+use Livewire\Component;
 
 #[Layout('layouts.storefront')]
 class PrivacyPolicy extends Component

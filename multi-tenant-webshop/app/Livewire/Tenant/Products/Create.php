@@ -7,6 +7,7 @@ use App\Models\Tenant\AttributeValue;
 use App\Models\Tenant\Category;
 use App\Models\Tenant\Product;
 use App\Models\Tenant\ProductVariation;
+use App\Services\TenantManager;
 use Illuminate\Support\Str;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
@@ -18,17 +19,26 @@ class Create extends Component
     use WithFileUploads;
 
     public string $name = '';
+
     public string $sku = '';
+
     public string $description = '';
+
     public float $price = 0;
+
     public int $stock = 0;
+
     public ?string $category_id = null;
+
     public string $meta_title = '';
+
     public string $meta_description = '';
+
     public $image;
 
     // Variations
     public bool $has_variations = false;
+
     public array $variations = [];
 
     protected function rules(): array
@@ -58,7 +68,7 @@ class Create extends Component
 
     public function toggleVariations()
     {
-        $this->has_variations = !$this->has_variations;
+        $this->has_variations = ! $this->has_variations;
         if ($this->has_variations && empty($this->variations)) {
             $this->addVariation();
         }
@@ -67,11 +77,11 @@ class Create extends Component
     public function addVariation()
     {
         $count = count($this->variations) + 1;
-        $baseSku = $this->sku ?: 'SKU-' . strtoupper(Str::random(4));
+        $baseSku = $this->sku ?: 'SKU-'.strtoupper(Str::random(4));
         $this->variations[] = [
             'attribute_name' => 'Maat',
             'attribute_value' => '',
-            'sku' => $baseSku . '-V' . $count,
+            'sku' => $baseSku.'-V'.$count,
             'price' => $this->price > 0 ? $this->price : null,
             'stock' => 5,
         ];
@@ -89,7 +99,7 @@ class Create extends Component
 
         $product = Product::create([
             'name' => $this->name,
-            'slug' => Str::slug($this->name) . '-' . Str::random(5),
+            'slug' => Str::slug($this->name).'-'.Str::random(5),
             'sku' => $this->sku,
             'description' => $this->description,
             'price' => $this->price,
@@ -113,7 +123,7 @@ class Create extends Component
                 $variation = ProductVariation::create([
                     'product_id' => $product->id,
                     'sku' => $varData['sku'],
-                    'price' => !empty($varData['price']) ? (float) $varData['price'] : null,
+                    'price' => ! empty($varData['price']) ? (float) $varData['price'] : null,
                     'stock' => (int) $varData['stock'],
                 ]);
 
@@ -129,7 +139,7 @@ class Create extends Component
 
         session()->flash('message', __('Product succesvol aangemaakt!'));
 
-        $tenant = app(\App\Services\TenantManager::class)->getTenant();
+        $tenant = app(TenantManager::class)->getTenant();
 
         return redirect()->route('tenant.products.manage', ['tenant' => $tenant->slug]);
     }

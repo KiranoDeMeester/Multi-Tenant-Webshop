@@ -3,7 +3,6 @@
 namespace App\Livewire\Tenant\Customers;
 
 use App\Models\Tenant\Customer;
-use App\Models\Tenant\Order;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -30,7 +29,7 @@ class Show extends Component
 
         return view('livewire.tenant.customers.show', [
             'orders' => $orders,
-            'totalSpent' => $totalSpent / 100
+            'totalSpent' => $totalSpent / 100,
         ])->layout('layouts.tenant');
     }
 }

@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ProductVariation extends Model
@@ -35,7 +36,7 @@ class ProductVariation extends Model
     /**
      * Get the stock mutations for the variation.
      */
-    public function stockMutations(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function stockMutations(): HasMany
     {
         return $this->hasMany(StockMutation::class, 'product_variation_id')->latest();
     }

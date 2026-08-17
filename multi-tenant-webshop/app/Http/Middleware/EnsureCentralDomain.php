@@ -11,8 +11,7 @@ class EnsureCentralDomain
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * @param  Closure(Request): (Response)  $next
      */
     public function handle(Request $request, Closure $next): Response
     {
@@ -20,7 +19,7 @@ class EnsureCentralDomain
         $centralDomain = config('app.central_domain', 'localhost');
 
         // Allow access only if it's the central domain, platform subdomain, or localhost/127.0.0.1
-        $allowedHosts = [$centralDomain, 'platform.' . $centralDomain, 'localhost', '127.0.0.1'];
+        $allowedHosts = [$centralDomain, 'platform.'.$centralDomain, 'localhost', '127.0.0.1'];
 
         if (! in_array($host, $allowedHosts)) {
             abort(404, 'Platform admin is niet toegankelijk vanaf tenant domeinen.');

@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Tenant\Product;
+use App\Models\Tenant\ProductVariation;
 use App\Models\Tenant\Setting;
 use Illuminate\Support\Facades\Session;
 
@@ -36,7 +37,7 @@ class CartService
         $maxStock = (int) $product->stock;
 
         if ($variationId) {
-            $variation = \App\Models\Tenant\ProductVariation::with('attributeValues.attribute')->find($variationId);
+            $variation = ProductVariation::with('attributeValues.attribute')->find($variationId);
             if ($variation) {
                 $price = (float) $variation->effective_price;
                 $sku = $variation->sku ?: $product->sku;
@@ -100,6 +101,7 @@ class CartService
         if (isset($cart[$key])) {
             if ($quantity <= 0) {
                 $this->remove($key);
+
                 return;
             }
             $cart[$key]['quantity'] = $quantity;
@@ -141,7 +143,7 @@ class CartService
     public function getShippingFee(): float
     {
         $total = $this->getTotal();
-        
+
         $shippingFee = (float) (Setting::where('key', 'shipping_fee')->first()?->value ?? 0);
         $threshold = (float) (Setting::where('key', 'free_shipping_threshold')->first()?->value ?? 0);
 

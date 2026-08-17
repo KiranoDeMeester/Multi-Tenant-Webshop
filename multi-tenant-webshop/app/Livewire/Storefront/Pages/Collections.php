@@ -3,8 +3,8 @@
 namespace App\Livewire\Storefront\Pages;
 
 use App\Models\Tenant\Category;
-use Livewire\Component;
 use Livewire\Attributes\Layout;
+use Livewire\Component;
 
 #[Layout('layouts.storefront')]
 class Collections extends Component

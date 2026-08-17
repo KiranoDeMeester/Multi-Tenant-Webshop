@@ -19,7 +19,7 @@ class CreateTenantDatabaseAction
         $dbName = $tenant->db_name;
 
         // Validation: Ensure database name is safe (alphanumeric and underscores only)
-        if (!preg_match('/^[a-z0-9_]+$/', $dbName)) {
+        if (! preg_match('/^[a-z0-9_]+$/', $dbName)) {
             throw new Exception("Invalid database name: {$dbName}");
         }
 

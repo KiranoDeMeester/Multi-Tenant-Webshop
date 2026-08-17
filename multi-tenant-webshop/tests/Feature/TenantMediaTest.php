@@ -1,7 +1,9 @@
 <?php
 
+use App\Models\Landlord\Tenant;
 use App\Models\Tenant\Category;
 use App\Models\Tenant\Product;
+use App\Services\TenantManager;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Config;
@@ -25,11 +27,11 @@ beforeEach(function () {
 
 test('product image is stored in tenant specific folder', function () {
     // 1. Create a real tenant record in landlord to set the context
-    $tenant = \App\Models\Landlord\Tenant::create([
+    $tenant = Tenant::create([
         'name' => 'Test Shop',
         'db_name' => ':memory:',
     ]);
-    app(\App\Services\TenantManager::class)->setTenant($tenant);
+    app(TenantManager::class)->setTenant($tenant);
 
     // 2. Migrate tenant tables (including media)
     $this->artisan('migrate', [
@@ -56,17 +58,17 @@ test('product image is stored in tenant specific folder', function () {
 
     // Verify the path contains the tenant ID
     expect($media->getPath())->toContain("tenants/{$tenant->id}/media/{$media->id}");
-    
+
     Storage::disk('public')->assertExists("tenants/{$tenant->id}/media/{$media->id}/product.jpg");
 });
 
 test('intervention image conversions are generated', function () {
     // 1. Create a real tenant record in landlord to set the context
-    $tenant = \App\Models\Landlord\Tenant::create([
+    $tenant = Tenant::create([
         'name' => 'Test Shop 2',
         'db_name' => ':memory:',
     ]);
-    app(\App\Services\TenantManager::class)->setTenant($tenant);
+    app(TenantManager::class)->setTenant($tenant);
 
     // 2. Migrate tenant tables (including media)
     $this->artisan('migrate', [

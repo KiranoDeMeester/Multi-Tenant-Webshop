@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Landlord\Tenant;
+use App\Models\Tenant\Category;
 use App\Models\Tenant\Customer;
 use App\Models\Tenant\CustomerAddress;
 use App\Models\Tenant\Order;
@@ -25,7 +26,7 @@ test('tenant admin can create, update, and delete products', function () {
         'password' => bcrypt('password'),
     ]);
 
-    $category = \App\Models\Tenant\Category::create([
+    $category = Category::create([
         'name' => 'General',
         'slug' => 'general',
     ]);
@@ -51,7 +52,7 @@ test('customer cannot manage products but can view them', function () {
         'password' => bcrypt('password'),
     ]);
 
-    $category = \App\Models\Tenant\Category::create([
+    $category = Category::create([
         'name' => 'General',
         'slug' => 'general',
     ]);

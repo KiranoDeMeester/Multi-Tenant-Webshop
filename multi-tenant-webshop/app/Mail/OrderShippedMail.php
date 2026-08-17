@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Models\Landlord\Tenant;
 use App\Models\Tenant\Order;
 use App\Services\TenantManager;
 use Illuminate\Bus\Queueable;
@@ -15,7 +16,9 @@ class OrderShippedMail extends Mailable implements ShouldQueue
     use Queueable;
 
     public string $orderId;
+
     public ?string $tenantId;
+
     public ?string $trackingCode;
 
     protected ?Order $orderInstance = null;
@@ -29,9 +32,9 @@ class OrderShippedMail extends Mailable implements ShouldQueue
 
     protected function getOrder(): Order
     {
-        if (!$this->orderInstance) {
+        if (! $this->orderInstance) {
             if ($this->tenantId) {
-                $tenant = \App\Models\Landlord\Tenant::find($this->tenantId);
+                $tenant = Tenant::find($this->tenantId);
                 if ($tenant) {
                     app(TenantManager::class)->setTenant($tenant);
                 }
@@ -45,8 +48,9 @@ class OrderShippedMail extends Mailable implements ShouldQueue
     public function envelope(): Envelope
     {
         $order = $this->getOrder();
+
         return new Envelope(
-            subject: 'Je bestelling is verzonden! - ' . $order->order_number,
+            subject: 'Je bestelling is verzonden! - '.$order->order_number,
         );
     }
 

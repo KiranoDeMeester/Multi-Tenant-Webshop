@@ -6,8 +6,6 @@ use App\Services\TenantManager;
 if (! function_exists('tenant')) {
     /**
      * Get the current tenant.
-     *
-     * @return Tenant|null
      */
     function tenant(): ?Tenant
     {
@@ -18,8 +16,6 @@ if (! function_exists('tenant')) {
 if (! function_exists('is_tenant_context')) {
     /**
      * Check if a tenant context is active.
-     *
-     * @return bool
      */
     function is_tenant_context(): bool
     {

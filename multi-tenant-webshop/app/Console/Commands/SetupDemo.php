@@ -37,16 +37,17 @@ class SetupDemo extends Command
         // 2. Get Demo Tenant
         $tenant = Tenant::where('name', 'Demo Shop')->first();
 
-        if (!$tenant) {
+        if (! $tenant) {
             $this->error('Demo Shop tenant not found!');
+
             return 1;
         }
 
         // 3. Setup Tenant Context
-        $this->info('Switching to Tenant context: ' . $tenant->name);
-        
+        $this->info('Switching to Tenant context: '.$tenant->name);
+
         // Delete existing sqlite file to ensure fresh migrations
-        $dbPath = database_path('tenants/' . $tenant->db_name . '.sqlite');
+        $dbPath = database_path('tenants/'.$tenant->db_name.'.sqlite');
         if (file_exists($dbPath)) {
             unlink($dbPath);
         }

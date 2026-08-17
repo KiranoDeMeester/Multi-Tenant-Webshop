@@ -13,13 +13,9 @@ class StockService
     /**
      * Adjust stock for a product or variation and record a mutation audit entry.
      *
-     * @param Product $product
-     * @param ProductVariation|null $variation
-     * @param int $delta Can be positive (+5) or negative (-2)
-     * @param string $type ('purchase', 'sale', 'adjustment', 'return', 'cancel_restitution')
-     * @param string|null $orderId
-     * @param string|null $description
-     * @return StockMutation
+     * @param  int  $delta  Can be positive (+5) or negative (-2)
+     * @param  string  $type  ('purchase', 'sale', 'adjustment', 'return', 'cancel_restitution')
+     *
      * @throws \Exception
      */
     public function adjustStock(
@@ -36,7 +32,7 @@ class StockService
                 $stockAfter = $stockBefore + $delta;
 
                 if ($stockAfter < 0) {
-                    throw new \Exception("Onvoldoende voorraad voor variant '{$variation->sku}'. Huidig: {$stockBefore}, gevraagd: " . abs($delta));
+                    throw new \Exception("Onvoldoende voorraad voor variant '{$variation->sku}'. Huidig: {$stockBefore}, gevraagd: ".abs($delta));
                 }
 
                 $variation->update(['stock' => $stockAfter]);
@@ -45,7 +41,7 @@ class StockService
                 $stockAfter = $stockBefore + $delta;
 
                 if ($stockAfter < 0) {
-                    throw new \Exception("Onvoldoende voorraad voor product '{$product->name}'. Huidig: {$stockBefore}, gevraagd: " . abs($delta));
+                    throw new \Exception("Onvoldoende voorraad voor product '{$product->name}'. Huidig: {$stockBefore}, gevraagd: ".abs($delta));
                 }
 
                 $product->update(['stock' => $stockAfter]);
@@ -80,7 +76,7 @@ class StockService
 
         foreach ($order->items as $item) {
             $product = Product::find($item->product_id);
-            if (!$product) {
+            if (! $product) {
                 continue;
             }
 
@@ -114,13 +110,13 @@ class StockService
             ->where('type', 'cancel_restitution')
             ->exists();
 
-        if (!$wasDeducted || $alreadyRestituted) {
+        if (! $wasDeducted || $alreadyRestituted) {
             return;
         }
 
         foreach ($order->items as $item) {
             $product = Product::find($item->product_id);
-            if (!$product) {
+            if (! $product) {
                 continue;
             }
 

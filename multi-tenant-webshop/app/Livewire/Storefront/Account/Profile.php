@@ -3,24 +3,28 @@
 namespace App\Livewire\Storefront\Account;
 
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
-use Illuminate\Validation\Rule;
 
 #[Layout('layouts.storefront')]
 class Profile extends Component
 {
     public $user;
+
     public string $name = '';
+
     public string $email = '';
+
     public string $password = '';
+
     public string $password_confirmation = '';
 
     public function mount()
     {
         $this->user = auth('customer')->user() ?? auth('tenant')->user();
-        
-        if (!$this->user) {
+
+        if (! $this->user) {
             return redirect()->route('storefront.login');
         }
 

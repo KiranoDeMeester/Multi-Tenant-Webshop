@@ -12,7 +12,9 @@ use Livewire\Component;
 class Show extends Component
 {
     public Product $product;
+
     public int $quantity = 1;
+
     public ?string $selectedVariationId = null;
 
     public function mount($slug)
@@ -36,7 +38,7 @@ class Show extends Component
 
     public function getSelectedVariationProperty(): ?ProductVariation
     {
-        if (!$this->selectedVariationId) {
+        if (! $this->selectedVariationId) {
             return null;
         }
 
@@ -79,15 +81,16 @@ class Show extends Component
     {
         if ($this->currentStock <= 0) {
             session()->flash('error', __('Dit product is momenteel niet op voorraad.'));
+
             return;
         }
 
         try {
             app(CartService::class)->add($this->product, $this->quantity, $this->selectedVariationId);
-            
+
             $this->dispatch('product-added-to-cart');
             $this->dispatch('open-cart');
-            
+
             session()->flash('message', __('Product toegevoegd aan winkelmand!'));
         } catch (\Exception $e) {
             session()->flash('error', $e->getMessage());

@@ -8,7 +8,9 @@ use Livewire\Component;
 class CookieBanner extends Component
 {
     public bool $enabled = true;
+
     public string $text = '';
+
     public bool $isVisible = false;
 
     public function mount()

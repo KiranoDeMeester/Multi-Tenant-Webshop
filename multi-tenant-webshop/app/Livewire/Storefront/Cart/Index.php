@@ -3,9 +3,8 @@
 namespace App\Livewire\Storefront\Cart;
 
 use App\Services\CartService;
-use App\Actions\Tenant\PrepareCheckoutAction;
-use Livewire\Component;
 use Livewire\Attributes\Title;
+use Livewire\Component;
 
 #[Title('Winkelwagen')]
 class Index extends Component
@@ -32,7 +31,7 @@ class Index extends Component
     public function render()
     {
         $cartService = app(CartService::class);
-        
+
         return view('livewire.storefront.cart.index', [
             'items' => $cartService->getItems(),
             'total' => $cartService->getTotal(),

@@ -4,6 +4,7 @@ namespace Database\Factories\Tenant;
 
 use App\Models\AppModelsTenantCategory;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 /**
  * @extends Factory<AppModelsTenantCategory>
@@ -18,10 +19,11 @@ class CategoryFactory extends Factory
     public function definition(): array
     {
         $name = $this->faker->unique()->word();
+
         return [
-            'id' => \Illuminate\Support\Str::uuid(),
+            'id' => Str::uuid(),
             'name' => ucfirst($name),
-            'slug' => \Illuminate\Support\Str::slug($name),
+            'slug' => Str::slug($name),
             'description' => $this->faker->sentence(),
         ];
     }

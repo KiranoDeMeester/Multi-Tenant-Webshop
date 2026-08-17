@@ -2,9 +2,21 @@
 
 namespace App\Providers;
 
+use App\Models\Landlord\Tenant;
+use App\Models\Tenant\Customer;
+use App\Models\Tenant\CustomerAddress;
+use App\Models\Tenant\Order;
+use App\Models\Tenant\Product;
+use App\Policies\CustomerAddressPolicy;
+use App\Policies\CustomerPolicy;
+use App\Policies\OrderPolicy;
+use App\Policies\ProductPolicy;
+use App\Policies\TenantPolicy;
+use App\Services\TenantManager;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
@@ -16,7 +28,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->singleton(\App\Services\TenantManager::class);
+        $this->app->singleton(TenantManager::class);
     }
 
     /**
@@ -31,11 +43,11 @@ class AppServiceProvider extends ServiceProvider
             $this->loadMigrationsFrom(database_path('migrations/landlord'));
         }
 
-        \Illuminate\Support\Facades\Gate::policy(\App\Models\Tenant\Product::class, \App\Policies\ProductPolicy::class);
-        \Illuminate\Support\Facades\Gate::policy(\App\Models\Tenant\Order::class, \App\Policies\OrderPolicy::class);
-        \Illuminate\Support\Facades\Gate::policy(\App\Models\Tenant\Customer::class, \App\Policies\CustomerPolicy::class);
-        \Illuminate\Support\Facades\Gate::policy(\App\Models\Tenant\CustomerAddress::class, \App\Policies\CustomerAddressPolicy::class);
-        \Illuminate\Support\Facades\Gate::policy(\App\Models\Landlord\Tenant::class, \App\Policies\TenantPolicy::class);
+        Gate::policy(Product::class, ProductPolicy::class);
+        Gate::policy(Order::class, OrderPolicy::class);
+        Gate::policy(Customer::class, CustomerPolicy::class);
+        Gate::policy(CustomerAddress::class, CustomerAddressPolicy::class);
+        Gate::policy(Tenant::class, TenantPolicy::class);
     }
 
     /**

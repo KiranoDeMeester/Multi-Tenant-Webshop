@@ -3,9 +3,9 @@
 namespace App\Livewire\Tenant\Products;
 
 use App\Models\Tenant\Product;
+use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Livewire\WithPagination;
-use Livewire\Attributes\Layout;
 
 #[Layout('layouts.tenant')]
 class Index extends Component

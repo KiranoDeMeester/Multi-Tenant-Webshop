@@ -2,8 +2,11 @@
 
 namespace Tests;
 
+use App\Services\TenantManager;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
+use Illuminate\Support\Facades\DB;
 use Laravel\Fortify\Features;
+use Mockery\MockInterface;
 
 abstract class TestCase extends BaseTestCase
 {
@@ -15,18 +18,18 @@ abstract class TestCase extends BaseTestCase
     protected function tearDown(): void
     {
         if ($this->app) {
-            $manager = app(\App\Services\TenantManager::class);
-            if (method_exists($manager, 'reset') && !($manager instanceof \Mockery\MockInterface)) {
+            $manager = app(TenantManager::class);
+            if (method_exists($manager, 'reset') && ! ($manager instanceof MockInterface)) {
                 $manager->reset();
             }
         }
-        
+
         parent::tearDown();
     }
 
     protected function migrateLandlord(): void
     {
-        \Illuminate\Support\Facades\DB::purge('landlord');
+        DB::purge('landlord');
 
         $this->artisan('migrate', [
             '--database' => 'landlord',

@@ -3,14 +3,16 @@
 namespace App\Livewire\Tenant\Settings;
 
 use App\Models\Tenant\Setting;
-use Livewire\Component;
 use Livewire\Attributes\Layout;
+use Livewire\Component;
 
 #[Layout('layouts.tenant')]
 class ComplianceSettings extends Component
 {
     public bool $cookie_banner_enabled = true;
+
     public string $cookie_banner_text = 'Wij gebruiken cookies om uw ervaring te verbeteren. Door verder te gaan op onze website gaat u akkoord met ons gebruik van cookies.';
+
     public string $privacy_policy_content = '';
 
     public function mount()
@@ -58,7 +60,7 @@ Door onze website te gebruiken, stemt u hierbij in met ons privacybeleid en gaat
         ";
 
         $this->privacy_policy_content = trim($template);
-        
+
         $this->dispatch('privacy-policy-generated');
     }
 

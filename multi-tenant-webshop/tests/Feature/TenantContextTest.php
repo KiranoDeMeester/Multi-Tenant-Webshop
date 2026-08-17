@@ -9,7 +9,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 test('the tenant helper returns the current tenant', function () {
     $tenant = new Tenant([
         'id' => 'test-id',
-        'name' => 'Test Tenant'
+        'name' => 'Test Tenant',
     ]);
 
     $this->mock(TenantManager::class, function ($mock) use ($tenant) {

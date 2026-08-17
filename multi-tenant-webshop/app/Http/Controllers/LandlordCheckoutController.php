@@ -18,7 +18,7 @@ class LandlordCheckoutController extends Controller
         // Note: Stripe requires absolute URLs
         $port = request()->getPort();
         $domain = config('app.central_domain', 'localhost');
-        if ($port && !in_array($port, [80, 443])) {
+        if ($port && ! in_array($port, [80, 443])) {
             $domain = "{$domain}:{$port}";
         }
         $protocol = str_contains(config('app.url'), 'https') ? 'https' : 'http';
@@ -28,9 +28,10 @@ class LandlordCheckoutController extends Controller
 
         try {
             $session = $this->stripeService->createLandlordSubscriptionSession($successUrl, $cancelUrl);
+
             return redirect($session->url);
         } catch (\Exception $e) {
-            return redirect()->route('home')->with('error', 'Kon betaling niet starten: ' . $e->getMessage());
+            return redirect()->route('home')->with('error', 'Kon betaling niet starten: '.$e->getMessage());
         }
     }
 }

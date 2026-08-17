@@ -3,8 +3,8 @@
 namespace App\Livewire\Storefront\Navigation;
 
 use App\Services\CartService;
-use Livewire\Component;
 use Livewire\Attributes\On;
+use Livewire\Component;
 
 class CartButton extends Component
 {

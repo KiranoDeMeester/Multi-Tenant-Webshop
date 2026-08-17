@@ -3,8 +3,8 @@
 namespace App\Livewire\Storefront\Cart;
 
 use App\Services\CartService;
-use Livewire\Component;
 use Livewire\Attributes\On;
+use Livewire\Component;
 
 class SidePanel extends Component
 {
@@ -19,7 +19,7 @@ class SidePanel extends Component
 
     public function toggle()
     {
-        $this->open = !$this->open;
+        $this->open = ! $this->open;
     }
 
     #[On('open-cart')]
@@ -31,7 +31,7 @@ class SidePanel extends Component
     #[On('toggle-cart')]
     public function toggleCart()
     {
-        $this->open = !$this->open;
+        $this->open = ! $this->open;
     }
 
     public function removeItem(string $key)
@@ -49,7 +49,7 @@ class SidePanel extends Component
     public function render()
     {
         $cartService = app(CartService::class);
-        
+
         return view('livewire.storefront.cart.side-panel', [
             'items' => $cartService->getItems(),
             'total' => $cartService->getTotal(),

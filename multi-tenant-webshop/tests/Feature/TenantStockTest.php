@@ -1,8 +1,10 @@
 <?php
 
+use App\Models\Landlord\Tenant;
 use App\Models\Tenant\Category;
 use App\Models\Tenant\Product;
 use App\Models\Tenant\ProductVariation;
+use App\Services\TenantManager;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
@@ -20,11 +22,11 @@ beforeEach(function () {
     $this->migrateLandlord();
 
     // Create a real tenant record to satisfy TenantManager
-    $tenant = \App\Models\Landlord\Tenant::create([
+    $tenant = Tenant::create([
         'name' => 'Stock Shop',
         'db_name' => ':memory:',
     ]);
-    app(\App\Services\TenantManager::class)->setTenant($tenant);
+    app(TenantManager::class)->setTenant($tenant);
 
     // Migrate tenant tables
     $this->artisan('migrate', [
@@ -67,7 +69,7 @@ test('cannot decrement simple product stock below zero', function () {
     ]);
 
     $product->decrementStock(3);
-})->throws(\Exception::class, 'Onvoldoende voorraad voor product: Charger');
+})->throws(Exception::class, 'Onvoldoende voorraad voor product: Charger');
 
 test('aggregate stock works for products with variations', function () {
     $category = Category::create(['name' => 'Clothing', 'slug' => 'clothing']);
@@ -116,4 +118,4 @@ test('cannot decrement variation stock below zero', function () {
     ]);
 
     $variation->decrementStock(2);
-})->throws(\Exception::class, 'Onvoldoende voorraad voor variatie: VAR-RED');
+})->throws(Exception::class, 'Onvoldoende voorraad voor variatie: VAR-RED');

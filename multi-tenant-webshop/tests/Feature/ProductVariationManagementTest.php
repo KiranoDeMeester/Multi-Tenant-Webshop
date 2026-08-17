@@ -1,11 +1,16 @@
 <?php
 
+use App\Livewire\Storefront\Products\Show;
+use App\Livewire\Tenant\Products\Create;
 use App\Models\Landlord\Domain;
 use App\Models\Landlord\Tenant;
+use App\Models\Tenant\Attribute;
+use App\Models\Tenant\AttributeValue;
 use App\Models\Tenant\Category;
 use App\Models\Tenant\Product;
 use App\Models\Tenant\ProductVariation;
 use App\Models\Tenant\User as TenantUser;
+use App\Services\CartService;
 use App\Services\TenantManager;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
@@ -49,7 +54,7 @@ beforeEach(function () {
 test('merchant can create a product with variations', function () {
     Auth::guard('tenant')->login($this->merchant);
 
-    Livewire::test(\App\Livewire\Tenant\Products\Create::class)
+    Livewire::test(Create::class)
         ->set('name', 'Designer Hoodie')
         ->set('sku', 'HOODIE-001')
         ->set('price', 79.99)
@@ -90,9 +95,9 @@ test('storefront customer can select variation and add to cart with correct pric
         'category_id' => $this->category->id,
     ]);
 
-    $attr = \App\Models\Tenant\Attribute::create(['name' => 'Maat']);
-    $valM = \App\Models\Tenant\AttributeValue::create(['attribute_id' => $attr->id, 'value' => 'Medium']);
-    $valXL = \App\Models\Tenant\AttributeValue::create(['attribute_id' => $attr->id, 'value' => 'XL']);
+    $attr = Attribute::create(['name' => 'Maat']);
+    $valM = AttributeValue::create(['attribute_id' => $attr->id, 'value' => 'Medium']);
+    $valXL = AttributeValue::create(['attribute_id' => $attr->id, 'value' => 'XL']);
 
     $varM = ProductVariation::create([
         'product_id' => $product->id,
@@ -110,13 +115,13 @@ test('storefront customer can select variation and add to cart with correct pric
     ]);
     $varXL->attributeValues()->sync([$valXL->id]);
 
-    Livewire::test(\App\Livewire\Storefront\Products\Show::class, ['slug' => 'classic-tee'])
+    Livewire::test(Show::class, ['slug' => 'classic-tee'])
         ->call('selectVariation', $varXL->id)
         ->assertSet('selectedVariationId', $varXL->id)
         ->call('addToCart')
         ->assertDispatched('product-added-to-cart');
 
-    $cartItems = app(\App\Services\CartService::class)->getItems();
+    $cartItems = app(CartService::class)->getItems();
     $cartKey = "{$product->id}_{$varXL->id}";
     expect(isset($cartItems[$cartKey]))->toBeTrue();
     expect($cartItems[$cartKey]['price'])->toBe(25.00);

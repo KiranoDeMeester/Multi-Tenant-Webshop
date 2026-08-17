@@ -3,13 +3,15 @@
 namespace App\Livewire\Tenant\Dashboard;
 
 use Illuminate\Support\Facades\Auth;
-use Livewire\Component;
+use Illuminate\Support\Str;
 use Livewire\Attributes\Layout;
+use Livewire\Component;
 
 #[Layout('layouts.auth')]
 class Login extends Component
 {
     public string $email = '';
+
     public string $password = '';
 
     public function login()
@@ -21,9 +23,9 @@ class Login extends Component
 
         if (Auth::guard('tenant')->attempt(['email' => $this->email, 'password' => $this->password])) {
             session()->regenerate();
-            
-            $tenant = request()->route('tenant') ?? \Illuminate\Support\Str::before(request()->getHost(), '.');
-            
+
+            $tenant = request()->route('tenant') ?? Str::before(request()->getHost(), '.');
+
             return redirect()->intended(route('tenant.dashboard', ['tenant' => $tenant]));
         }
 

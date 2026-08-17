@@ -2,27 +2,34 @@
 
 namespace App\Livewire\Landlord;
 
-use App\Models\Landlord\Tenant;
 use App\Models\Landlord\Domain;
+use App\Models\Landlord\Tenant;
+use App\Models\Tenant\User;
 use App\Services\TenantManager;
-use Livewire\Component;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Hash;
-use Stripe\Stripe;
+use Illuminate\Support\Str;
+use Livewire\Component;
 use Stripe\Checkout\Session;
+use Stripe\Stripe;
 
 class RegisterTenant extends Component
 {
     public string $sessionId = '';
+
     public bool $isPaid = false;
+
     public string $errorMessage = '';
 
     // Form fields
     public string $shop_name = '';
+
     public string $subdomain = '';
+
     public string $admin_name = '';
+
     public string $admin_email = '';
+
     public string $admin_password = '';
 
     public function mount()
@@ -32,9 +39,11 @@ class RegisterTenant extends Component
         if (empty($this->sessionId)) {
             if (app()->environment('local')) {
                 $this->isPaid = true; // Allow testing directly in local dev
+
                 return;
             }
             $this->errorMessage = 'Geen betalingssessie gevonden. Betaal eerst het abonnement.';
+
             return;
         }
 
@@ -51,15 +60,17 @@ class RegisterTenant extends Component
             if (app()->environment('local')) {
                 // Bypass Stripe verification failure in local if it's a dummy session_id
                 $this->isPaid = true;
+
                 return;
             }
-            $this->errorMessage = 'Fout bij het controleren van de betalingsstatus: ' . $e->getMessage();
+            $this->errorMessage = 'Fout bij het controleren van de betalingsstatus: '.$e->getMessage();
         }
     }
 
     protected function rules(): array
     {
         $centralDomain = config('app.central_domain', 'localhost');
+
         return [
             'shop_name' => 'required|string|min:3|max:100',
             'subdomain' => [
@@ -73,7 +84,7 @@ class RegisterTenant extends Component
                     if (Domain::where('domain', $domain)->exists()) {
                         $fail('Dit subdomein is al in gebruik.');
                     }
-                }
+                },
             ],
             'admin_name' => 'required|string|min:2|max:100',
             'admin_email' => 'required|email|max:255',
@@ -99,7 +110,7 @@ class RegisterTenant extends Component
         try {
             $centralDomain = config('app.central_domain', 'localhost');
             $fullDomain = "{$this->subdomain}.{$centralDomain}";
-            $dbName = 'tenant_' . Str::slug($this->shop_name) . '_' . Str::random(5);
+            $dbName = 'tenant_'.Str::slug($this->shop_name).'_'.Str::random(5);
 
             // 1. Create Tenant in Landlord DB
             $tenant = Tenant::create([
@@ -131,7 +142,7 @@ class RegisterTenant extends Component
             ]);
 
             // 4. Update the owner user in the tenant database
-            \App\Models\Tenant\User::updateOrCreate(
+            User::updateOrCreate(
                 ['email' => 'owner@example.com'], // Update default seeded owner
                 [
                     'name' => $this->admin_name,
@@ -144,17 +155,17 @@ class RegisterTenant extends Component
             // 5. Build Redirect URL with port if present
             $port = request()->getPort();
             $redirectDomain = $fullDomain;
-            if ($port && !in_array($port, [80, 443])) {
+            if ($port && ! in_array($port, [80, 443])) {
                 $redirectDomain = "{$redirectDomain}:{$port}";
             }
             $protocol = str_contains(config('app.url'), 'https') ? 'https' : 'http';
 
             session()->flash('success', 'Je winkel is succesvol aangemaakt! Log in met je gegevens.');
-            
+
             return redirect("{$protocol}://{$redirectDomain}/dashboard/login");
 
         } catch (\Exception $e) {
-            session()->flash('error', 'Er is iets fout gegaan bij het aanmaken van de winkel: ' . $e->getMessage());
+            session()->flash('error', 'Er is iets fout gegaan bij het aanmaken van de winkel: '.$e->getMessage());
         }
     }
 

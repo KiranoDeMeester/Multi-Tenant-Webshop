@@ -66,7 +66,7 @@ test('handle payment action is idempotent and handles duplicate webhook executio
         'customer_details' => [
             'name' => 'David Tennant',
             'email' => 'david@bbc.co.uk',
-        ]
+        ],
     ]);
 
     OrderItem::create([

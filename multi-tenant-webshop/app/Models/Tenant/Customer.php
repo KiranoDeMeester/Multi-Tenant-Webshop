@@ -10,7 +10,7 @@ use Illuminate\Notifications\Notifiable;
 
 class Customer extends Authenticatable
 {
-    use HasFactory, Notifiable, HasTenantConnection, HasUuid;
+    use HasFactory, HasTenantConnection, HasUuid, Notifiable;
 
     protected $guarded = [];
 

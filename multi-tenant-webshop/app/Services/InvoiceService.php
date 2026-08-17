@@ -26,7 +26,7 @@ class InvoiceService
             'logo' => Setting::where('key', 'invoice_logo')->first()?->value,
         ];
 
-        $invoiceNumber = 'INV-' . date('Y', strtotime($order->created_at)) . '-' . str_pad($order->id, 5, '0', STR_PAD_LEFT);
+        $invoiceNumber = 'INV-'.date('Y', strtotime($order->created_at)).'-'.str_pad($order->id, 5, '0', STR_PAD_LEFT);
 
         $totalCents = (int) $order->total_amount;
         $shippingCents = (int) ($order->shipping_amount ?? 0);
@@ -74,7 +74,7 @@ class InvoiceService
             'logo' => Setting::where('key', 'invoice_logo')->first()?->value,
         ];
 
-        $invoiceNumber = 'INV-' . date('Y', strtotime($order->created_at)) . '-' . str_pad($order->id, 5, '0', STR_PAD_LEFT);
+        $invoiceNumber = 'INV-'.date('Y', strtotime($order->created_at)).'-'.str_pad($order->id, 5, '0', STR_PAD_LEFT);
 
         $totalCents = (int) $order->total_amount;
         $shippingCents = (int) ($order->shipping_amount ?? 0);
@@ -114,7 +114,7 @@ class InvoiceService
             'logo' => Setting::where('key', 'invoice_logo')->first()?->value,
         ];
 
-        $invoiceNumber = 'INV-' . date('Y', strtotime($order->created_at)) . '-' . str_pad($order->id, 5, '0', STR_PAD_LEFT);
+        $invoiceNumber = 'INV-'.date('Y', strtotime($order->created_at)).'-'.str_pad($order->id, 5, '0', STR_PAD_LEFT);
 
         $totalCents = (int) $order->total_amount;
         $shippingCents = (int) ($order->shipping_amount ?? 0);

@@ -8,14 +8,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class Category extends Model implements HasMedia
 {
-    use HasFactory, HasTenantConnection, HasUuid, SoftDeletes, InteractsWithMedia;
+    use HasFactory, HasTenantConnection, HasUuid, InteractsWithMedia, SoftDeletes;
 
     protected $guarded = [];
 

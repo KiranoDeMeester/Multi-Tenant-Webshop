@@ -13,7 +13,7 @@ class Payments extends Component
 
         return view('livewire.tenant.dashboard.payments', [
             'tenant' => $tenant,
-            'isConnected' => !empty($tenant->stripe_account_id),
+            'isConnected' => ! empty($tenant->stripe_account_id),
         ])->layout('layouts.tenant');
     }
 }

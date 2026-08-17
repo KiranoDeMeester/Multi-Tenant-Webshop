@@ -15,15 +15,22 @@ class StockHistory extends Component
     use WithPagination;
 
     public string $search = '';
+
     public string $typeFilter = '';
+
     public ?string $selectedProductId = null;
 
     // Manual Stock Adjustment Form
     public bool $showAdjustModal = false;
+
     public ?string $adjustProductId = null;
+
     public ?string $adjustVariationId = null;
+
     public int $adjustDelta = 0;
+
     public string $adjustType = 'adjustment';
+
     public string $adjustReason = '';
 
     protected $rules = [
@@ -85,9 +92,9 @@ class StockHistory extends Component
             ->with(['product', 'variation.attributeValues.attribute', 'order'])
             ->when($this->search, function ($q) {
                 $q->whereHas('product', function ($pq) {
-                    $pq->where('name', 'like', '%' . $this->search . '%')
-                       ->orWhere('sku', 'like', '%' . $this->search . '%');
-                })->orWhere('description', 'like', '%' . $this->search . '%');
+                    $pq->where('name', 'like', '%'.$this->search.'%')
+                        ->orWhere('sku', 'like', '%'.$this->search.'%');
+                })->orWhere('description', 'like', '%'.$this->search.'%');
             })
             ->when($this->typeFilter, function ($q) {
                 $q->where('type', $this->typeFilter);

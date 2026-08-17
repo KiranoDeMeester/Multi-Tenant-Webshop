@@ -30,7 +30,7 @@ class Tenant extends Model
         parent::boot();
 
         static::creating(function ($tenant) {
-            if (!$tenant->id) {
+            if (! $tenant->id) {
                 $tenant->id = (string) Str::uuid();
             }
         });

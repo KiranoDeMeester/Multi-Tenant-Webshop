@@ -10,17 +10,26 @@ use Livewire\Component;
 class Addresses extends Component
 {
     public $user;
+
     public bool $showForm = false;
+
     public ?string $editingId = null;
 
     // Form fields
     public string $type = 'shipping';
+
     public string $first_name = '';
+
     public string $last_name = '';
+
     public string $street = '';
+
     public string $house_number = '';
+
     public string $postal_code = '';
+
     public string $city = '';
+
     public string $country = 'België';
 
     protected $rules = [
@@ -36,8 +45,8 @@ class Addresses extends Component
     public function mount()
     {
         $this->user = auth('customer')->user() ?? auth('tenant')->user();
-        
-        if (!$this->user) {
+
+        if (! $this->user) {
             return redirect()->route('storefront.login');
         }
     }
@@ -97,7 +106,7 @@ class Addresses extends Component
         CustomerAddress::where('customer_id', $this->user->id)
             ->where('id', $id)
             ->delete();
-            
+
         session()->flash('message', __('Adres verwijderd.'));
     }
 
@@ -115,7 +124,7 @@ class Addresses extends Component
     public function render()
     {
         $addresses = CustomerAddress::where('customer_id', $this->user->id)->get();
-        
+
         return view('livewire.storefront.account.addresses', [
             'addresses' => $addresses,
         ]);
