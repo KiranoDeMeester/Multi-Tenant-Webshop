@@ -22,6 +22,11 @@ jobs:
         extensions: mbstring, xml, ctype, iconv, intl, pdo_sqlite, gd, zip, fileinfo
         coverage: none
 
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20
+
     - name: Prepare Environment & SQLite
       working-directory: multi-tenant-webshop
       run: |
@@ -48,6 +53,12 @@ jobs:
     - name: Generate Application Key
       working-directory: multi-tenant-webshop
       run: php artisan key:generate
+
+    - name: Install Node Dependencies & Build Frontend Assets (Vite)
+      working-directory: multi-tenant-webshop
+      run: |
+        npm install
+        npm run build
 
     - name: Code Style Check (Laravel Pint)
       working-directory: multi-tenant-webshop
