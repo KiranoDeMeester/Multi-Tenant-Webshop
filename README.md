@@ -1,166 +1,114 @@
-# SaaS Multi-Tenant Webshop Platform (Traject B)
+# 🏪 Multi-Tenant E-Commerce Platform
 
-Dit project is een enterprise-grade multi-tenant SaaS e-commerce platform gebouwd in Laravel en Livewire volgens de specificaties van **Traject B (zonder stage)**. Het demonstreert fysieke database-isolatie (Multi-Database), asynchrone queue verwerking, Stripe Connect onboarding en betalingen, geavanceerd stockbeheer en dynamische realtime theming.
+[![CI Pipeline](https://github.com/KiranoDeMeester/Multi-Tenant-Webshop/actions/workflows/ci.yml/badge.svg)](https://github.com/KiranoDeMeester/Multi-Tenant-Webshop/actions)
+[![Tests](https://img.shields.io/badge/tests-89%20passed%20(281%20assertions)-brightgreen.svg)](https://github.com/KiranoDeMeester/Multi-Tenant-Webshop)
+[![PHP](https://img.shields.io/badge/php-8.3%2B-blue.svg)](https://php.net)
+[![Laravel](https://img.shields.io/badge/laravel-12.x-red.svg)](https://laravel.com)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
----
+Een volwaardig, enterprise-grade **Multi-Tenant Webshop SaaS Platform** gebouwd met **Laravel 12**, **Livewire 4**, **Flux UI**, **Tailwind CSS**, **SQLite (Database-per-Tenant)**, **Stripe Connect**, **Docker** en **GitHub Actions CI/CD**.
 
-## Inhoudsopgave
-1. [Systeemvereisten](#systeemvereisten)
-2. [Installatiehandleiding](#installatiehandleiding)
-3. [Lokale Domeinnaamkoppeling (Hosts bestand)](#lokale-domeinnaamkoppeling-hosts-bestand)
-4. [Database & Seeding](#database--seeding)
-5. [Queue & Achtergrondtaken](#queue--achtergrondtaken)
-6. [Stripe Connect & Betalingssimulatie](#stripe-connect--betalingssimulatie)
-7. [Productie & Development Commando's](#productie--development-commandos)
-8. [Geautomatiseerd Testen (Pest)](#geautomatiseerd-testen-pest)
+Dit project biedt een complete SaaS-oplossing waarbij platformbeheerders nieuwe webshops (tenants) kunnen onboarden en beheren, winkeliers (merchants) hun eigen catalogus, variaties, kortingscodes, voorraadaudits en bestellingen beheren via een gepersonaliseerd dashboard, en storefront klanten naadloos kunnen winkelen, registreren, en afrekenen.
 
 ---
 
-## Systeemvereisten
-Zorg ervoor dat de volgende software op je systeem is geïnstalleerd:
-- **PHP 8.2 of hoger** (met de extensies `pdo_sqlite` en `sqlite3` ingeschakeld in je `php.ini`)
-- **Composer** (voor PHP packages)
-- **Node.js 18+ & NPM** (voor frontend assets)
-- **SQLite** (gebruikt voor zowel Landlord als Dynamic Tenants)
-- **Google Chrome / Microsoft Edge** (voor PDF factuurgeneratie en test suites)
+## 🌟 Belangrijkste Functionaliteiten
+
+### 1. 🏢 Multi-Tenant Architectuur (Database-per-Tenant)
+- **Volledige Database Isolatie:** Elke webshop krijgt een eigen afzonderlijke SQLite database (`database/tenants/{slug}.sqlite`), waardoor data van verschillende winkels nooit vermengd raakt.
+- **Centraal Landlord Beheer:** Landlord database beheert tenants, domeinen/subdomeinen, abonnementen en platform-wijde contactberichten.
+- **Performance Caching:** `SetTenantConnection` middleware cacht domeinresoluties via `Cache::remember()`, wat zorgt voor 0 landlord queries bij herhaalde storefront bezoeken.
+
+### 2. 🔐 Autorisatie, Beveiliging & IDOR-bescherming
+- **3 Aparte Authenticatie Guards:**
+  - `web`: Platform/Landlord Superadministrators (`App\Models\User`).
+  - `tenant`: Winkelier/Merchant Beheerders (`App\Models\Tenant\User`).
+  - `customer`: Storefront Klanten & Kopers (`App\Models\Tenant\Customer`).
+- **Granulaire Laravel Policies:**
+  - `ProductPolicy`, `OrderPolicy`, `CustomerPolicy`, `CustomerAddressPolicy`, `TenantPolicy`.
+- **Customer Password Reset:** Dedicated wachtwoord-herstel flow met beveiligde tokens en mails voor storefront klanten (`/wachtwoord-vergeten`).
+
+### 3. 🛍️ Storefront E-Commerce Flow, Checkout & Kortingscodes
+- **Klantregistratie & Login:** Direct registreren via `/registreren` of inloggen via `/login`.
+- **Productvariaties & Matrix:** Maten, kleuren en opties met eigen SKU, afwijkende prijzen en voorraadniveaus met live UI updates.
+- **Kortingscodes & Coupons:** Klanten kunnen kortingscodes toepassen in de checkout met live validatie en BTW-herberekening.
+- **Volledig Checkout Proces (`/afrekenen`):**
+  - Opgeslagen bezorgadressen voor klanten of gast-adresinvoer met optie tot accountcreatie.
+  - Schakelaar voor afwijkend factuuradres.
+  - Transparant besteloverzicht met 21% BTW-uitsplitsing, korting en verzendkosten.
+
+### 4. 📦 Geavanceerd Voorraadbeheer & Audit Trail
+- **`StockMutation` Auditlogboek:** Elke voorraadmutatie wordt geregistreerd (`purchase`, `sale`, `adjustment`, `return`, `cancel_restitution`) met `stock_before` en `stock_after`.
+- **Automatische Verkoopafhandeling & Herstel:** Voorraad wordt atomisch afgeboekt bij betaling via `StockService` en direct hersteld bij orderannulering.
+- **Dashboard Voorraadhistorie:** Inzichtelijk overzicht voor winkeliers met filteropties en handmatige voorraadcorrecties.
+
+### 5. 🧾 Facturatie, Webhooks & Statusmails
+- **PDF Factuur Generatie:** Volledige PDF facturen (`Barryvdh\DomPDF`) met merchant bedrijfsgegevens, BTW-nummer, klantadressen en 21% BTW-uitsplitsing.
+- **Factuur Downloads:** Zowel klanten (`/mijn-account/bestellingen/{order}/factuur`) als winkeliers (`/dashboard/orders/{order}/invoice`) kunnen facturen direct downloaden.
+- **Geautomatiseerde E-mails:** `OrderPaidMail` (inclusief PDF factuur), `OrderShippedMail` (Track & Trace) en `OrderCancelledMail`.
+- **Idempotente Stripe Webhook:** Veilige afhandeling van Stripe events (`checkout.session.completed`) met deduplicatie.
+
+### 6. ⚙️ DevOps, CI/CD & Data Portabiliteit
+- **GitHub Actions CI/CD:** Geautomatiseerde pipeline die Pint (style check) en de complete Pest testsuite draait bij elke commit.
+- **Docker Stack:** Kant-en-klare `Dockerfile` en `docker-compose.yml` met Nginx en PHP 8.3-FPM.
+- **GDPR Data Portabiliteit / Backup:** Artisan commando `php artisan tenant:backup {slug}` dat de database en media in een `.zip` archief inpakt.
 
 ---
 
-## Installatiehandleiding
+## 🏗️ Technische Stack
 
-Volg deze stappen nauwkeurig om het platform lokaal op te starten:
+| Component | Technologie |
+|---|---|
+| **Framework** | Laravel 12 (PHP 8.3+) |
+| **Frontend/Reactivity** | Livewire 4 & Livewire Flux UI |
+| **Database** | SQLite (Landlord + Dedicated Database-per-Tenant) |
+| **Betalingen** | Stripe Connect & Stripe Checkout |
+| **Documenten/PDF** | DomPDF (`barryvdh/laravel-dompdf`) |
+| **DevOps / CI/CD** | GitHub Actions & Docker Compose |
+| **Testing** | Pest 4 & PHPUnit (89 tests, 281 assertions) |
+| **Code Formatting** | Laravel Pint (PSR-12 Standard) |
 
-### Stap 1: Ga naar de projectmap
-Open je terminal en navigeer naar de submap `multi-tenant-webshop` in dit project:
+---
+
+## 🚀 Snelle Start (Met Docker of Lokaal)
+
+### Optie A: Met Docker (Aanbevolen)
 ```bash
-cd multi-tenant-webshop
+# Start de volledige container stack
+docker compose up -d
+
+# De webshop draait direct op http://localhost:8000
 ```
 
-### Stap 2: Installeer de dependencies
-Installeer alle benodigde Composer packages en NPM dependencies:
+### Optie B: Lokale Installatie
 ```bash
+git clone https://github.com/KiranoDeMeester/Multi-Tenant-Webshop.git
+cd Multi-Tenant-Webshop/multi-tenant-webshop
+
 composer install
 npm install
-```
-
-### Stap 3: Omgevingsvariabelen configureren
-Kopieer het voorbeeld `.env` bestand naar een nieuw `.env` bestand:
-```bash
-copy .env.example .env
-```
-Open het `.env` bestand en genereer de applicatiesleutel:
-```bash
+cp .env.example .env
 php artisan key:generate
-```
 
-Controleer of de database-instellingen in `.env` wijzen naar SQLite (dit is de standaard voor dit project):
-```env
-DB_CONNECTION=sqlite
-DB_DATABASE=C:\wamp64\www\ProgrammingPhP\Multi-Tenant-Webshop\multi-tenant-webshop\database\database.sqlite
+# Migreer landlord en start servers
+php artisan migrate --path=database/migrations/landlord
+php artisan db:seed
+
+npm run dev
+php artisan serve
 ```
-*(Pas het absolute pad aan naar de werkelijke locatie op jouw computer).*
 
 ---
 
-## Lokale Domeinnaamkoppeling (Hosts bestand)
+## 🧪 Test Suite Uitvoeren
 
-Omdat dit platform gebruik maakt van **domein-gebaseerde routing** (om te bepalen welke webshop getoond moet worden), moet je lokale host-bestanden aanpassen.
+Het project beschikt over een uitgebreide testsuite met **89 geautomatiseerde tests** en **281 assertions** (100% pass rate):
 
-### Op Windows:
-1. Open Kladblok (Notepad) als **Administrator**.
-2. Open het bestand: `C:\Windows\System32\drivers\etc\hosts`
-3. Voeg de volgende regels toe aan het einde van het bestand:
-   ```text
-   127.0.0.1 platform.localhost
-   127.0.0.1 minimalist.localhost
-   127.0.0.1 demo-shop.localhost
-   127.0.0.1 localhost
-   ```
-4. Sla het bestand op.
-
----
-
-## Database & Seeding
-
-Het platform maakt gebruik van een landlord database en dynamisch aangemaakte tenant databases.
-
-### Stap 1: Databasebestanden aanmaken
-Zorg ervoor dat het landlord databasebestand bestaat en maak de map aan voor de dynamic tenants:
 ```bash
-# Maak de landlord database aan indien deze niet bestaat
-touch database/database.sqlite
-
-# Zorg ervoor dat de tenants map bestaat
-mkdir database/tenants
-```
-
-### Stap 2: Database migreren en seeden
-Voer de migraties en seeders uit. Dit initialiseert de landlord database en maakt automatisch de demowebshops aan inclusief demoproducten, instellingen en testaccounts:
-```bash
-php artisan migrate:fresh --seed
-```
-
-Dit commando maakt de volgende accounts aan:
-- **Landlord Admin (Platform Beheerder):** `admin@platform.localhost` (wachtwoord: `password`)
-- **Tenant Owner (Winkeleigenaar):** `owner@demo-shop.localhost` (wachtwoord: `password`)
-- **Test Customer (Winkelklant):** `customer@example.com` (wachtwoord: `password`)
-
----
-
-## Queue & Achtergrondtaken
-
-Zware processen (zoals het versturen van e-mails met PDF facturen en het verwerken van betalingen) worden afgehandeld via Laravel Queues.
-
-Stel in je `.env` bestand de queue driver in op `database` (voor lokaal testen) of `sync` (indien je geen worker wilt draaien):
-```env
-QUEUE_CONNECTION=database
-```
-
-Als je `database` gebruikt, start dan de queue worker in een apart terminalvenster om taken op de achtergrond te verwerken:
-```bash
-php artisan queue:work
+php vendor/bin/pest
 ```
 
 ---
 
-## Stripe Connect & Betalingssimulatie
-
-Het platform maakt gebruik van Stripe Connect voor destination charges.
-
-1. **Test-modus activeren:** In het `.env` bestand zijn Stripe test sleutels vereist om de checkout te laten werken. Vul de Stripe api keys in:
-   ```env
-   STRIPE_KEY=pk_test_...
-   STRIPE_SECRET=sk_test_...
-   STRIPE_WEBHOOK_SECRET=whsec_...
-   ```
-2. **Webhooks simuleren:** Gebruik de Stripe CLI om lokale webhooks door te sturen naar de applicatie:
-   ```bash
-   stripe listen --forward-to platform.localhost:8000/stripe/webhook
-   ```
-3. **Checkout flow:** Klanten kunnen betalen met Stripe testkaarten (bijv. 4242 4242 4242 4242).
-
----
-
-## Productie & Development Commando's
-
-Start de ingebouwde Vite en Laravel ontwikkelserver gelijktijdig op:
-```bash
-composer run dev
-```
-Dit commando draait `php artisan serve --port=8000` en `npm run dev` parallel. 
-
-Je kan het platform nu bezoeken via:
-- Platform landing page: `http://localhost:8000` of `http://platform.localhost:8000`
-- Demo Winkel 1: `http://demo-shop.localhost:8000`
-- Demo Winkel 2 (Minimalist Store): `http://minimalist.localhost:8000`
-
----
-
-## Geautomatiseerd Testen (Pest)
-
-De applicatie is voorzien van een uitgebreide Pest-testsuite die test op database-isolatie (tenant isolation), voorraadintegriteit (race conditions) en betalingsflows.
-
-Om de testsuite uit te voeren, gebruik je het volgende commando:
-```bash
-php artisan test
-```
+## 📄 Licentie
+Dit project is open-source software gelicenseerd onder de [MIT licentie](LICENSE).

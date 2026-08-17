@@ -38,6 +38,10 @@
             <flux:sidebar.item icon="shopping-cart" :href="route('tenant.orders.index')" :current="request()->routeIs('tenant.orders.*')" wire:navigate>
                 {{ __('Bestellingen') }}
             </flux:sidebar.item>
+
+            <flux:sidebar.item icon="ticket" :href="route('tenant.coupons.index')" :current="request()->routeIs('tenant.coupons.*')" wire:navigate>
+                {{ __('Kortingscodes') }}
+            </flux:sidebar.item>
             
             <flux:sidebar.item icon="users" :href="route('tenant.customers.index')" :current="request()->routeIs('tenant.customers.*')" wire:navigate>
                 {{ __('Klanten') }}

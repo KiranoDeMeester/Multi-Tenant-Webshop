@@ -59,7 +59,7 @@
 
                 <div class="flex items-center justify-between">
                     <flux:checkbox :label="__('Onthoud mij')" />
-                    <flux:link href="#" class="text-sm">{{ __('Wachtwoord vergeten?') }}</flux:link>
+                    <flux:link :href="route('storefront.password.request')" class="text-sm">{{ __('Wachtwoord vergeten?') }}</flux:link>
                 </div>
 
                 <flux:button type="submit" variant="primary" class="w-full h-12 bg-primary hover:bg-primary/95 border-none">{{ __('Inloggen') }}</flux:button>

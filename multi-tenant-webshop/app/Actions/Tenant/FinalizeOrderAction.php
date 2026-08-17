@@ -3,6 +3,7 @@
 namespace App\Actions\Tenant;
 
 use App\Mail\OrderPaidMail;
+use App\Models\Tenant\Coupon;
 use App\Models\Tenant\Order;
 use App\Services\StockService;
 use App\Services\TenantManager;
@@ -32,7 +33,15 @@ class FinalizeOrderAction
             // 1. Update Stock atomically and record stock mutation audit entries
             app(StockService::class)->fulfillOrderStock($order);
 
-            // 2. Send Confirmation Email (passing primitive IDs instead of Model to avoid Queue serialization issues)
+            // 2. Increment coupon used count if a coupon was used
+            if ($order->coupon_code) {
+                $coupon = Coupon::where('code', $order->coupon_code)->first();
+                if ($coupon) {
+                    $coupon->increment('used_count');
+                }
+            }
+
+            // 3. Send Confirmation Email (passing primitive IDs instead of Model to avoid Queue serialization issues)
             $customerEmail = $order->customer_details['email'] ?? $order->customer?->email;
 
             if ($customerEmail) {

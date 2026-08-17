@@ -3,6 +3,7 @@
 namespace App\Livewire\Storefront\Checkout;
 
 use App\Actions\Tenant\PrepareCheckoutAction;
+use App\Models\Tenant\Coupon;
 use App\Models\Tenant\Customer;
 use App\Models\Tenant\CustomerAddress;
 use App\Models\Tenant\Setting;
@@ -59,8 +60,14 @@ class Index extends Component
 
     public string $billing_country = 'België';
 
-    // Order notes
+    // Order notes & Coupons
     public string $notes = '';
+
+    public string $coupon_code = '';
+
+    public ?string $applied_coupon_code = null;
+
+    public int $discount_amount = 0; // In cents
 
     public function mount()
     {
@@ -119,6 +126,63 @@ class Index extends Component
         $this->shipping_postal_code = $address->postal_code;
         $this->shipping_city = $address->city;
         $this->shipping_country = $address->country;
+    }
+
+    public function applyCoupon()
+    {
+        $code = strtoupper(trim($this->coupon_code));
+        if (empty($code)) {
+            $this->dispatch('toast', [
+                'type' => 'error',
+                'message' => __('Vul een kortingscode in.'),
+            ]);
+
+            return;
+        }
+
+        $coupon = Coupon::where('code', $code)->first();
+        if (! $coupon) {
+            $this->dispatch('toast', [
+                'type' => 'error',
+                'message' => __('Ongeldige kortingscode.'),
+            ]);
+
+            return;
+        }
+
+        $cartService = app(CartService::class);
+        $subtotalInCents = (int) round($cartService->getTotal() * 100);
+
+        $check = $coupon->isValidForAmount($subtotalInCents);
+        if (! $check['valid']) {
+            $this->dispatch('toast', [
+                'type' => 'error',
+                'message' => $check['message'],
+            ]);
+
+            return;
+        }
+
+        $this->discount_amount = $coupon->calculateDiscount($subtotalInCents);
+        $this->applied_coupon_code = $coupon->code;
+        $this->coupon_code = '';
+
+        $this->dispatch('toast', [
+            'type' => 'success',
+            'message' => __('Kortingscode succesvol toegepast!'),
+        ]);
+    }
+
+    public function removeCoupon()
+    {
+        $this->applied_coupon_code = null;
+        $this->discount_amount = 0;
+        $this->coupon_code = '';
+
+        $this->dispatch('toast', [
+            'type' => 'info',
+            'message' => __('Kortingscode verwijderd.'),
+        ]);
     }
 
     protected function rules(): array
@@ -220,7 +284,12 @@ class Index extends Component
         ];
 
         try {
-            $checkoutUrl = $prepareCheckout->execute($this->notes, $customerDetails);
+            $checkoutUrl = $prepareCheckout->execute(
+                $this->notes,
+                $customerDetails,
+                $this->discount_amount,
+                $this->applied_coupon_code
+            );
 
             return redirect($checkoutUrl);
         } catch (\Exception $e) {
@@ -238,15 +307,19 @@ class Index extends Component
         $savedAddresses = $customer ? CustomerAddress::where('customer_id', $customer->id)->get() : collect();
 
         $subtotal = $cartService->getTotal();
+        $discountEuros = $this->discount_amount / 100;
+        $effectiveSubtotal = max(0, $subtotal - $discountEuros);
         $shippingFee = $cartService->getShippingFee();
-        $grandTotal = $cartService->getGrandTotal();
+        $grandTotal = $effectiveSubtotal + $shippingFee;
 
         $vatPercentage = (float) (Setting::where('key', 'invoice_vat_percentage')->first()?->value ?? 21);
-        $taxAmount = $subtotal - ($subtotal / (1 + ($vatPercentage / 100)));
+        $taxAmount = $effectiveSubtotal - ($effectiveSubtotal / (1 + ($vatPercentage / 100)));
 
         return view('livewire.storefront.checkout.index', [
             'items' => $cartService->getItems(),
             'subtotal' => $subtotal,
+            'discountEuros' => $discountEuros,
+            'effectiveSubtotal' => $effectiveSubtotal,
             'shippingFee' => $shippingFee,
             'grandTotal' => $grandTotal,
             'taxAmount' => $taxAmount,

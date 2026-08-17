@@ -252,12 +252,44 @@
                         @endforeach
                     </div>
 
+                    <!-- Coupon Code Input -->
+                    <div class="pt-4 border-t border-neutral-100">
+                        @if($applied_coupon_code)
+                            <div class="bg-emerald-50 border border-emerald-200 rounded-2xl p-3 flex items-center justify-between">
+                                <div class="flex items-center gap-2">
+                                    <flux:icon name="ticket" class="w-4 h-4 text-emerald-600" />
+                                    <div>
+                                        <div class="text-xs font-bold text-emerald-900">{{ __('Kortingscode actief:') }} <span class="font-mono font-black">{{ $applied_coupon_code }}</span></div>
+                                        <div class="text-[11px] text-emerald-700 font-semibold">-€{{ number_format($discountEuros, 2, ',', '.') }} {{ __('korting') }}</div>
+                                    </div>
+                                </div>
+                                <button type="button" wire:click="removeCoupon" class="text-xs text-red-500 hover:text-red-700 font-bold underline cursor-pointer">
+                                    {{ __('Verwijderen') }}
+                                </button>
+                            </div>
+                        @else
+                            <div class="flex gap-2">
+                                <input wire:model="coupon_code" type="text" placeholder="{{ __('Kortingscode invoeren') }}" class="flex-1 bg-neutral-50 border border-neutral-200 rounded-xl px-3 py-2 text-xs uppercase font-mono font-bold text-black focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary" />
+                                <button type="button" wire:click="applyCoupon" class="px-4 py-2 bg-neutral-900 hover:bg-black text-white text-xs font-bold rounded-xl transition-colors cursor-pointer">
+                                    {{ __('Toepassen') }}
+                                </button>
+                            </div>
+                        @endif
+                    </div>
+
                     <!-- Totals Breakdown -->
                     <div class="space-y-3 pt-4 border-t border-neutral-100 text-sm">
                         <div class="flex justify-between text-neutral-600">
                             <span>{{ __('Subtotaal') }}</span>
                             <span class="font-bold text-black">€{{ number_format($subtotal, 2, ',', '.') }}</span>
                         </div>
+
+                        @if($discountEuros > 0)
+                            <div class="flex justify-between text-emerald-600 font-bold">
+                                <span>{{ __('Korting') }} ({{ $applied_coupon_code }})</span>
+                                <span>-€{{ number_format($discountEuros, 2, ',', '.') }}</span>
+                            </div>
+                        @endif
 
                         <div class="flex justify-between text-neutral-600">
                             <span>{{ __('Verzendkosten') }}</span>

@@ -10,8 +10,10 @@ use App\Livewire\Landlord\RegisterTenant;
 use App\Livewire\Storefront\Account\Addresses;
 use App\Livewire\Storefront\Account\Orders;
 use App\Livewire\Storefront\Account\Profile;
+use App\Livewire\Storefront\Auth\ForgotPassword;
 use App\Livewire\Storefront\Auth\Login;
 use App\Livewire\Storefront\Auth\Register;
+use App\Livewire\Storefront\Auth\ResetPassword;
 use App\Livewire\Storefront\Checkout\Cancel;
 use App\Livewire\Storefront\Checkout\Success;
 use App\Livewire\Storefront\Pages\AboutUs;
@@ -94,6 +96,8 @@ Route::domain('{tenant}.'.config('app.central_domain', 'localhost'))->middleware
     // Auth Routes for customers
     Route::get('/login', Login::class)->name('storefront.login');
     Route::get('/registreren', Register::class)->name('storefront.register');
+    Route::get('/wachtwoord-vergeten', ForgotPassword::class)->name('storefront.password.request');
+    Route::get('/wachtwoord-resetten/{token}', ResetPassword::class)->name('storefront.password.reset');
 
     Route::post('/logout', function () {
         $wasTenant = auth('tenant')->check();
@@ -133,6 +137,7 @@ Route::domain('{tenant}.'.config('app.central_domain', 'localhost'))->middleware
             Route::get('/orders/{order}', App\Livewire\Tenant\Orders\Show::class)->name('tenant.orders.show');
             Route::get('/orders/{order}/edit', App\Livewire\Tenant\Orders\Edit::class)->name('tenant.orders.edit');
             Route::get('/orders/{order}/invoice', [InvoiceController::class, 'downloadMerchantInvoice'])->name('tenant.orders.invoice');
+            Route::get('/coupons', App\Livewire\Tenant\Coupons\Index::class)->name('tenant.coupons.index');
             Route::get('/customers', App\Livewire\Tenant\Customers\Index::class)->name('tenant.customers.index');
             Route::get('/customers/{customer}', App\Livewire\Tenant\Customers\Show::class)->name('tenant.customers.show');
             Route::get('/settings', StyleDashboard::class)->name('tenant.settings');

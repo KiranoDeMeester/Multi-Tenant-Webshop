@@ -1,0 +1,55 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches: [ main, dev, "feat/**", "fix/**" ]
+  pull_request:
+    branches: [ main, dev ]
+
+jobs:
+  laravel-tests:
+    name: Lint & Test Suite (PHP 8.3)
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+
+    - name: Setup PHP & Extensions
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.3'
+        extensions: mbstring, xml, ctype, iconv, intl, pdo_sqlite, gd, zip, fileinfo
+        coverage: none
+
+    - name: Get Composer Cache Directory
+      id: composer-cache
+      working-directory: multi-tenant-webshop
+      run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+    - name: Cache Composer Dependencies
+      uses: actions/cache@v4
+      with:
+        path: ${{ steps.composer-cache.outputs.dir }}
+        key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+        restore-keys: ${{ runner.os }}-composer-
+
+    - name: Install Composer Dependencies
+      working-directory: multi-tenant-webshop
+      run: composer install --prefer-dist --no-interaction --optimize-autoloader
+
+    - name: Copy .env
+      working-directory: multi-tenant-webshop
+      run: cp .env.example .env
+
+    - name: Generate Application Key
+      working-directory: multi-tenant-webshop
+      run: php artisan key:generate
+
+    - name: Code Style Check (Laravel Pint)
+      working-directory: multi-tenant-webshop
+      run: vendor/bin/pint --test
+
+    - name: Execute Feature & Unit Tests (Pest)
+      working-directory: multi-tenant-webshop
+      run: vendor/bin/pest --ci

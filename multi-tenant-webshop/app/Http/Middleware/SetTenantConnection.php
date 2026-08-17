@@ -6,6 +6,7 @@ use App\Models\Landlord\Domain;
 use App\Services\TenantManager;
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
@@ -34,8 +35,10 @@ class SetTenantConnection
             return $next($request);
         }
 
-        // Try to find the tenant by domain
-        $domain = Domain::where('domain', $host)->with('tenant')->first();
+        // Try to find the tenant by domain (cached for performance)
+        $domain = Cache::remember("tenant_domain:{$host}", 3600, function () use ($host) {
+            return Domain::where('domain', $host)->with('tenant')->first();
+        });
 
         if (! $domain || ! $domain->tenant) {
             abort(404, 'Webshop niet gevonden.');

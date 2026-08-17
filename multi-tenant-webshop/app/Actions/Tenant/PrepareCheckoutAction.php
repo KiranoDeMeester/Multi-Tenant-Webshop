@@ -27,7 +27,7 @@ class PrepareCheckoutAction
      *
      * @throws \Exception
      */
-    public function execute(string $notes = '', ?array $customerDetails = null): string
+    public function execute(string $notes = '', ?array $customerDetails = null, int $discountAmount = 0, ?string $couponCode = null): string
     {
         $tenant = $this->tenantManager->getTenant();
 
@@ -41,14 +41,16 @@ class PrepareCheckoutAction
         }
 
         try {
-            return DB::transaction(function () use ($tenant, $items, $notes, $customerDetails) {
+            return DB::transaction(function () use ($tenant, $items, $notes, $customerDetails, $discountAmount, $couponCode) {
                 $subtotal = (int) round($this->cartService->getTotal() * 100);
                 $shipping = (int) round($this->cartService->getShippingFee() * 100);
-                $total = $subtotal + $shipping;
+                $discountInCents = max(0, $discountAmount);
+                $effectiveSubtotal = max(0, $subtotal - $discountInCents);
+                $total = $effectiveSubtotal + $shipping;
 
-                // Calculate VAT amount (default 21% inclusive if not set)
+                // Calculate VAT amount on effective subtotal (default 21% inclusive if not set)
                 $vatPercentage = (float) (Setting::where('key', 'invoice_vat_percentage')->first()?->value ?? 21);
-                $taxAmount = (int) round($subtotal - ($subtotal / (1 + ($vatPercentage / 100))));
+                $taxAmount = (int) round($effectiveSubtotal - ($effectiveSubtotal / (1 + ($vatPercentage / 100))));
 
                 // 1. Create Order
                 $order = Order::create([
@@ -56,6 +58,8 @@ class PrepareCheckoutAction
                     'total_amount' => $total,
                     'tax_amount' => $taxAmount,
                     'shipping_amount' => $shipping,
+                    'discount_amount' => $discountInCents,
+                    'coupon_code' => $couponCode,
                     'status' => 'pending',
                     'customer_id' => auth('customer')->id(),
                     'customer_details' => $customerDetails,
