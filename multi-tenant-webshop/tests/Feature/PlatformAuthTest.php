@@ -16,7 +16,7 @@ test('login page is accessible on central domain', function () {
     $response = $this->get('http://platform.localhost/login');
 
     $response->assertStatus(200);
-    $response->assertSee('Inloggen');
+    $response->assertSee(__('Log in'));
 });
 
 test('login page is not accessible on tenant domain', function () {
