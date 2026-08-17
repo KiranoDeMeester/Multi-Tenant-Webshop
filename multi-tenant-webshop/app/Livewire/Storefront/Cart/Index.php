@@ -24,17 +24,9 @@ class Index extends Component
         $this->dispatch('cart-updated');
     }
 
-    public function checkout(PrepareCheckoutAction $prepareCheckout)
+    public function checkout()
     {
-        try {
-            $checkoutUrl = $prepareCheckout->execute($this->notes);
-            return redirect($checkoutUrl);
-        } catch (\Exception $e) {
-            $this->dispatch('toast', [
-                'type' => 'error',
-                'message' => $e->getMessage()
-            ]);
-        }
+        return redirect()->route('storefront.checkout');
     }
 
     public function render()

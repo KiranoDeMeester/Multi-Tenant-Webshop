@@ -67,7 +67,7 @@
                 <div class="pt-6 border-t border-neutral-100 text-center space-y-4">
                     <flux:text size="sm">
                         {{ __('Nog geen account?') }}
-                        <flux:link href="#" class="font-bold ml-1">{{ __('Registreer hier') }}</flux:link>
+                        <flux:link :href="route('storefront.register')" class="font-bold ml-1">{{ __('Registreer hier') }}</flux:link>
                     </flux:text>
                     
                     <flux:separator />

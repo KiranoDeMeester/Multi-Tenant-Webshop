@@ -25,7 +25,7 @@ class PrepareCheckoutAction
      * @return string The Stripe Checkout URL
      * @throws \Exception
      */
-    public function execute(string $notes = ''): string
+    public function execute(string $notes = '', ?array $customerDetails = null): string
     {
         $tenant = $this->tenantManager->getTenant();
         
@@ -39,18 +39,24 @@ class PrepareCheckoutAction
         }
 
         try {
-            return DB::transaction(function () use ($tenant, $items, $notes) {
+            return DB::transaction(function () use ($tenant, $items, $notes, $customerDetails) {
                 $subtotal = (int) round($this->cartService->getTotal() * 100);
                 $shipping = (int) round($this->cartService->getShippingFee() * 100);
                 $total = $subtotal + $shipping;
+
+                // Calculate VAT amount (default 21% inclusive if not set)
+                $vatPercentage = (float) (\App\Models\Tenant\Setting::where('key', 'invoice_vat_percentage')->first()?->value ?? 21);
+                $taxAmount = (int) round($subtotal - ($subtotal / (1 + ($vatPercentage / 100))));
 
                 // 1. Create Order
                 $order = Order::create([
                     'order_number' => 'ORD-' . strtoupper(Str::random(8)),
                     'total_amount' => $total,
+                    'tax_amount' => $taxAmount,
                     'shipping_amount' => $shipping,
                     'status' => 'pending',
                     'customer_id' => auth('customer')->id(),
+                    'customer_details' => $customerDetails,
                     'notes' => $notes,
                 ]);
 
@@ -60,10 +66,11 @@ class PrepareCheckoutAction
                         'order_id' => $order->id,
                         'product_id' => $item['id'],
                         'product_variation_id' => $item['variation_id'] ?? null,
-                        'product_name' => $item['name'],
+                        'product_name' => $item['name'] . (!empty($item['variation_name']) ? ' (' . $item['variation_name'] . ')' : ''),
                         'sku' => $item['sku'] ?? null,
                         'price' => (int) round($item['price'] * 100),
                         'quantity' => $item['quantity'],
+                        'options' => $item['options'] ?? (!empty($item['variation_name']) ? ['variant' => $item['variation_name']] : null),
                     ]);
                 }
 

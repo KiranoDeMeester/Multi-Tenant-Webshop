@@ -1,4 +1,4 @@
-<div class="p-6 max-w-2xl mx-auto">
+<div class="p-6 max-w-4xl mx-auto">
     <div class="mb-6">
         <flux:breadcrumbs>
             <flux:breadcrumbs.item :href="route('tenant.products.manage', ['tenant' => request()->route('tenant')])">{{ __('Producten') }}</flux:breadcrumbs.item>
@@ -54,23 +54,73 @@
                             <flux:select wire:model="category_id" :label="__('Categorie')">
                                 <option value="">{{ __('Geen categorie') }}</option>
                                 @foreach($categories as $category)
-                                    <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                    <option value="{{ $category->id }}" @selected($category->id == $category_id)>{{ $category->name }}</option>
                                 @endforeach
                             </flux:select>
                         </div>
 
-                        <flux:textarea wire:model="description" :label="__('Beschrijving')" rows="5" />
+                        <flux:textarea wire:model="description" :label="__('Beschrijving')" rows="4" />
                     </div>
                 </div>
             </flux:card>
 
+            <!-- Pricing & Stock / Variations Section -->
             <flux:card>
-                <flux:heading size="lg" class="mb-6">{{ __('Voorraad & Prijs') }}</flux:heading>
-                
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
-                    <flux:input type="number" step="0.01" wire:model="price" :label="__('Verkoopprijs (€)')" icon="currency-euro" />
-                    <flux:input type="number" wire:model="stock" :label="__('Huidige Voorraad')" icon="archive-box" />
+                <div class="flex items-center justify-between mb-6">
+                    <div>
+                        <flux:heading size="lg">{{ __('Voorraad & Variaties') }}</flux:heading>
+                        <flux:text size="sm">{{ __('Beheer standaard voorraad of configureer productvarianten (maten, kleuren, etc.).') }}</flux:text>
+                    </div>
+                    <flux:button type="button" wire:click="toggleVariations" variant="{{ $has_variations ? 'primary' : 'outline' }}" size="sm">
+                        {{ $has_variations ? __('Variaties Ingeschakeld') : __('Variaties Toevoegen') }}
+                    </flux:button>
                 </div>
+                
+                @if(!$has_variations)
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
+                        <flux:input type="number" step="0.01" wire:model="price" :label="__('Verkoopprijs (€)')" icon="currency-euro" />
+                        <flux:input type="number" wire:model="stock" :label="__('Huidige Voorraad')" icon="archive-box" />
+                    </div>
+                @else
+                    <div class="space-y-6 animate-fade-in">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 pb-4 border-b border-zinc-100 dark:border-zinc-800">
+                            <flux:input type="number" step="0.01" wire:model="price" :label="__('Basis Verkoopprijs (€)')" icon="currency-euro" />
+                            <div class="flex items-end">
+                                <flux:button type="button" wire:click="addVariation" icon="plus" variant="outline" class="w-full">
+                                    {{ __('Nieuwe Variatie Toevoegen') }}
+                                </flux:button>
+                            </div>
+                        </div>
+
+                        <div class="space-y-4">
+                            @foreach($variations as $index => $var)
+                                <div class="p-4 bg-zinc-50 dark:bg-zinc-900/60 rounded-2xl border border-zinc-200 dark:border-zinc-700 flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
+                                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 flex-1 w-full">
+                                        <div>
+                                            <flux:label class="text-[10px] uppercase font-bold text-zinc-400">{{ __('Kenmerk') }}</flux:label>
+                                            <flux:input wire:model="variations.{{ $index }}.attribute_name" placeholder="Bijv. Maat" size="sm" />
+                                        </div>
+                                        <div>
+                                            <flux:label class="text-[10px] uppercase font-bold text-zinc-400">{{ __('Waarde') }}</flux:label>
+                                            <flux:input wire:model="variations.{{ $index }}.attribute_value" placeholder="Bijv. Large" size="sm" />
+                                        </div>
+                                        <div>
+                                            <flux:label class="text-[10px] uppercase font-bold text-zinc-400">{{ __('SKU') }}</flux:label>
+                                            <flux:input wire:model="variations.{{ $index }}.sku" size="sm" />
+                                        </div>
+                                        <div>
+                                            <flux:label class="text-[10px] uppercase font-bold text-zinc-400">{{ __('Voorraad') }}</flux:label>
+                                            <flux:input type="number" wire:model="variations.{{ $index }}.stock" size="sm" />
+                                        </div>
+                                    </div>
+                                    <button type="button" wire:click="removeVariation({{ $index }})" class="text-zinc-400 hover:text-red-500 p-2 mt-2 sm:mt-0 transition-colors">
+                                        <flux:icon name="trash" size="sm" />
+                                    </button>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                @endif
             </flux:card>
 
             <flux:card>

@@ -57,11 +57,13 @@ Route::domain('{tenant}.' . config('app.central_domain', 'localhost'))->middlewa
     Route::get('/bestelling/volgen/{id}', \App\Livewire\Storefront\Pages\OrderTracking::class)->name('storefront.order.track');
 
     // Checkout flow
+    Route::get('/afrekenen', \App\Livewire\Storefront\Checkout\Index::class)->name('storefront.checkout');
     Route::get('/checkout/success', \App\Livewire\Storefront\Checkout\Success::class)->name('storefront.checkout.success');
     Route::get('/checkout/cancel', \App\Livewire\Storefront\Checkout\Cancel::class)->name('storefront.checkout.cancel');
 
     // Auth Routes for customers
     Route::get('/login', \App\Livewire\Storefront\Auth\Login::class)->name('storefront.login');
+    Route::get('/registreren', \App\Livewire\Storefront\Auth\Register::class)->name('storefront.register');
     
     Route::post('/logout', function () {
         $wasTenant = auth('tenant')->check();

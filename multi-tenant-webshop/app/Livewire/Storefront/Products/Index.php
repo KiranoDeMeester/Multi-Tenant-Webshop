@@ -49,11 +49,24 @@ class Index extends Component
 
     public function quickAddToCart(string $productId)
     {
-        $product = Product::findOrFail($productId);
-        app(\App\Services\CartService::class)->add($product, 1);
-        
-        $this->dispatch('product-added-to-cart');
-        $this->dispatch('open-cart');
+        $product = Product::with('variations')->findOrFail($productId);
+
+        if ($product->variations->isNotEmpty()) {
+            return redirect()->route('storefront.products.show', ['slug' => $product->slug]);
+        }
+
+        if ($product->stock <= 0) {
+            session()->flash('error', __('Dit product is uitverkocht.'));
+            return;
+        }
+
+        try {
+            app(\App\Services\CartService::class)->add($product, 1);
+            $this->dispatch('product-added-to-cart');
+            $this->dispatch('open-cart');
+        } catch (\Exception $e) {
+            session()->flash('error', $e->getMessage());
+        }
     }
 
     public function render()

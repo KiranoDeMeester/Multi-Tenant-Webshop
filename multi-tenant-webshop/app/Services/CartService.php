@@ -20,23 +20,61 @@ class CartService
 
     /**
      * Add a product to the cart.
+     *
+     * @throws \Exception
      */
     public function add(Product $product, int $quantity = 1, ?string $variationId = null): void
     {
         $cart = $this->getItems();
         $key = $variationId ? "{$product->id}_{$variationId}" : $product->id;
 
+        $variation = null;
+        $price = (float) $product->price;
+        $sku = $product->sku;
+        $variationName = '';
+        $options = null;
+        $maxStock = (int) $product->stock;
+
+        if ($variationId) {
+            $variation = \App\Models\Tenant\ProductVariation::with('attributeValues.attribute')->find($variationId);
+            if ($variation) {
+                $price = (float) $variation->effective_price;
+                $sku = $variation->sku ?: $product->sku;
+                $maxStock = (int) $variation->stock;
+
+                $attrPairs = [];
+                $optArray = [];
+                foreach ($variation->attributeValues as $val) {
+                    $attrName = $val->attribute?->name ?? 'Optie';
+                    $attrPairs[] = "{$attrName}: {$val->value}";
+                    $optArray[$attrName] = $val->value;
+                }
+                $variationName = implode(', ', $attrPairs);
+                $options = $optArray;
+            }
+        }
+
+        $currentQty = isset($cart[$key]) ? $cart[$key]['quantity'] : 0;
+        $newQty = $currentQty + $quantity;
+
+        if ($maxStock < $newQty && $maxStock >= 0) {
+            throw new \Exception(__('Niet voldoende voorraad beschikbaar (maximaal :max beschikbaar).', ['max' => $maxStock]));
+        }
+
         if (isset($cart[$key])) {
-            $cart[$key]['quantity'] += $quantity;
+            $cart[$key]['quantity'] = $newQty;
         } else {
             $cart[$key] = [
                 'id' => $product->id,
                 'name' => $product->name,
-                'price' => $product->price,
+                'price' => $price,
                 'quantity' => $quantity,
                 'image' => $product->getFirstMediaUrl('products', 'thumb') ?: $product->image_url,
                 'variation_id' => $variationId,
-                'sku' => $product->sku,
+                'variation_name' => $variationName,
+                'options' => $options,
+                'sku' => $sku,
+                'max_stock' => $maxStock,
             ];
         }
 

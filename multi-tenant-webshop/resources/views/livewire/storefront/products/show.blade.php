@@ -14,8 +14,14 @@
     </div>
 
     @if (session()->has('message'))
-        <div class="mb-8 p-4 bg-black text-white text-xs font-black uppercase tracking-widest rounded-xl animate-bounce">
+        <div class="mb-8 p-4 bg-black text-white text-xs font-black uppercase tracking-widest rounded-xl animate-fade-in">
             {{ session('message') }}
+        </div>
+    @endif
+
+    @if (session()->has('error'))
+        <div class="mb-8 p-4 bg-red-600 text-white text-xs font-black uppercase tracking-widest rounded-xl animate-fade-in">
+            {{ session('error') }}
         </div>
     @endif
 
@@ -38,18 +44,55 @@
         <div class="flex flex-col justify-center">
             <div class="text-[10px] font-black uppercase tracking-[0.3em] text-secondary mb-4">{{ $product->category->name ?? '' }}</div>
             <h1 class="text-5xl md:text-6xl font-black mb-4 uppercase tracking-tighter">{{ $product->name }}</h1>
-            <div class="text-xs font-bold text-neutral-400 uppercase tracking-widest mb-10">SKU: {{ $product->sku }}</div>
+            <div class="text-xs font-bold text-neutral-400 uppercase tracking-widest mb-6">SKU: {{ $selectedVariation ? $selectedVariation->sku : $product->sku }}</div>
 
-            <div class="text-4xl font-black mb-12">
-                €{{ number_format($product->price, 2) }}
+            <!-- Dynamic Price -->
+            <div class="text-4xl font-black mb-8 text-black">
+                €{{ number_format($currentPrice, 2, ',', '.') }}
             </div>
 
-            <div class="prose prose-neutral mb-12 text-black font-medium leading-relaxed max-w-md">
+            <!-- Variation Selector -->
+            @if($product->variations->isNotEmpty())
+                <div class="mb-10 p-6 bg-zinc-50 border-2 border-zinc-200 rounded-3xl space-y-4">
+                    <div class="flex items-center justify-between">
+                        <label class="text-xs font-black uppercase tracking-wider text-black">
+                            {{ __('Kies een optie / variant:') }}
+                        </label>
+                        @if($selectedVariation)
+                            <span class="text-xs font-bold text-neutral-500">
+                                {{ $selectedVariation->stock > 0 ? __('Op voorraad (:count)', ['count' => $selectedVariation->stock]) : __('Uitverkocht') }}
+                            </span>
+                        @endif
+                    </div>
+                    
+                    <div class="flex flex-wrap gap-3">
+                        @foreach($product->variations as $var)
+                            @php
+                                $valName = $var->attributeValues->pluck('value')->implode(' / ') ?: $var->sku;
+                                $isSelected = $selectedVariationId === $var->id;
+                                $isOutOfStock = $var->stock <= 0;
+                            @endphp
+                            <button type="button" wire:click="selectVariation('{{ $var->id }}')" 
+                                class="px-5 py-3 rounded-2xl font-bold text-sm border-2 transition-all flex items-center gap-2
+                                {{ $isSelected ? 'border-primary bg-primary text-white shadow-md' : 'border-zinc-300 bg-white text-black hover:border-black' }}
+                                {{ $isOutOfStock ? 'opacity-50 line-through' : '' }}"
+                            >
+                                <span>{{ $valName }}</span>
+                                @if($var->price && $var->price != $product->price)
+                                    <span class="text-xs font-normal opacity-80">(€{{ number_format($var->price, 2, ',', '.') }})</span>
+                                @endif
+                            </button>
+                        @endforeach
+                    </div>
+                </div>
+            @endif
+
+            <div class="prose prose-neutral mb-10 text-black font-medium leading-relaxed max-w-md">
                 {!! nl2br(e($product->description)) !!}
             </div>
 
-            @if($product->stock > 0)
-                <div class="space-y-8 pt-10 border-t-2 border-black">
+            @if($currentStock > 0)
+                <div class="space-y-8 pt-8 border-t-2 border-black">
                     <div class="flex items-center gap-10">
                         <div class="flex items-center border-2 border-black rounded-2xl overflow-hidden bg-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
                             <button wire:click="decrement" class="p-4 hover:bg-black hover:text-white transition-all">
@@ -61,7 +104,7 @@
                             </button>
                         </div>
                         <div class="text-[10px] font-black uppercase tracking-widest text-neutral-400">
-                            {{ __('Nog :count op voorraad', ['count' => $product->stock]) }}
+                            {{ __('Nog :count op voorraad', ['count' => $currentStock]) }}
                         </div>
                     </div>
 

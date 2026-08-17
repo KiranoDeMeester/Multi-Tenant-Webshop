@@ -105,12 +105,12 @@
                 <a href="{{ route('storefront.cart.index') }}" class="block text-center text-sm font-bold text-zinc-500 hover:text-black transition-colors mb-6 underline decoration-zinc-200 underline-offset-4">
                     {{ __('Bekijk volledig winkelmandje') }}
                 </a>
-                <button class="w-full h-14 text-lg font-black bg-black text-white rounded-2xl hover:bg-neutral-800 transition-all flex items-center justify-center gap-2 shadow-lg high-contrast-dark">
+                <a href="{{ route('storefront.checkout') }}" class="w-full h-14 text-lg font-black bg-black text-white rounded-2xl hover:bg-neutral-800 transition-all flex items-center justify-center gap-2 shadow-lg high-contrast-dark">
                     {{ __('Afrekenen') }}
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
                     </svg>
-                </button>
+                </a>
                 <p class="text-[10px] text-center text-zinc-400 mt-4 uppercase tracking-widest font-bold">{{ __('Verzendkosten worden berekend bij checkout') }}</p>
             </div>
         @endif
